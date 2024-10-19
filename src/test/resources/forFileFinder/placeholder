@@ -1,0 +1,1 @@
+without this file, maven does not copy the directory at all into the target folder

@@ -1,4 +1,4 @@
-package com.github.gzougianos;
+package com.github.gzougianos.packagraph;
 
 public class Main {
     public static void main(String[] args) {
