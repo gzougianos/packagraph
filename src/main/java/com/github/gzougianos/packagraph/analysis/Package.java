@@ -3,7 +3,6 @@ package com.github.gzougianos.packagraph.analysis;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Accessors(fluent = true)
 @Getter
 @ToString
@@ -12,4 +11,11 @@ public final class Package {
     static final Package ROOT = new Package("<no_package>");
     private final String name;
 
+    Package(String name) {
+        this.name = name.trim();
+    }
+
+    public Package renamed(String name) {
+        return new Package(name.trim());
+    }
 }
