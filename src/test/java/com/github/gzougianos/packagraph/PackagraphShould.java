@@ -126,6 +126,25 @@ class PackagraphShould {
         assertTrue(renamings.dependsOn(toBeExcludedInAnotherTestCase));
     }
 
+    // +------------+
+    // | Java  |
+    // +------------+
+    @Test
+    void merge_packages_based_on_names() {
+        PackagraphOptions options = PackagraphOptions.builder()
+                .directories(projectFolder("renamings"))
+                .renamings(List.of(
+                        new PackagraphOptions.Rename("java.*", "Java"),
+                        new PackagraphOptions.Rename("assume.something.to.be.excluded", "Java"),
+                        new PackagraphOptions.Rename("renamings.*", "Java")))
+                .build();
+
+        Collection<PackageNode> packageNodes = Packagraph.create(options);
+        assertEquals(1, packageNodes.size());
+
+        findUniqueNode("Java", packageNodes);
+    }
+
     //+------------+                 +------------+
     //| Renamings  |  ------------->  |   Java     |
     //+------------+                 +------------+
