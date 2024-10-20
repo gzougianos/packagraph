@@ -3,10 +3,15 @@ package com.github.gzougianos.packagraph;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
 public final class JavaFilesFinder {
+
+    public static List<File> findWithin(Collection<File> directories) {
+        return findWithin(directories.toArray(new File[0]));
+    }
 
     public static List<File> findWithin(File... directories) {
         verifyAllExistAndAreDirectories(directories);

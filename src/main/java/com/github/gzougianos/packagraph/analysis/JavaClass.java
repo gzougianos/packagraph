@@ -2,6 +2,7 @@ package com.github.gzougianos.packagraph.analysis;
 
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
 import lombok.Getter;
 import lombok.ToString;
@@ -18,7 +19,7 @@ import java.util.Collection;
 public final class JavaClass {
     public static final JavaParser JAVA_PARSER = new JavaParser();
     private final File sourceFile;
-    private final Collection<Import> imports;
+    private final Collection<Package> imports;
     private final Package packag;
 
     private JavaClass(File sourceFile) throws IOException {
@@ -48,10 +49,31 @@ public final class JavaClass {
                 .orElseThrow(() -> new ClassAnalysisFailedException("Failed to parse file: " + sourceFile.getAbsolutePath()));
     }
 
-    private Collection<Import> findImports(CompilationUnit unit) {
+    private Collection<Package> findImports(CompilationUnit unit) {
         return unit.getImports().stream()
-                .map(x -> new Import(x.getNameAsString(), x.isStatic(), x.isAsterisk()))
+                .map(x -> adaptImport(x))
                 .toList();
+    }
+
+    private static Package adaptImport(ImportDeclaration importt) {
+        var name = importt.getNameAsString();
+        var withoutLastDot = name.substring(0, name.lastIndexOf('.'));
+        //Assume static import: java.lang.System.setErr
+        //Library gives: java.lang.System.setErr
+        //So need to trim the last dot part
+        if (importt.isStatic()) {
+            return new Package(withoutLastDot);
+        }
+
+        //Assume regular import: java.io.File
+        //Library gives: java.io.File
+        //So need to trim the last dot part
+        if (!importt.isAsterisk())
+            return new Package(name.substring(0, name.lastIndexOf('.')));
+
+        //Assume wildcard import: java.io.*
+        //Library gives: java.io
+        return new Package(name);
     }
 
     public static JavaClass of(File sourceFile) throws ClassAnalysisFailedException {

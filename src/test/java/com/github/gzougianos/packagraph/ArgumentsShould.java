@@ -27,7 +27,7 @@ class ArgumentsShould {
         var arguments = Arguments.of("-o", optionsTxt.getAbsolutePath(), "-d", dir1.getAbsolutePath(), dir2.getAbsolutePath());
 
 
-        assertEquals(optionsTxt, arguments.optionsFile());
+        assertEquals(optionsTxt, arguments.optionsFile().orElse(null));
         assertEquals(List.of(dir1, dir2), arguments.directories());
     }
 

@@ -10,19 +10,25 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
-@Getter
+
 @Accessors(fluent = true)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString
 public final class Arguments {
 
     private File optionsFile;
+    @Getter
     private Collection<File> directories;
     private static HelpFormatter helpFormatter = new HelpFormatter();
 
     private Arguments() {
+    }
+
+    public Optional<File> optionsFile() {
+        return Optional.ofNullable(optionsFile);
     }
 
     static void setHelpFormatter(HelpFormatter helpFormatter) {
