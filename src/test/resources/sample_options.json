@@ -1,0 +1,17 @@
+{
+  "includeOnlyFromDirectories": false,
+  "directories": [
+    "src/main/java",
+    "src/test/java"
+  ],
+  "renames": [
+    {
+      "rename": "java.util.*",
+      "to": "java"
+    },
+    {
+      "rename": "com.github.com.",
+      "to": ""
+    }
+  ]
+}
