@@ -90,7 +90,7 @@ public class Packagraph {
         return !packag.name().trim().isEmpty();
     }
 
-    public record Dependency(Package from, Package to) {
+    private record Dependency(Package from, Package to) {
     }
 
     private static JavaClass asClass(File javaFile) {
