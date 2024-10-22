@@ -57,6 +57,11 @@ public final class JavaClass {
 
     private static Package adaptImport(ImportDeclaration importt) {
         var name = importt.getNameAsString();
+
+        if (!importt.isStatic() && importt.isAsterisk()) {
+            return new Package(name);
+        }
+
         var withoutLastDot = name.substring(0, name.lastIndexOf('.'));
         //Assume static import: java.lang.System.setErr
         //Library gives: java.lang.System.setErr
