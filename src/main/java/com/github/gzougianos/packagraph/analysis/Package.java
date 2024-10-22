@@ -1,6 +1,8 @@
 package com.github.gzougianos.packagraph.analysis;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)

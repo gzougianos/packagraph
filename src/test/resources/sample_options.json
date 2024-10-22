@@ -13,5 +13,9 @@
       "rename": "com.github.com.",
       "to": ""
     }
-  ]
+  ],
+  "outputImage": {
+    "path": "target/packagraph.png",
+    "overwrite": true
+  }
 }

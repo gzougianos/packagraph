@@ -1,0 +1,28 @@
+{
+  "includeOnlyFromDirectories": false,
+  "directories": [
+    "./src/main/java"
+  ],
+  "renames": [
+    {
+      "rename": "java.*,lombok.*",
+      "to": ""
+    },
+    {
+      "rename": "com.github.javaparser.*",
+      "to": "JavaParser"
+    },
+    {
+      "rename": "com.github.javaparser.*",
+      "to": "JavaParser"
+    },
+    {
+      "rename": "guru.nidi.*",
+      "to": "Graphviz"
+    }
+  ],
+  "outputImage": {
+    "path": "./packagraph.png",
+    "overwrite": true
+  }
+}

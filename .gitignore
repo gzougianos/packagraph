@@ -37,3 +37,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+#Exported from manual tests
+packagraph.png

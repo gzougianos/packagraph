@@ -4,7 +4,6 @@ import com.github.gzougianos.packagraph.ResourcesFolder;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

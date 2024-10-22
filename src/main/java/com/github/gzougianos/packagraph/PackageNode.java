@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
