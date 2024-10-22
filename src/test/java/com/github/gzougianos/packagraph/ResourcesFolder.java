@@ -13,7 +13,7 @@ public class ResourcesFolder {
             if (file.isDirectory())
                 return file;
         }
-        
+
         throw new RuntimeException("Test resources folder could not be found");
     }
 }

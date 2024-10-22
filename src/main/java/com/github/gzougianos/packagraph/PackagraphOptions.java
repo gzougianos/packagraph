@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 public class PackagraphOptions {
-    
+
     private static final String COMMA = ",";
     @Getter
     private boolean includeOnlyFromDirectories;
