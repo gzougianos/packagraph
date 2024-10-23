@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -27,6 +28,7 @@ public class PackagraphOptions {
     private String[] directories;
     private List<Definition> definitions;
     private OutputImage outputImage;
+    private NodeStyle globalStyle;
 
 
     public static PackagraphOptions fromJson(File optionsFile) throws IOException {
@@ -62,6 +64,21 @@ public class PackagraphOptions {
 
     public boolean allowsOverwriteImageOutput() {
         return outputImage.overwrite;
+    }
+
+    public NodeStyle styleOf(Package packag) {
+        for (var definition : definitions()) {
+            if (definition.refersToRenamed(packag)) {
+                return Optional.ofNullable(definition.style())
+                        .map(style -> style.inheritGlobal(globalStyle()))
+                        .orElse(globalStyle());
+            }
+        }
+        return globalStyle();
+    }
+
+    private NodeStyle globalStyle() {
+        return globalStyle == null ? NodeStyle.DEFAULT : globalStyle;
     }
 
 
@@ -107,18 +124,22 @@ public class PackagraphOptions {
         return Arrays.stream(directories).map(File::new).toArray(File[]::new);
     }
 
-    List<Definition> definitions() {
+    private List<Definition> definitions() {
         if (isEmpty(definitions))
             return Collections.emptyList();
 
         return definitions;
     }
 
-    record Definition(String packages, String as) {
+    record Definition(String packages, String as, NodeStyle style) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
                     .anyMatch(pattern -> packag.name().matches(pattern));
+        }
+
+        private boolean refersToRenamed(Package packag) {
+            return refersTo(packag) || packag.name().equals(as.trim());
         }
     }
 

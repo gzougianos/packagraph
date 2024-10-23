@@ -7,15 +7,43 @@
   "definitions": [
     {
       "packages": "java.util.*",
-      "as": "java"
+      "as": "java",
+      "style": {
+        "fillcolor": "green",
+        "inheritGlobal": true
+      }
     },
     {
-      "packages": "com.github.com.",
-      "as": ""
+      "packages": "com.github.com",
+      "as": "",
+      "style": {
+        "fillcolor": "blue",
+        "inheritGlobal": false
+      }
     }
   ],
   "outputImage": {
     "path": "target/packagraph.png",
     "overwrite": true
+  },
+  "globalStyle": {
+    "shape": "rectangle",
+    "style": "rounded",
+    "fillcolor": "lightblue",
+    "color": "black",
+    "fontcolor": "black",
+    "fontsize": 10,
+    "fontname": "Arial",
+    "width": 1,
+    "height": 1,
+    "fixedsize": true,
+    "tooltip": "tooltip",
+    "url": "url",
+    "target": "target",
+    "layer": 1,
+    "group": "group",
+    "rank": "same",
+    "sides": 4,
+    "peripheries": 1
   }
 }

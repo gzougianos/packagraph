@@ -3,6 +3,7 @@ package com.github.gzougianos.packagraph;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,9 +19,17 @@ class PackagraphShould {
     // +-------------+                 +-------------+
     @Test
     void create_nodes_for_simple_dependencies() {
-        PackagraphOptions options = PackagraphOptions.builder()
-                .directories(projectFolder("simple"))
-                .build();
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("simple")));
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
         assertEquals(2, packageNodes.size());
@@ -38,9 +47,17 @@ class PackagraphShould {
     //       |------------------------------|
     @Test
     void understand_circular_dependencies() {
-        PackagraphOptions options = PackagraphOptions.builder()
-                .directories(projectFolder("circular"))
-                .build();
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("circular")));
 
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
@@ -64,9 +81,17 @@ class PackagraphShould {
     //  +-------------+
     @Test
     void create_nodes_for_external_dependencies() {
-        PackagraphOptions options = PackagraphOptions.builder()
-                .directories(projectFolder("externaldependency"))
-                .build();
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("externaldependency")));
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
         assertEquals(3, packageNodes.size());
@@ -84,10 +109,18 @@ class PackagraphShould {
     //+-------------+                 +-------------+
     @Test
     void exclude_dependencies_from_packages_outside_the_directories() {
-        PackagraphOptions options = PackagraphOptions.builder()
-                .directories(projectFolder("externaldependency"))
-                .includeOnlyFromDirectories(true)
-                .build();
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "includeOnlyFromDirectories": true,
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("externaldependency")));
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
         assertEquals(2, packageNodes.size());
@@ -109,12 +142,28 @@ class PackagraphShould {
     //  +--------------+
     @Test
     void rename_packages() {
-        PackagraphOptions options = PackagraphOptions.builder()
-                .directories(projectFolder("renamings"))
-                .definitions(List.of(
-                        new PackagraphOptions.Definition("java.*", "Java"),
-                        new PackagraphOptions.Definition("renamings.*", "Renamings")))
-                .build();
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "includeOnlyFromDirectories": false,
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "definitions": [
+                      {
+                        "packages": "java.*",
+                        "as": "Java"
+                      },
+                      {
+                        "packages": "renamings.*",
+                        "as": "Renamings"
+                      }
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("renamings")));
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
         assertEquals(3, packageNodes.size());
@@ -131,13 +180,32 @@ class PackagraphShould {
     // +------------+
     @Test
     void merge_packages_based_on_names() {
-        PackagraphOptions options = PackagraphOptions.builder()
-                .directories(projectFolder("renamings"))
-                .definitions(List.of(
-                        new PackagraphOptions.Definition("java.*", "Java"),
-                        new PackagraphOptions.Definition("assume.something.to.be.excluded", "Java"),
-                        new PackagraphOptions.Definition("renamings.*", "Java")))
-                .build();
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "includeOnlyFromDirectories": false,
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "definitions": [
+                      {
+                        "packages": "java.*",
+                        "as": "Java"
+                      },
+                      {
+                        "packages": "assume.something.to.be.excluded",
+                        "as": "Java"
+                      },
+                      {
+                        "packages": "renamings.*",
+                        "as": "Java"
+                      }
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("renamings")));
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
         assertEquals(1, packageNodes.size());
@@ -150,13 +218,32 @@ class PackagraphShould {
     //+------------+                 +------------+
     @Test
     void exclude_packages_with_empty_string_renaming() {
-        PackagraphOptions options = PackagraphOptions.builder()
-                .directories(projectFolder("renamings"))
-                .definitions(List.of(
-                        new PackagraphOptions.Definition("java.*", "Java"),
-                        new PackagraphOptions.Definition("assume.something.to.be.excluded.*", ""),
-                        new PackagraphOptions.Definition("renamings.*", "Renamings")))
-                .build();
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "includeOnlyFromDirectories": false,
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "definitions": [
+                      {
+                        "packages": "java.*",
+                        "as": "Java"
+                      },
+                      {
+                        "packages": "assume.something.to.be.excluded",
+                        "as": ""
+                      },
+                      {
+                        "packages": "renamings.*",
+                        "as": "Renamings"
+                      }
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("renamings")));
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
         assertEquals(2, packageNodes.size());
@@ -174,7 +261,7 @@ class PackagraphShould {
         return foundNodes.getFirst();
     }
 
-    private static String[] projectFolder(String name) {
-        return new String[]{new File(FOR_GRAPH_CREATION, name).getAbsolutePath()};
+    private static String projectFolder(String name) {
+        return new File(FOR_GRAPH_CREATION, name).getPath().replace('\\', '/');
     }
 }

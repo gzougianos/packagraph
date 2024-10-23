@@ -3,24 +3,32 @@
   "directories": [
     "./src/main/java"
   ],
-  "renames": [
+  "definitions": [
     {
-      "rename": "java.*,lombok.*",
-      "to": ""
+      "packages": "java.*,lombok.*",
+      "as": ""
     },
     {
-      "rename": "com.github.javaparser.*",
-      "to": "JavaParser"
+      "packages": "com.github.javaparser.*",
+      "as": "JavaParser",
+      "style": {
+        "color": "blue",
+        "inheritGlobal": false
+      }
     },
     {
-      "rename": "com.github.javaparser.*",
-      "to": "JavaParser"
-    },
-    {
-      "rename": "guru.nidi.*",
-      "to": "Graphviz"
+      "packages": "guru.nidi.*",
+      "as": "Graphviz",
+      "style": {
+        "style": "filled",
+        "fillcolor": "green"
+      }
     }
   ],
+  "globalStyle": {
+    "fontsize": 20,
+    "shape": "box"
+  },
   "outputImage": {
     "path": "./packagraph.png",
     "overwrite": true
