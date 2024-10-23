@@ -20,17 +20,18 @@ class PackagraphOptionsShould {
         assertEquals(new File("src/main/java"), options.directories()[0]);
         assertEquals(new File("src/test/java"), options.directories()[1]);
 
-        assertEquals(2, options.renames().size());
-        var rename1 = options.renames().get(0);
-        assertEquals("java.util.*", rename1.rename());
-        assertEquals("java", rename1.to());
+        assertEquals(2, options.definitions().size());
+        var rename1 = options.definitions().get(0);
+        assertEquals("java.util.*", rename1.packages());
+        assertEquals("java", rename1.as());
 
-        var rename2 = options.renames().get(1);
-        assertEquals("com.github.com.", rename2.rename());
-        assertEquals("", rename2.to());
+        var rename2 = options.definitions().get(1);
+        assertEquals("com.github.com.", rename2.packages());
+        assertEquals("", rename2.as());
 
         assertEquals(new File("target/packagraph.png"), options.outputFile());
         assertTrue(options.allowsOverwriteImageOutput());
+
     }
 
 }

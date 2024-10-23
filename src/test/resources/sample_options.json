@@ -4,14 +4,14 @@
     "src/main/java",
     "src/test/java"
   ],
-  "renames": [
+  "definitions": [
     {
-      "rename": "java.util.*",
-      "to": "java"
+      "packages": "java.util.*",
+      "as": "java"
     },
     {
-      "rename": "com.github.com.",
-      "to": ""
+      "packages": "com.github.com.",
+      "as": ""
     }
   ],
   "outputImage": {

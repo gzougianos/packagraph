@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class PackagraphOptions {
     @Getter
     private boolean includeOnlyFromDirectories;
     private String[] directories;
-    private List<Rename> renames;
+    private List<Definition> definitions;
     private OutputImage outputImage;
 
 
@@ -91,28 +92,31 @@ public class PackagraphOptions {
     }
 
     Package rename(Package packag) {
-        if (isEmpty(renames))
+        if (isEmpty(definitions))
             return packag;
 
-        for (var rename : renames) {
+        for (var rename : definitions) {
             if (rename.refersTo(packag)) {
-                return packag.renamed(rename.to().trim());
+                return packag.renamed(rename.as().trim());
             }
         }
         return packag;
-    }
-
-    List<Rename> renames() {
-        return renames;
     }
 
     public File[] directories() {
         return Arrays.stream(directories).map(File::new).toArray(File[]::new);
     }
 
-    record Rename(String rename, String to) {
+    List<Definition> definitions() {
+        if (isEmpty(definitions))
+            return Collections.emptyList();
+
+        return definitions;
+    }
+
+    record Definition(String packages, String as) {
         private boolean refersTo(Package packag) {
-            return Arrays.stream(rename.split(COMMA))
+            return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
                     .anyMatch(pattern -> packag.name().matches(pattern));
         }
@@ -124,9 +128,6 @@ public class PackagraphOptions {
 
     private static boolean isEmpty(List<?> list) {
         return list == null || list.isEmpty();
-    }
-
-    record Cluster(String name, String[] packages) {
     }
 
     private record OutputImage(String path, boolean overwrite) {

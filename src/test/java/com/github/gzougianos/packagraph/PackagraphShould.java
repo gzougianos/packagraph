@@ -111,9 +111,9 @@ class PackagraphShould {
     void rename_packages() {
         PackagraphOptions options = PackagraphOptions.builder()
                 .directories(projectFolder("renamings"))
-                .renames(List.of(
-                        new PackagraphOptions.Rename("java.*", "Java"),
-                        new PackagraphOptions.Rename("renamings.*", "Renamings")))
+                .definitions(List.of(
+                        new PackagraphOptions.Definition("java.*", "Java"),
+                        new PackagraphOptions.Definition("renamings.*", "Renamings")))
                 .build();
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
@@ -133,10 +133,10 @@ class PackagraphShould {
     void merge_packages_based_on_names() {
         PackagraphOptions options = PackagraphOptions.builder()
                 .directories(projectFolder("renamings"))
-                .renames(List.of(
-                        new PackagraphOptions.Rename("java.*", "Java"),
-                        new PackagraphOptions.Rename("assume.something.to.be.excluded", "Java"),
-                        new PackagraphOptions.Rename("renamings.*", "Java")))
+                .definitions(List.of(
+                        new PackagraphOptions.Definition("java.*", "Java"),
+                        new PackagraphOptions.Definition("assume.something.to.be.excluded", "Java"),
+                        new PackagraphOptions.Definition("renamings.*", "Java")))
                 .build();
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
@@ -152,10 +152,10 @@ class PackagraphShould {
     void exclude_packages_with_empty_string_renaming() {
         PackagraphOptions options = PackagraphOptions.builder()
                 .directories(projectFolder("renamings"))
-                .renames(List.of(
-                        new PackagraphOptions.Rename("java.*", "Java"),
-                        new PackagraphOptions.Rename("assume.something.to.be.excluded.*", ""),
-                        new PackagraphOptions.Rename("renamings.*", "Renamings")))
+                .definitions(List.of(
+                        new PackagraphOptions.Definition("java.*", "Java"),
+                        new PackagraphOptions.Definition("assume.something.to.be.excluded.*", ""),
+                        new PackagraphOptions.Definition("renamings.*", "Renamings")))
                 .build();
 
         Collection<PackageNode> packageNodes = Packagraph.create(options);
