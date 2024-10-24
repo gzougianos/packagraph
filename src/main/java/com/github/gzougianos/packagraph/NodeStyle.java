@@ -1,7 +1,5 @@
 package com.github.gzougianos.packagraph;
 
-import javax.swing.text.Style;
-import java.util.List;
 import java.util.Objects;
 
 public record NodeStyle(
