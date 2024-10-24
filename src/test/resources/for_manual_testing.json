@@ -5,6 +5,10 @@
   ],
   "definitions": [
     {
+      "packages": "com.github.gzougianos\\.(.*)",
+      "as": "$1"
+    },
+    {
       "packages": "java.*,lombok.*",
       "as": ""
     },

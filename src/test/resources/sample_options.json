@@ -20,6 +20,10 @@
         "fillcolor": "blue",
         "inheritGlobal": false
       }
+    },
+    {
+      "packages": "com.something\\.(.*)",
+      "as": "$1"
     }
   ],
   "outputImage": {

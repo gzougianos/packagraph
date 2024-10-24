@@ -43,6 +43,29 @@ class PackagraphOptionsShould {
         assertEquals("", renamedGithub.name());
     }
 
+    //Suppose 3 packages: com.something.pack1 and com.something.pack2 and com.something.pack1.subpack
+    //We want to trim the "com.something" part and let only pack1/pack2/pack1.subpack
+    //    {
+    //      "packages": "com.something\\.(.*)",
+    //      "as": "$1"
+    //    }
+    @Test
+    void rename_packages_with_regex_groups() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        Package pack1 = PackageFactoryForTests.create("com.something.pack1");
+        Package pack2 = PackageFactoryForTests.create("com.something.pack2");
+        Package pack1Subpack = PackageFactoryForTests.create("com.something.pack1.subpack");
+
+        Package renamedPack1 = options.rename(pack1);
+        assertEquals("pack1", renamedPack1.name());
+
+        Package renamedPack2 = options.rename(pack2);
+        assertEquals("pack2", renamedPack2.name());
+
+        Package renamedPack1Subpack = options.rename(pack1Subpack);
+        assertEquals("pack1.subpack", renamedPack1Subpack.name());
+    }
+
     @Test
     void know_the_style_of_a_package() throws Exception {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);

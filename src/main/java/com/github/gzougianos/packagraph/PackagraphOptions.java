@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -114,7 +116,9 @@ public class PackagraphOptions {
 
         for (var rename : definitions) {
             if (rename.refersTo(packag)) {
-                return packag.renamed(rename.as().trim());
+                String pattern = rename.findMatchingPattern(packag);
+                String result = packag.name().replaceAll(pattern, rename.as()).trim();
+                return packag.renamed(result);
             }
         }
         return packag;
@@ -140,6 +144,13 @@ public class PackagraphOptions {
 
         private boolean refersToRenamed(Package packag) {
             return refersTo(packag) || packag.name().equals(as.trim());
+        }
+
+        public String findMatchingPattern(Package packag) {
+            return Arrays.stream(packages.split(COMMA))
+                    .filter(pattern -> !isEmpty(pattern))
+                    .filter(pattern -> packag.name().matches(pattern))
+                    .findFirst().orElseThrow();
         }
     }
 
