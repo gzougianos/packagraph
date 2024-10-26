@@ -45,7 +45,7 @@ public record NodeStyle(
             true);
 
     public NodeStyle inheritGlobal(NodeStyle global) {
-        if (Objects.equals(Boolean.FALSE, inheritGlobal))
+        if (inheritGlobalIsExplicitlyDisabled())
             return this;
 
         var shape = this.shape == null ? global.shape : this.shape;
@@ -87,5 +87,9 @@ public record NodeStyle(
                 sides,
                 peripheries,
                 false);
+    }
+
+    private boolean inheritGlobalIsExplicitlyDisabled() {
+        return Objects.equals(Boolean.FALSE, inheritGlobal);
     }
 }
