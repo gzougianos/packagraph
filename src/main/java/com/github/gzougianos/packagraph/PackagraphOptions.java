@@ -29,6 +29,7 @@ public class PackagraphOptions {
     private List<Definition> definitions;
     private OutputImage outputImage;
     private NodeStyle globalStyle;
+    private EdgeStyle globalEdgeStyle;
 
 
     public static PackagraphOptions fromJson(File optionsFile) throws IOException {
@@ -75,6 +76,10 @@ public class PackagraphOptions {
             }
         }
         return globalStyle();
+    }
+
+    public EdgeStyle globalEdgeStyle() {
+        return globalEdgeStyle == null ? EdgeStyle.DEFAULT : globalEdgeStyle;
     }
 
     private NodeStyle globalStyle() {

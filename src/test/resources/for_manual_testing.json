@@ -33,6 +33,11 @@
     "fontsize": 20,
     "shape": "box"
   },
+  "globalEdgeStyle": {
+    "color": "#0000FF",
+    "style": "dashed",
+    "weight": 1
+  },
   "outputImage": {
     "path": "./packagraph.png",
     "overwrite": true

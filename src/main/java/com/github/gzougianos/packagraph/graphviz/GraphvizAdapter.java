@@ -8,6 +8,7 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.Graph;
+import guru.nidi.graphviz.model.Link;
 import guru.nidi.graphviz.model.Node;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,6 +16,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static guru.nidi.graphviz.model.Link.to;
 
 @Slf4j
 class GraphvizAdapter implements GraphLibrary {
@@ -34,7 +37,9 @@ class GraphvizAdapter implements GraphLibrary {
 
             for (var dependency : node.dependencies()) {
                 var dependencyNode = allNodesForAllPackages.get(dependency.packag());
-                g = g.with(graphNode.link(dependencyNode));
+                Link edge = to(dependencyNode);
+                edge = applyStyle(options, edge);
+                g = g.with(graphNode.link(edge));
             }
         }
 
@@ -51,6 +56,51 @@ class GraphvizAdapter implements GraphLibrary {
         } catch (IOException e) {
             log.error("Failed to generate graph image", e);
         }
+    }
+
+    private Link applyStyle(PackagraphOptions options, Link edge) {
+        var style = options.globalEdgeStyle();
+        if (style.label() != null) {
+            edge = edge.with("label", style.label());
+        }
+        if (style.color() != null) {
+            edge = edge.with("color", style.color());
+        }
+        if (style.style() != null) {
+            edge = edge.with("style", style.style());
+        }
+        if (style.weight() != null) {
+            edge = edge.with("weight", style.weight().toString());
+        }
+        if (style.penwidth() != null) {
+            edge = edge.with("penwidth", style.penwidth().toString());
+        }
+        if (style.arrowhead() != null) {
+            edge = edge.with("arrowhead", style.arrowhead());
+        }
+        if (style.arrowsize() != null) {
+            edge = edge.with("arrowsize", style.arrowsize().toString());
+        }
+        if (style.dir() != null) {
+            edge = edge.with("dir", style.dir());
+        }
+        if (style.constraint() != null) {
+            edge = edge.with("constraint", style.constraint().toString());
+        }
+        if (style.fontsize() != null) {
+            edge = edge.with("fontsize", style.fontsize().toString());
+        }
+        if (style.fontcolor() != null) {
+            edge = edge.with("fontcolor", style.fontcolor());
+        }
+        if (style.decorate() != null) {
+            edge = edge.with("decorate", style.decorate().toString());
+        }
+        if (style.url() != null) {
+            edge = edge.with("URL", style.url());
+        }
+
+        return edge;
     }
 
     private static boolean fileExistsAndCantOverwrite(PackagraphOptions options) {

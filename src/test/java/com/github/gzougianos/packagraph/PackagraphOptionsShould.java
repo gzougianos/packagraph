@@ -119,6 +119,26 @@ class PackagraphOptionsShould {
     }
 
     @Test
+    void know_the_edge_style() throws IOException {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        var edgeStyle = options.globalEdgeStyle();
+
+        assertEquals("Sample Edge", edgeStyle.label());
+        assertEquals("blue", edgeStyle.color());
+        assertEquals("dashed", edgeStyle.style());
+        assertEquals(2, edgeStyle.weight());
+        assertEquals(1.5, edgeStyle.penwidth());
+        assertEquals("diamond", edgeStyle.arrowhead());
+        assertEquals(1.2, edgeStyle.arrowsize());
+        assertEquals("both", edgeStyle.dir());
+        assertTrue(edgeStyle.constraint());
+        assertEquals(12, edgeStyle.fontsize());
+        assertEquals("black", edgeStyle.fontcolor());
+        assertTrue(edgeStyle.decorate());
+        assertEquals("https://example.com", edgeStyle.url());
+    }
+
+    @Test
     void not_inherit_global_style() throws Exception {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
         Package github = PackageFactoryForTests.create("com.github.com");
