@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
-public final class JavaFilesFinder {
+final class JavaFilesFinder {
 
     public static List<File> findWithin(Collection<File> directories) {
         return findWithin(directories.toArray(new File[0]));

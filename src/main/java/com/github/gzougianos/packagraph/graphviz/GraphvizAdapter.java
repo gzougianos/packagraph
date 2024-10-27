@@ -144,7 +144,7 @@ class GraphvizAdapter implements GraphLibrary {
     private static <T> T applyAttributeIfNotNull(Supplier<Object> valueGetter, String attrName, Attributed<T, ?> node) {
         var value = valueGetter.get();
         var isNull = value == null || "null".equalsIgnoreCase(String.valueOf(value));
-        
+
         if (isNull)
             return (T) node;//as is, nothing changes
 
