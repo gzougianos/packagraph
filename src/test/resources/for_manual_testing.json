@@ -33,6 +33,12 @@
       }
     }
   ],
+  "clusters": [
+    {
+      "packages": "packagraph.*",
+      "name": "Packagraph"
+    }
+  ],
   "globalStyle": {
     "fontsize": 20,
     "shape": "box"

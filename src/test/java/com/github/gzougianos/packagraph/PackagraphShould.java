@@ -252,6 +252,50 @@ class PackagraphShould {
         assertTrue(renamings.dependsOn(java));
     }
 
+    //                         +-----------+
+    //                         | clusters  |
+    //                         +-----------+
+    //             /                |                \
+    //            /                 |                 \
+    //           /                  |                  \
+    //          v                   v                   v
+    // +--------------------+     +----------------------------+
+    // | clusters.subpackage |    |       java.basics          |
+    // +--------------------+     |  +---------+  +---------+  |
+    //                            |  | java.io |  |java.util|  |
+    //                            |  +---------+  +---------+  |
+    //                            +----------------------------+
+    @Test
+    void put_package_nodes_into_clusters() {
+        var options = PackagraphOptions.fromJson("""
+                {
+                    "includeOnlyFromDirectories": false,
+                    "directories": [
+                      "%PROJECT_DIR%"
+                    ],
+                    "definitions": [],
+                    "clusters" : [
+                        {
+                            "packages": "java.*",
+                            "name": "Standard Java"
+                        }
+                    ],
+                    "outputImage": {
+                        "path": "target/packagraph.png",
+                        "overwrite": true
+                    }
+                }
+                """.replace("%PROJECT_DIR%", projectFolder("clusters")));
+
+        Collection<PackageNode> packageNodes = Packagraph.create(options);
+        assertEquals(4, packageNodes.size());
+
+        var io = findUniqueNode("java.io", packageNodes);
+        var util = findUniqueNode("java.util", packageNodes);
+        assertEquals("Standard Java", io.cluster().orElseThrow());
+        assertEquals("Standard Java", util.cluster().orElseThrow());
+    }
+
     private static PackageNode findUniqueNode(String packageName, Collection<PackageNode> nodes) {
         List<PackageNode> foundNodes = nodes.stream().filter(p -> p.packag().name().equals(packageName)).toList();
         if (foundNodes.size() != 1) {

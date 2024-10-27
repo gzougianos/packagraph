@@ -8,6 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 
 @Accessors(fluent = true)
 @ToString
@@ -17,12 +18,17 @@ public class PackageNode {
     @Getter
     @EqualsAndHashCode.Include
     private final Package packag;
+    private final String cluster;
     private final Collection<PackageNode> dependencies = new HashSet<>();
 
-    public PackageNode(Package packag) {
+    PackageNode(Package packag, String cluster) {
         this.packag = packag;
+        this.cluster = cluster;
     }
 
+    public Optional<String> cluster() {
+        return Optional.ofNullable(cluster);
+    }
 
     public void dependOn(PackageNode node) {
         if (node == this) {

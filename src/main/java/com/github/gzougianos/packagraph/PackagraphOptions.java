@@ -27,6 +27,7 @@ public class PackagraphOptions {
     private boolean includeOnlyFromDirectories;
     private String[] directories;
     private List<Definition> definitions;
+    private List<Cluster> clusters;
     private OutputImage outputImage;
     private NodeStyle globalStyle;
     private EdgeStyle globalEdgeStyle;
@@ -60,7 +61,7 @@ public class PackagraphOptions {
         return globalEdgeStyle == null ? EdgeStyle.DEFAULT : globalEdgeStyle;
     }
 
-    private NodeStyle globalStyle() {
+    public NodeStyle globalStyle() {
         return globalStyle == null ? NodeStyle.DEFAULT : globalStyle;
     }
 
@@ -102,14 +103,37 @@ public class PackagraphOptions {
         return Arrays.stream(directories).map(File::new).toArray(File[]::new);
     }
 
-    private List<Definition> definitions() {
-        if (isEmpty(definitions))
-            return Collections.emptyList();
 
-        return definitions;
+    public Optional<String> clusterOf(Package packag) {
+        if (isEmpty(clusters))
+            return Optional.empty();
+
+        for (var cluster : clusters()) {
+            if (cluster.refersTo(packag)) {
+                return Optional.of(cluster.name());
+            }
+        }
+        return Optional.empty();
     }
 
-    record Definition(String packages, String as, NodeStyle style, EdgeStyle edgeInStyle) {
+    private record Cluster(String packages, String name) {
+
+        public boolean refersTo(Package packag) {
+            return Arrays.stream(packages.split(COMMA))
+                    .filter(pattern -> !isEmpty(pattern))
+                    .anyMatch(pattern -> packag.name().matches(pattern));
+        }
+    }
+
+    private List<Definition> definitions() {
+        return alwaysNonNull(definitions);
+    }
+
+    private List<Cluster> clusters() {
+        return alwaysNonNull(clusters);
+    }
+
+    private record Definition(String packages, String as, NodeStyle style, EdgeStyle edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
@@ -162,6 +186,10 @@ public class PackagraphOptions {
             throw new IllegalArgumentException("Output file already exists: " + options.outputFile().getAbsolutePath());
 
         return options;
+    }
+
+    private static <T> List<T> alwaysNonNull(List<T> list) {
+        return list == null ? List.of() : list;
     }
 
     private static boolean isEmpty(String str) {

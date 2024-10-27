@@ -34,6 +34,12 @@
       "as": "$1"
     }
   ],
+  "clusters": [
+    {
+      "packages": "java.util.*",
+      "name": "something"
+    }
+  ],
   "outputImage": {
     "path": "target/packagraph.png",
     "overwrite": true

@@ -4,6 +4,7 @@ import com.github.gzougianos.packagraph.GraphLibrary;
 import com.github.gzougianos.packagraph.Packagraph;
 import com.github.gzougianos.packagraph.PackagraphOptions;
 import com.github.gzougianos.packagraph.ResourcesFolder;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -13,6 +14,7 @@ class GraphvizManualPlayground {
     private static final File MANUAL_TESTING_JSON = new File(ResourcesFolder.asFile(), "for_manual_testing.json");
 
     @Test
+    @Disabled
     void manual_testing() throws IOException {
 
         PackagraphOptions options = PackagraphOptions.fromJson(MANUAL_TESTING_JSON);

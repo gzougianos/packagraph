@@ -41,13 +41,17 @@ public class Packagraph {
         final Set<Package> allPackages = combinePackages(internalPackages, dependencies);
 
         final Map<Package, PackageNode> allNodes = allPackages.stream()
-                .map(PackageNode::new)
+                .map(this::createPackageNodeFor)
                 .collect(Collectors.toMap(PackageNode::packag, Function.identity()));
 
 
         dependencies.forEach(dependency -> allNodes.get(dependency.from()).dependOn(allNodes.get(dependency.to())));
 
         return allNodes.values();
+    }
+
+    private PackageNode createPackageNodeFor(Package packag) {
+        return new PackageNode(packag, options.clusterOf(packag).orElse(null));
     }
 
     private static Set<Package> combinePackages(Set<Package> internalPackages, HashSet<Dependency> dependencies) {
