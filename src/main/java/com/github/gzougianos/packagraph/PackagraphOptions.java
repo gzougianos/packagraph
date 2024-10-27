@@ -42,7 +42,7 @@ public class PackagraphOptions {
     public NodeStyle styleOf(Package packag) {
         return findDefinitionForRenamed(packag)
                 .map(Definition::style)
-                .map(style -> style.inherit(globalStyle()))
+                .map(style -> style.inheritFrom(globalStyle()))
                 .orElse(globalStyle());
     }
 

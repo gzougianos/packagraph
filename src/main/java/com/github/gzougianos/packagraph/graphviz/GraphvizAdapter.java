@@ -1,6 +1,8 @@
 package com.github.gzougianos.packagraph.graphviz;
 
-import com.github.gzougianos.packagraph.*;
+import com.github.gzougianos.packagraph.GraphLibrary;
+import com.github.gzougianos.packagraph.PackageNode;
+import com.github.gzougianos.packagraph.PackagraphOptions;
 import com.github.gzougianos.packagraph.analysis.Package;
 import com.github.gzougianos.packagraph.style.ClusterStyle;
 import com.github.gzougianos.packagraph.style.NodeStyle;

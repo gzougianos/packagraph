@@ -42,7 +42,7 @@ public record NodeStyle(
             0,
             true);
 
-    public NodeStyle inherit(NodeStyle otherStyle) {
+    public NodeStyle inheritFrom(NodeStyle otherStyle) {
         if (inheritGlobalIsExplicitlyDisabled())
             return this;
 
