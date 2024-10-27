@@ -11,6 +11,10 @@
       "style": {
         "fillcolor": "green",
         "inheritGlobal": true
+      },
+      "edgeInStyle": {
+        "style": "solid",
+        "color": "red"
       }
     },
     {
@@ -19,6 +23,10 @@
       "style": {
         "fillcolor": "blue",
         "inheritGlobal": false
+      },
+      "edgeInStyle": {
+        "inheritGlobal": false,
+        "color": "green"
       }
     },
     {

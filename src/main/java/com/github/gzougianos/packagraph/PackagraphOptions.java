@@ -68,17 +68,26 @@ public class PackagraphOptions {
     }
 
     public NodeStyle styleOf(Package packag) {
-        for (var definition : definitions()) {
-            if (definition.refersToRenamed(packag)) {
-                return Optional.ofNullable(definition.style())
-                        .map(style -> style.inheritGlobal(globalStyle()))
-                        .orElse(globalStyle());
-            }
-        }
-        return globalStyle();
+        return findDefinitionForRenamed(packag)
+                .map(Definition::style)
+                .map(style -> style.inheritGlobal(globalStyle()))
+                .orElse(globalStyle());
     }
 
-    public EdgeStyle globalEdgeStyle() {
+    public EdgeStyle edgeInStyleOf(Package packag) {
+        return findDefinitionForRenamed(packag)
+                .map(Definition::edgeInStyle)
+                .map(style -> style.inheritGlobal(globalEdgeStyle()))
+                .orElse(globalEdgeStyle());
+    }
+
+    private Optional<Definition> findDefinitionForRenamed(Package packag) {
+        return definitions().stream()
+                .filter(definition -> definition.refersToRenamed(packag))
+                .findFirst();
+    }
+
+    private EdgeStyle globalEdgeStyle() {
         return globalEdgeStyle == null ? EdgeStyle.DEFAULT : globalEdgeStyle;
     }
 
@@ -117,7 +126,7 @@ public class PackagraphOptions {
         if (isEmpty(definitions))
             return packag;
 
-        for (var rename : definitions) {
+        for (var rename : definitions()) {
             if (rename.refersTo(packag)) {
                 String pattern = rename.findMatchingPattern(packag);
                 String result = packag.name().replaceAll(pattern, rename.as()).trim();
@@ -138,7 +147,7 @@ public class PackagraphOptions {
         return definitions;
     }
 
-    record Definition(String packages, String as, NodeStyle style) {
+    record Definition(String packages, String as, NodeStyle style, EdgeStyle edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))

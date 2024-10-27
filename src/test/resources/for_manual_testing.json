@@ -26,6 +26,10 @@
       "style": {
         "style": "filled",
         "fillcolor": "green"
+      },
+      "edgeInStyle": {
+        "style": "solid",
+        "color": "green"
       }
     }
   ],

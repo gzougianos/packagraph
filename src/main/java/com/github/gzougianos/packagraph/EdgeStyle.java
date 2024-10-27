@@ -1,5 +1,7 @@
 package com.github.gzougianos.packagraph;
 
+import java.util.Objects;
+
 public record EdgeStyle(
         // Text label on the edge
         String label,
@@ -38,13 +40,45 @@ public record EdgeStyle(
         Boolean decorate,
 
         // Hyperlink attached to the edge (useful for interactive formats like SVG)
-        String url
+        String url,
+
+        Boolean inheritGlobal
 ) {
     public static final EdgeStyle DEFAULT = new EdgeStyle(
-            null, null, null, null, null, null, null, null, null, null, null, null, null
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            true
     );
 
-    public EdgeStyle {
+    EdgeStyle inheritGlobal(EdgeStyle global) {
+        if (Objects.equals(Boolean.FALSE, inheritGlobal))
+            return this;
 
+        var label = this.label == null ? global.label : this.label;
+        var color = this.color == null ? global.color : this.color;
+        var style = this.style == null ? global.style : this.style;
+        var weight = this.weight == null ? global.weight : this.weight;
+        var penwidth = this.penwidth == null ? global.penwidth : this.penwidth;
+        var arrowhead = this.arrowhead == null ? global.arrowhead : this.arrowhead;
+        var arrowsize = this.arrowsize == null ? global.arrowsize : this.arrowsize;
+        var dir = this.dir == null ? global.dir : this.dir;
+        var constraint = this.constraint == null ? global.constraint : this.constraint;
+        var fontsize = this.fontsize == null ? global.fontsize : this.fontsize;
+        var fontcolor = this.fontcolor == null ? global.fontcolor : this.fontcolor;
+        var decorate = this.decorate == null ? global.decorate : this.decorate;
+        var url = this.url == null ? global.url : this.url;
+        return new EdgeStyle(label, color, style, weight, penwidth, arrowhead, arrowsize,
+                dir, constraint, fontsize, fontcolor, decorate, url, inheritGlobal);
     }
 }

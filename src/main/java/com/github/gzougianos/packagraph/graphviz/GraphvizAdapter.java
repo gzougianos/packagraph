@@ -4,6 +4,7 @@ import com.github.gzougianos.packagraph.GraphLibrary;
 import com.github.gzougianos.packagraph.PackageNode;
 import com.github.gzougianos.packagraph.PackagraphOptions;
 import com.github.gzougianos.packagraph.analysis.Package;
+import guru.nidi.graphviz.attribute.Attributed;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Factory;
@@ -37,8 +38,8 @@ class GraphvizAdapter implements GraphLibrary {
 
             for (var dependency : node.dependencies()) {
                 var dependencyNode = allNodesForAllPackages.get(dependency.packag());
-                Link edge = to(dependencyNode);
-                edge = applyStyle(options, edge);
+
+                var edge = applyEdgeInStyle(options, to(dependencyNode), dependency.packag());
                 g = g.with(graphNode.link(edge));
             }
         }
@@ -58,47 +59,21 @@ class GraphvizAdapter implements GraphLibrary {
         }
     }
 
-    private Link applyStyle(PackagraphOptions options, Link edge) {
-        var style = options.globalEdgeStyle();
-        if (style.label() != null) {
-            edge = edge.with("label", style.label());
-        }
-        if (style.color() != null) {
-            edge = edge.with("color", style.color());
-        }
-        if (style.style() != null) {
-            edge = edge.with("style", style.style());
-        }
-        if (style.weight() != null) {
-            edge = edge.with("weight", style.weight().toString());
-        }
-        if (style.penwidth() != null) {
-            edge = edge.with("penwidth", style.penwidth().toString());
-        }
-        if (style.arrowhead() != null) {
-            edge = edge.with("arrowhead", style.arrowhead());
-        }
-        if (style.arrowsize() != null) {
-            edge = edge.with("arrowsize", style.arrowsize().toString());
-        }
-        if (style.dir() != null) {
-            edge = edge.with("dir", style.dir());
-        }
-        if (style.constraint() != null) {
-            edge = edge.with("constraint", style.constraint().toString());
-        }
-        if (style.fontsize() != null) {
-            edge = edge.with("fontsize", style.fontsize().toString());
-        }
-        if (style.fontcolor() != null) {
-            edge = edge.with("fontcolor", style.fontcolor());
-        }
-        if (style.decorate() != null) {
-            edge = edge.with("decorate", style.decorate().toString());
-        }
-        if (style.url() != null) {
-            edge = edge.with("URL", style.url());
-        }
+    private Link applyEdgeInStyle(PackagraphOptions options, Link edge, Package to) {
+        var style = options.edgeInStyleOf(to);
+        edge = applyAttributeIfNotNull(style::label, "label", edge);
+        edge = applyAttributeIfNotNull(style::color, "color", edge);
+        edge = applyAttributeIfNotNull(style::style, "style", edge);
+        edge = applyAttributeIfNotNull(style::weight, "weight", edge);
+        edge = applyAttributeIfNotNull(style::penwidth, "penwidth", edge);
+        edge = applyAttributeIfNotNull(style::arrowhead, "arrowhead", edge);
+        edge = applyAttributeIfNotNull(style::arrowsize, "arrowsize", edge);
+        edge = applyAttributeIfNotNull(style::dir, "dir", edge);
+        edge = applyAttributeIfNotNull(style::constraint, "constraint", edge);
+        edge = applyAttributeIfNotNull(style::fontsize, "fontsize", edge);
+        edge = applyAttributeIfNotNull(style::fontcolor, "fontcolor", edge);
+        edge = applyAttributeIfNotNull(style::decorate, "decorate", edge);
+        edge = applyAttributeIfNotNull(style::url, "url", edge);
 
         return edge;
     }
@@ -165,11 +140,14 @@ class GraphvizAdapter implements GraphLibrary {
         return node;
     }
 
-    private static Node applyAttributeIfNotNull(Supplier<Object> valueGetter, String attrName, Node node) {
+    @SuppressWarnings("unchecked")
+    private static <T> T applyAttributeIfNotNull(Supplier<Object> valueGetter, String attrName, Attributed<T, ?> node) {
         var value = valueGetter.get();
-        if (value != null) {
-            return node.with(attrName, value);
-        }
-        return node;
+        var isNull = value == null || "null".equalsIgnoreCase(String.valueOf(value));
+        
+        if (isNull)
+            return (T) node;//as is, nothing changes
+
+        return node.with(attrName, value);
     }
 }

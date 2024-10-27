@@ -118,25 +118,6 @@ class PackagraphOptionsShould {
         assertEquals(1, style.peripheries());
     }
 
-    @Test
-    void know_the_edge_style() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        var edgeStyle = options.globalEdgeStyle();
-
-        assertEquals("Sample Edge", edgeStyle.label());
-        assertEquals("blue", edgeStyle.color());
-        assertEquals("dashed", edgeStyle.style());
-        assertEquals(2, edgeStyle.weight());
-        assertEquals(1.5, edgeStyle.penwidth());
-        assertEquals("diamond", edgeStyle.arrowhead());
-        assertEquals(1.2, edgeStyle.arrowsize());
-        assertEquals("both", edgeStyle.dir());
-        assertTrue(edgeStyle.constraint());
-        assertEquals(12, edgeStyle.fontsize());
-        assertEquals("black", edgeStyle.fontcolor());
-        assertTrue(edgeStyle.decorate());
-        assertEquals("https://example.com", edgeStyle.url());
-    }
 
     @Test
     void not_inherit_global_style() throws Exception {
@@ -162,6 +143,50 @@ class PackagraphOptionsShould {
         assertNull(style.rank());
         assertNull(style.sides());
         assertNull(style.peripheries());
+    }
+
+
+    @Test
+    void know_the_edge_in_style() throws IOException {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        Package java = PackageFactoryForTests.create("java");
+        var edgeStyle = options.edgeInStyleOf(java);
+
+        assertEquals("Sample Edge", edgeStyle.label());
+        assertEquals("red", edgeStyle.color());
+        assertEquals("solid", edgeStyle.style());
+        assertEquals(2, edgeStyle.weight());
+        assertEquals(1.5, edgeStyle.penwidth());
+        assertEquals("diamond", edgeStyle.arrowhead());
+        assertEquals(1.2, edgeStyle.arrowsize());
+        assertEquals("both", edgeStyle.dir());
+        assertTrue(edgeStyle.constraint());
+        assertEquals(12, edgeStyle.fontsize());
+        assertEquals("black", edgeStyle.fontcolor());
+        assertTrue(edgeStyle.decorate());
+        assertEquals("https://example.com", edgeStyle.url());
+    }
+
+    @Test
+    void not_inherit_edge_in_style() throws IOException {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        Package java = PackageFactoryForTests.create("com.github.com");
+        var edgeStyle = options.edgeInStyleOf(java);
+
+        assertEquals("green", edgeStyle.color());
+        assertNull(edgeStyle.label());
+        assertNull(edgeStyle.style());
+        assertNull(edgeStyle.weight());
+        assertNull(edgeStyle.penwidth());
+        assertNull(edgeStyle.arrowhead());
+        assertNull(edgeStyle.arrowsize());
+        assertNull(edgeStyle.dir());
+        assertNull(edgeStyle.constraint());
+        assertNull(edgeStyle.fontsize());
+        assertNull(edgeStyle.fontcolor());
+        assertNull(edgeStyle.decorate());
+        assertNull(edgeStyle.url());
+
     }
 
 }
