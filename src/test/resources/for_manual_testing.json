@@ -36,7 +36,12 @@
   "clusters": [
     {
       "packages": "packagraph.*",
-      "name": "Packagraph"
+      "name": "Packagraph",
+      "style": {
+        "color": "red",
+        "label": "Clusterized",
+        "fontsize": 42
+      }
     }
   ],
   "globalStyle": {

@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -65,6 +64,14 @@ public class PackagraphOptions {
         return globalStyle == null ? NodeStyle.DEFAULT : globalStyle;
     }
 
+    public ClusterStyle clusterStyleOf(String clusterName) {
+        return alwaysNonNull(clusters).stream()
+                .filter(cluster -> cluster.name().equals(clusterName))
+                .findFirst()
+                .map(Cluster::style)
+                .orElse(ClusterStyle.DEFAULT);
+    }
+
 
     public File outputFile() {
         return new File(outputImage.path);
@@ -116,7 +123,7 @@ public class PackagraphOptions {
         return Optional.empty();
     }
 
-    private record Cluster(String packages, String name) {
+    private record Cluster(String packages, String name, ClusterStyle style) {
 
         public boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))

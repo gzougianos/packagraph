@@ -189,4 +189,15 @@ class PackagraphOptionsShould {
 
     }
 
+    @Test
+    void know_the_cluster_style() throws IOException {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        Package java = PackageFactoryForTests.create("java.util");
+        assertEquals("something", options.clusterOf(java).orElseThrow());
+
+        ClusterStyle clusterStyle = options.clusterStyleOf("something");
+        assertEquals("Something", clusterStyle.label());
+        assertEquals("42", clusterStyle.fontsize());
+        assertEquals("red", clusterStyle.color());
+    }
 }

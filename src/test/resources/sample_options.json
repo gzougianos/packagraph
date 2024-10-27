@@ -37,7 +37,12 @@
   "clusters": [
     {
       "packages": "java.util.*",
-      "name": "something"
+      "name": "something",
+      "style": {
+        "color": "red",
+        "label": "Something",
+        "fontsize": 42
+      }
     }
   ],
   "outputImage": {
