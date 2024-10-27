@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph;
+package com.github.gzougianos.packagraph.style;
 
 /**
  * Record representing Graphviz graph-level attributes with descriptions of accepted values.

@@ -2,6 +2,8 @@ package com.github.gzougianos.packagraph.graphviz;
 
 import com.github.gzougianos.packagraph.*;
 import com.github.gzougianos.packagraph.analysis.Package;
+import com.github.gzougianos.packagraph.style.ClusterStyle;
+import com.github.gzougianos.packagraph.style.NodeStyle;
 import guru.nidi.graphviz.attribute.Attributed;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
@@ -254,7 +256,6 @@ class GraphvizAdapter implements GraphLibrary {
         if (isNull)
             return;//as is, nothing changes
 
-        System.out.println("adding attribute: " + attrName + " = " + value);
         node.add(attrName, value);
     }
 }

@@ -2,6 +2,7 @@ package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
 import com.github.gzougianos.packagraph.analysis.PackageFactoryForTests;
+import com.github.gzougianos.packagraph.style.ClusterStyle;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

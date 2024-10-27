@@ -1,6 +1,9 @@
 package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
+import com.github.gzougianos.packagraph.style.ClusterStyle;
+import com.github.gzougianos.packagraph.style.EdgeStyle;
+import com.github.gzougianos.packagraph.style.NodeStyle;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,14 +42,14 @@ public class PackagraphOptions {
     public NodeStyle styleOf(Package packag) {
         return findDefinitionForRenamed(packag)
                 .map(Definition::style)
-                .map(style -> style.inheritGlobal(globalStyle()))
+                .map(style -> style.inherit(globalStyle()))
                 .orElse(globalStyle());
     }
 
     public EdgeStyle edgeInStyleOf(Package packag) {
         return findDefinitionForRenamed(packag)
                 .map(Definition::edgeInStyle)
-                .map(style -> style.inheritGlobal(globalEdgeStyle()))
+                .map(style -> style.inheritFrom(globalEdgeStyle()))
                 .orElse(globalEdgeStyle());
     }
 
