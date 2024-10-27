@@ -32,37 +32,6 @@ public class PackagraphOptions {
     private EdgeStyle globalEdgeStyle;
 
 
-    public static PackagraphOptions fromJson(File optionsFile) throws IOException {
-        verifyExistsAndIsFile(optionsFile);
-
-        String jsonContent = Files.readAllLines(optionsFile.toPath())
-                .stream()
-                .collect(Collectors.joining(System.lineSeparator()));
-
-        return fromJson(jsonContent);
-    }
-
-    public static PackagraphOptions fromJson(String optionsJson) {
-        Gson gson = new Gson();
-        return verify(gson.fromJson(optionsJson, PackagraphOptions.class));
-    }
-
-    private static PackagraphOptions verify(PackagraphOptions options) {
-        if (options.directories == null || options.directories.length == 0)
-            throw new IllegalArgumentException("No directories specified");
-
-        if (options.outputImage.path == null)
-            throw new IllegalArgumentException("No output image file specified");
-
-        if (options.outputFile().exists() && options.outputFile().isDirectory())
-            throw new IllegalArgumentException("Output file already exists and is directory: " + options.outputFile().getAbsolutePath());
-
-        if (options.outputFile().exists() && !options.outputImage.overwrite)
-            throw new IllegalArgumentException("Output file already exists: " + options.outputFile().getAbsolutePath());
-
-        return options;
-    }
-
     public boolean allowsOverwriteImageOutput() {
         return outputImage.overwrite;
     }
@@ -114,13 +83,6 @@ public class PackagraphOptions {
         return ""; // or return null if you prefer
     }
 
-    private static void verifyExistsAndIsFile(File optionsFile) {
-        if (!optionsFile.exists())
-            throw new IllegalArgumentException("Options file not found: " + optionsFile.getAbsolutePath());
-
-        if (optionsFile.isDirectory())
-            throw new IllegalArgumentException("Options file is a directory: " + optionsFile.getAbsolutePath());
-    }
 
     Package rename(Package packag) {
         if (isEmpty(definitions))
@@ -166,6 +128,42 @@ public class PackagraphOptions {
         }
     }
 
+
+    private record OutputImage(String path, boolean overwrite) {
+    }
+
+
+    public static PackagraphOptions fromJson(File optionsFile) throws IOException {
+        verifyExistsAndIsFile(optionsFile);
+
+        String jsonContent = Files.readAllLines(optionsFile.toPath())
+                .stream()
+                .collect(Collectors.joining(System.lineSeparator()));
+
+        return fromJson(jsonContent);
+    }
+
+    public static PackagraphOptions fromJson(String optionsJson) {
+        Gson gson = new Gson();
+        return verify(gson.fromJson(optionsJson, PackagraphOptions.class));
+    }
+
+    private static PackagraphOptions verify(PackagraphOptions options) {
+        if (options.directories == null || options.directories.length == 0)
+            throw new IllegalArgumentException("No directories specified");
+
+        if (options.outputImage.path == null)
+            throw new IllegalArgumentException("No output image file specified");
+
+        if (options.outputFile().exists() && options.outputFile().isDirectory())
+            throw new IllegalArgumentException("Output file already exists and is directory: " + options.outputFile().getAbsolutePath());
+
+        if (options.outputFile().exists() && !options.outputImage.overwrite)
+            throw new IllegalArgumentException("Output file already exists: " + options.outputFile().getAbsolutePath());
+
+        return options;
+    }
+
     private static boolean isEmpty(String str) {
         return str == null || str.trim().isEmpty();
     }
@@ -174,7 +172,11 @@ public class PackagraphOptions {
         return list == null || list.isEmpty();
     }
 
-    private record OutputImage(String path, boolean overwrite) {
+    private static void verifyExistsAndIsFile(File optionsFile) {
+        if (!optionsFile.exists())
+            throw new IllegalArgumentException("Options file not found: " + optionsFile.getAbsolutePath());
 
+        if (optionsFile.isDirectory())
+            throw new IllegalArgumentException("Options file is a directory: " + optionsFile.getAbsolutePath());
     }
 }
