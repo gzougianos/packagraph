@@ -8,6 +8,7 @@ import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.model.Factory;
 import guru.nidi.graphviz.model.Graph;
+import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.Node;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,16 +22,15 @@ import static guru.nidi.graphviz.model.Link.to;
 class GraphvizAdapter implements GraphLibrary {
     @Override
     public void createGraph(Collection<PackageNode> nodes, PackagraphOptions options) {
-        Graph mainGraph = Factory.graph("Package Dependencies").directed();
+        final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
+
         Map<String, Graph> clusterGraphs = createClusterGraphs(nodes, options);
 
         Map<Package, Node> allNodesForAllPackages = createNodesForAllPackages(nodes, options);
 
         for (Map.Entry<Package, Node> entry : allNodesForAllPackages.entrySet()) {
-            PackageNode packageNode = nodes.stream()
-                    .filter(p -> p.packag().equals(entry.getKey()))
-                    .findFirst()
-                    .orElseThrow();
+            var packag = entry.getKey();
+            PackageNode packageNode = findNodeOfPackage(nodes, packag);
 
             String clusterName = packageNode.cluster().orElse(null);
             boolean belongsToCluster = clusterName != null;
@@ -38,11 +38,11 @@ class GraphvizAdapter implements GraphLibrary {
                 Graph clusterGraph = clusterGraphs.get(clusterName);
                 clusterGraphs.put(clusterName, clusterGraph.with(entry.getValue()));
             } else {
-                mainGraph = mainGraph.with(entry.getValue());
+                mainGraph.add(entry.getValue());
             }
         }
 
-        mainGraph = addClusterGraphs(clusterGraphs, mainGraph, options);
+        addAllClusterGraphs(mainGraph, clusterGraphs);
 
         for (var node : nodes) {
             var graphNode = allNodesForAllPackages.get(node.packag());
@@ -52,7 +52,7 @@ class GraphvizAdapter implements GraphLibrary {
 
                 var style = options.edgeInStyleOf(dependency.packag());
                 var edge = StylesHelper.applyEdgeInStyle(style, to(dependencyNode));
-                mainGraph = mainGraph.with(graphNode.link(edge));
+                mainGraph.add(graphNode.link(edge));
             }
         }
 
@@ -72,6 +72,19 @@ class GraphvizAdapter implements GraphLibrary {
         }
     }
 
+    private void addAllClusterGraphs(MutableGraph mainGraph, Map<String, Graph> clusterGraphs) {
+        for (var cluster : clusterGraphs.entrySet()) {
+            mainGraph.add(cluster.getValue());
+        }
+    }
+
+    private static PackageNode findNodeOfPackage(Collection<PackageNode> nodes, Package packag) {
+        return nodes.stream()
+                .filter(p -> p.packag().equals(packag))
+                .findFirst()
+                .orElseThrow();
+    }
+
     private Map<String, Graph> createClusterGraphs(Collection<PackageNode> nodes, PackagraphOptions options) {
         Map<String, Graph> clusterGraphs = new HashMap<>();
 
@@ -85,15 +98,6 @@ class GraphvizAdapter implements GraphLibrary {
             clusterGraphs.put(cluster, clusterGraph);
         }
         return clusterGraphs;
-    }
-
-
-    private Graph addClusterGraphs(Map<String, Graph> clusterGraphs, Graph mainGraph, PackagraphOptions options) {
-        for (var cluster : clusterGraphs.entrySet()) {
-            Graph clusterGraph = cluster.getValue();
-            mainGraph = mainGraph.with(clusterGraph);
-        }
-        return mainGraph;
     }
 
     private Set<String> findAllClusters(Collection<PackageNode> nodes) {
