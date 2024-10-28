@@ -30,13 +30,13 @@ public class PackagraphOptions {
     private String[] directories;
     private List<Definition> definitions;
     private List<Cluster> clusters;
-    private OutputImage outputImage;
+    private Output output;
     private NodeStyle globalStyle;
     private EdgeStyle globalEdgeStyle;
 
 
     public boolean allowsOverwriteImageOutput() {
-        return outputImage.overwrite;
+        return output.overwrite;
     }
 
     public NodeStyle styleOf(Package packag) {
@@ -77,7 +77,7 @@ public class PackagraphOptions {
 
 
     public File outputFile() {
-        return new File(outputImage.path);
+        return new File(output.path);
     }
 
     public String outputFileType() {
@@ -163,7 +163,7 @@ public class PackagraphOptions {
     }
 
 
-    private record OutputImage(String path, boolean overwrite) {
+    private record Output(String path, boolean overwrite) {
     }
 
 
@@ -186,13 +186,13 @@ public class PackagraphOptions {
         if (options.directories == null || options.directories.length == 0)
             throw new IllegalArgumentException("No directories specified");
 
-        if (options.outputImage.path == null)
-            throw new IllegalArgumentException("No output image file specified");
+        if (options.output == null || options.output.path == null)
+            throw new IllegalArgumentException("No output specified");
 
         if (options.outputFile().exists() && options.outputFile().isDirectory())
             throw new IllegalArgumentException("Output file already exists and is directory: " + options.outputFile().getAbsolutePath());
 
-        if (options.outputFile().exists() && !options.outputImage.overwrite)
+        if (options.outputFile().exists() && !options.output.overwrite)
             throw new IllegalArgumentException("Output file already exists: " + options.outputFile().getAbsolutePath());
 
         return options;

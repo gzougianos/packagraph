@@ -45,7 +45,7 @@
       }
     }
   ],
-  "outputImage": {
+  "output": {
     "path": "target/packagraph.png",
     "overwrite": true
   },

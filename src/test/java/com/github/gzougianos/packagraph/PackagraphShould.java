@@ -23,7 +23,7 @@ class PackagraphShould {
                     "directories": [
                       "%PROJECT_DIR%"
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
@@ -51,7 +51,7 @@ class PackagraphShould {
                     "directories": [
                       "%PROJECT_DIR%"
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
@@ -85,7 +85,7 @@ class PackagraphShould {
                     "directories": [
                       "%PROJECT_DIR%"
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
@@ -114,7 +114,7 @@ class PackagraphShould {
                     "directories": [
                       "%PROJECT_DIR%"
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
@@ -157,7 +157,7 @@ class PackagraphShould {
                         "as": "Renamings"
                       }
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
@@ -199,7 +199,7 @@ class PackagraphShould {
                         "as": "Java"
                       }
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
@@ -237,7 +237,7 @@ class PackagraphShould {
                         "as": "Renamings"
                       }
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
@@ -280,7 +280,7 @@ class PackagraphShould {
                             "name": "Standard Java"
                         }
                     ],
-                    "outputImage": {
+                    "output": {
                         "path": "target/packagraph.png",
                         "overwrite": true
                     }
