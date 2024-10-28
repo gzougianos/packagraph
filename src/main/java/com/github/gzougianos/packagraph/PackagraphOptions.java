@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.hjson.JsonValue;
 
 import java.io.File;
 import java.io.IOException;
@@ -182,8 +183,9 @@ public class PackagraphOptions {
     }
 
     public static PackagraphOptions fromJson(String optionsJson) {
+        String humanJsonString = JsonValue.readHjson(optionsJson).toString();
         Gson gson = new Gson();
-        return verify(gson.fromJson(optionsJson, PackagraphOptions.class));
+        return verify(gson.fromJson(humanJsonString, PackagraphOptions.class));
     }
 
     private static PackagraphOptions verify(PackagraphOptions options) {

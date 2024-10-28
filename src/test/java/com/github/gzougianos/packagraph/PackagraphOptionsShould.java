@@ -212,4 +212,22 @@ class PackagraphOptionsShould {
         assertEquals("Tahoma", style.fontname());
         assertEquals("pink", style.fontcolor());
     }
+
+    @Test
+    void parse_human_json_format() {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  //Some comments
+                  "includeOnlyFromDirectories": false,
+                  "directories": [
+                    "src/main/java",
+                  ],
+                  "output": {
+                    "path": "target/packagraph.png",
+                    "overwrite": true,
+                  }
+                
+                }""");
+        assertFalse(options.includeOnlyFromDirectories());
+    }
 }

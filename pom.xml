@@ -46,6 +46,14 @@
             <version>0.18.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.hjson/hjson -->
+        <dependency>
+            <groupId>org.hjson</groupId>
+            <artifactId>hjson</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
