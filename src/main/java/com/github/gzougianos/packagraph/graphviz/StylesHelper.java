@@ -32,7 +32,7 @@ final class StylesHelper {
         return node;
     }
 
-    static void applyClusterStyle(MutableGraph graph, GraphStyle style) {
+    static void applyGraphStyle(MutableGraph graph, GraphStyle style) {
 
         applyAttributeIfNotNull(style.damping(), "Damping", graph.graphAttrs());
         applyAttributeIfNotNull(style.k(), "K", graph.graphAttrs());
