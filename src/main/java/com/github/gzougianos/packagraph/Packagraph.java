@@ -69,9 +69,9 @@ public class Packagraph {
         return options.rename(packag);
     }
 
-    private HashSet<Dependency> findDependencies(List<JavaClass> analyzed, Set<Package> internalPackages) {
+    private HashSet<Dependency> findDependencies(List<JavaClass> analyzedClasses, Set<Package> internalPackages) {
         final HashSet<Dependency> dependencies = new HashSet<>();
-        analyzed.forEach(javaClass -> {
+        analyzedClasses.forEach(javaClass -> {
             var renamedFromPackage = rename(javaClass.packag());
 
             for (var declaredImport : javaClass.imports()) {
