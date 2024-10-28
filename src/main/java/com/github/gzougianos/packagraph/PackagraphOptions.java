@@ -1,7 +1,7 @@
 package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
-import com.github.gzougianos.packagraph.style.ClusterStyle;
+import com.github.gzougianos.packagraph.style.GraphStyle;
 import com.github.gzougianos.packagraph.style.EdgeStyle;
 import com.github.gzougianos.packagraph.style.NodeStyle;
 import com.google.gson.Gson;
@@ -67,12 +67,16 @@ public class PackagraphOptions {
         return globalStyle == null ? NodeStyle.DEFAULT : globalStyle;
     }
 
-    public ClusterStyle clusterStyleOf(String clusterName) {
+    public GraphStyle mainGraphStyle() {
+        return output.style == null ? GraphStyle.DEFAULT : output.style;
+    }
+
+    public GraphStyle clusterStyleOf(String clusterName) {
         return alwaysNonNull(clusters).stream()
                 .filter(cluster -> cluster.name().equals(clusterName))
                 .findFirst()
                 .map(Cluster::style)
-                .orElse(ClusterStyle.DEFAULT);
+                .orElse(GraphStyle.DEFAULT);
     }
 
 
@@ -126,7 +130,7 @@ public class PackagraphOptions {
         return Optional.empty();
     }
 
-    private record Cluster(String packages, String name, ClusterStyle style) {
+    private record Cluster(String packages, String name, GraphStyle style) {
 
         public boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
@@ -163,7 +167,7 @@ public class PackagraphOptions {
     }
 
 
-    private record Output(String path, boolean overwrite) {
+    private record Output(String path, boolean overwrite, GraphStyle style) {
     }
 
 

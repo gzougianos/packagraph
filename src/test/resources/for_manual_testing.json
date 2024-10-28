@@ -39,8 +39,10 @@
       "name": "Packagraph",
       "style": {
         "color": "red",
-        "label": "Clusterized",
-        "fontsize": 42
+        "label": "PackgraphInternals",
+        "fontsize": 18,
+        "fontcolor": "lightblue",
+        "labeljust": "l"
       }
     }
   ],
@@ -55,6 +57,13 @@
   },
   "output": {
     "path": "./packagraph.png",
-    "overwrite": true
+    "overwrite": true,
+    "style": {
+      "label": "ManualTesting",
+      "fontsize": 24,
+      "fontname": "Tahoma",
+      "fontcolor": "purple",
+      "labeljust": "r"
+    }
   }
 }

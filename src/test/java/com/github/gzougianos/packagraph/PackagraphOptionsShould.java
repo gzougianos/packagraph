@@ -2,7 +2,7 @@ package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
 import com.github.gzougianos.packagraph.analysis.PackageFactoryForTests;
-import com.github.gzougianos.packagraph.style.ClusterStyle;
+import com.github.gzougianos.packagraph.style.GraphStyle;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -196,9 +196,20 @@ class PackagraphOptionsShould {
         Package java = PackageFactoryForTests.create("java.util");
         assertEquals("something", options.clusterOf(java).orElseThrow());
 
-        ClusterStyle clusterStyle = options.clusterStyleOf("something");
+        GraphStyle clusterStyle = options.clusterStyleOf("something");
         assertEquals("Something", clusterStyle.label());
         assertEquals("42", clusterStyle.fontsize());
         assertEquals("red", clusterStyle.color());
+    }
+
+    @Test
+    void know_the_main_graph_style() throws IOException {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        var style = options.mainGraphStyle();
+
+        assertEquals("a_label", style.label());
+        assertEquals("24", style.fontsize());
+        assertEquals("Tahoma", style.fontname());
+        assertEquals("pink", style.fontcolor());
     }
 }

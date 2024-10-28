@@ -23,6 +23,10 @@ class GraphvizAdapter implements GraphLibrary {
     @Override
     public void createGraph(Collection<PackageNode> nodes, PackagraphOptions options) {
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
+        //Unfortunately, main graph style is applied also to Cluster styles
+        //ClusterStyles have to be explicitly defined in order to override main graph's properties
+        StylesHelper.applyClusterStyle(mainGraph, options.mainGraphStyle());
+
 
         Map<String, Graph> clusterGraphs = createClusterGraphs(nodes, options);
 
@@ -91,11 +95,11 @@ class GraphvizAdapter implements GraphLibrary {
         for (var cluster : findAllClusters(nodes)) {
             //All cluster graphs must start with "cluster_"
             var clusterGraph = Factory
-                    .graph("cluster_" + cluster);
+                    .graph("cluster_" + cluster).toMutable();
 
             var clusterStyle = options.clusterStyleOf(cluster);
-            clusterGraph = StylesHelper.applyClusterStyle(clusterGraph, clusterStyle);
-            clusterGraphs.put(cluster, clusterGraph);
+            StylesHelper.applyClusterStyle(clusterGraph, clusterStyle);
+            clusterGraphs.put(cluster, clusterGraph.toImmutable());
         }
         return clusterGraphs;
     }

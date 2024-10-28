@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph.graphviz;
 
-import com.github.gzougianos.packagraph.style.ClusterStyle;
+import com.github.gzougianos.packagraph.style.GraphStyle;
 import com.github.gzougianos.packagraph.style.EdgeStyle;
 import com.github.gzougianos.packagraph.style.NodeStyle;
 import guru.nidi.graphviz.attribute.Attributed;
@@ -32,61 +32,58 @@ final class StylesHelper {
         return node;
     }
 
-    static Graph applyClusterStyle(Graph clusterGraph, ClusterStyle clusterStyle) {
-        var mutableGraph = clusterGraph.toMutable();
+    static void applyClusterStyle(MutableGraph graph, GraphStyle style) {
 
-        applyAttributeIfNotNull(clusterStyle.damping(), "Damping", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.k(), "K", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.url(), "URL", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.background(), "background", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.bb(), "bb", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.bgcolor(), "bgcolor", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.center(), "center", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.charset(), "charset", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.clusterrank(), "clusterrank", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.color(), "color", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.colorscheme(), "colorscheme", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.comment(), "comment", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.compound(), "compound", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.concentrate(), "concentrate", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.dpi(), "dpi", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.epsilon(), "epsilon", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.esep(), "esep", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.fontcolor(), "fontcolor", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.fontname(), "fontname", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.fontpath(), "fontpath", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.fontsize(), "fontsize", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.id(), "id", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.label(), "label", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.labeljust(), "labeljust", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.labelloc(), "labelloc", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.landscape(), "landscape", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.layers(), "layers", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.layersep(), "layersep", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.layout(), "layout", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.margin(), "margin", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.maxiter(), "maxiter", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.mclimit(), "mclimit", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.mindist(), "mindist", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.mode(), "mode", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.model(), "model", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.rankdir(), "rankdir", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.ranksep(), "ranksep", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.ratio(), "ratio", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.remincross(), "remincross", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.rotate(), "rotate", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.scale(), "scale", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.searchsize(), "searchsize", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.sep(), "sep", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.splines(), "splines", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.stylesheet(), "stylesheet", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.target(), "target", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.tooltip(), "tooltip", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.truecolor(), "truecolor", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.viewport(), "viewport", mutableGraph.graphAttrs());
-        applyAttributeIfNotNull(clusterStyle.xdotversion(), "xdotversion", mutableGraph.graphAttrs());
-
-        return mutableGraph.toImmutable();
+        applyAttributeIfNotNull(style.damping(), "Damping", graph.graphAttrs());
+        applyAttributeIfNotNull(style.k(), "K", graph.graphAttrs());
+        applyAttributeIfNotNull(style.url(), "URL", graph.graphAttrs());
+        applyAttributeIfNotNull(style.background(), "background", graph.graphAttrs());
+        applyAttributeIfNotNull(style.bb(), "bb", graph.graphAttrs());
+        applyAttributeIfNotNull(style.bgcolor(), "bgcolor", graph.graphAttrs());
+        applyAttributeIfNotNull(style.center(), "center", graph.graphAttrs());
+        applyAttributeIfNotNull(style.charset(), "charset", graph.graphAttrs());
+        applyAttributeIfNotNull(style.clusterrank(), "clusterrank", graph.graphAttrs());
+        applyAttributeIfNotNull(style.color(), "color", graph.graphAttrs());
+        applyAttributeIfNotNull(style.colorscheme(), "colorscheme", graph.graphAttrs());
+        applyAttributeIfNotNull(style.comment(), "comment", graph.graphAttrs());
+        applyAttributeIfNotNull(style.compound(), "compound", graph.graphAttrs());
+        applyAttributeIfNotNull(style.concentrate(), "concentrate", graph.graphAttrs());
+        applyAttributeIfNotNull(style.dpi(), "dpi", graph.graphAttrs());
+        applyAttributeIfNotNull(style.epsilon(), "epsilon", graph.graphAttrs());
+        applyAttributeIfNotNull(style.esep(), "esep", graph.graphAttrs());
+        applyAttributeIfNotNull(style.fontcolor(), "fontcolor", graph.graphAttrs());
+        applyAttributeIfNotNull(style.fontname(), "fontname", graph.graphAttrs());
+        applyAttributeIfNotNull(style.fontpath(), "fontpath", graph.graphAttrs());
+        applyAttributeIfNotNull(style.fontsize(), "fontsize", graph.graphAttrs());
+        applyAttributeIfNotNull(style.id(), "id", graph.graphAttrs());
+        applyAttributeIfNotNull(style.label(), "label", graph.graphAttrs());
+        applyAttributeIfNotNull(style.labeljust(), "labeljust", graph.graphAttrs());
+        applyAttributeIfNotNull(style.labelloc(), "labelloc", graph.graphAttrs());
+        applyAttributeIfNotNull(style.landscape(), "landscape", graph.graphAttrs());
+        applyAttributeIfNotNull(style.layers(), "layers", graph.graphAttrs());
+        applyAttributeIfNotNull(style.layersep(), "layersep", graph.graphAttrs());
+        applyAttributeIfNotNull(style.layout(), "layout", graph.graphAttrs());
+        applyAttributeIfNotNull(style.margin(), "margin", graph.graphAttrs());
+        applyAttributeIfNotNull(style.maxiter(), "maxiter", graph.graphAttrs());
+        applyAttributeIfNotNull(style.mclimit(), "mclimit", graph.graphAttrs());
+        applyAttributeIfNotNull(style.mindist(), "mindist", graph.graphAttrs());
+        applyAttributeIfNotNull(style.mode(), "mode", graph.graphAttrs());
+        applyAttributeIfNotNull(style.model(), "model", graph.graphAttrs());
+        applyAttributeIfNotNull(style.rankdir(), "rankdir", graph.graphAttrs());
+        applyAttributeIfNotNull(style.ranksep(), "ranksep", graph.graphAttrs());
+        applyAttributeIfNotNull(style.ratio(), "ratio", graph.graphAttrs());
+        applyAttributeIfNotNull(style.remincross(), "remincross", graph.graphAttrs());
+        applyAttributeIfNotNull(style.rotate(), "rotate", graph.graphAttrs());
+        applyAttributeIfNotNull(style.scale(), "scale", graph.graphAttrs());
+        applyAttributeIfNotNull(style.searchsize(), "searchsize", graph.graphAttrs());
+        applyAttributeIfNotNull(style.sep(), "sep", graph.graphAttrs());
+        applyAttributeIfNotNull(style.splines(), "splines", graph.graphAttrs());
+        applyAttributeIfNotNull(style.stylesheet(), "stylesheet", graph.graphAttrs());
+        applyAttributeIfNotNull(style.target(), "target", graph.graphAttrs());
+        applyAttributeIfNotNull(style.tooltip(), "tooltip", graph.graphAttrs());
+        applyAttributeIfNotNull(style.truecolor(), "truecolor", graph.graphAttrs());
+        applyAttributeIfNotNull(style.viewport(), "viewport", graph.graphAttrs());
+        applyAttributeIfNotNull(style.xdotversion(), "xdotversion", graph.graphAttrs());
     }
 
     static Link applyEdgeInStyle(EdgeStyle edgeInStyle, Link edge) {

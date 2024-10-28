@@ -3,7 +3,7 @@ package com.github.gzougianos.packagraph.style;
 /**
  * Record representing Graphviz graph-level attributes with descriptions of accepted values.
  */
-public record ClusterStyle(
+public record GraphStyle(
         /*
          * Adjusts the damping factor in the layout algorithm. Higher values spread nodes further apart.
          * Default is 0.99.
@@ -259,7 +259,7 @@ public record ClusterStyle(
     /**
      * Default values for Graphviz graph attributes.
      */
-    public static final ClusterStyle DEFAULT = new ClusterStyle(
+    public static final GraphStyle DEFAULT = new GraphStyle(
             null, // damping
             null, // K
             null, // URL
