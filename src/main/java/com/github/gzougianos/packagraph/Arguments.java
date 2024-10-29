@@ -60,7 +60,7 @@ public final class Arguments {
             return new Arguments(optionsFile, directories);
 
         } catch (ParseException e) {
-            helpFormatter.printHelp("-o myOptions.json -d ./myproject1/src/main/java ./myproject1/src/main/java", options);
+            helpFormatter.printHelp("-o myOptions.json -d ./myproject1/src/main/java ./myproject2/src/main/java", options);
             throw new IllegalArgumentException("Failed to parse command line arguments.", e);
         }
     }
