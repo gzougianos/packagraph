@@ -6,10 +6,7 @@ import com.github.gzougianos.packagraph.PackagraphOptions;
 import com.github.gzougianos.packagraph.analysis.Package;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
-import guru.nidi.graphviz.model.Factory;
-import guru.nidi.graphviz.model.Graph;
-import guru.nidi.graphviz.model.MutableGraph;
-import guru.nidi.graphviz.model.Node;
+import guru.nidi.graphviz.model.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -25,7 +22,7 @@ class GraphvizAdapter implements GraphLibrary {
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
         //Unfortunately, main graph style is applied also to Cluster styles
         //ClusterStyles have to be explicitly defined in order to override main graph's properties
-        StylesHelper.applyGraphStyle(mainGraph, options.mainGraphStyle());
+        applyGraphStyle(mainGraph, options.mainGraphStyle());
 
 
         Map<String, Graph> clusterGraphs = createClusterGraphs(nodes, options);
@@ -55,7 +52,7 @@ class GraphvizAdapter implements GraphLibrary {
                 var dependencyNode = allNodesForAllPackages.get(dependency.packag());
 
                 var style = options.edgeInStyleOf(dependency.packag());
-                var edge = StylesHelper.applyEdgeInStyle(style, to(dependencyNode));
+                var edge = applyEdgeInStyle(style, to(dependencyNode));
                 mainGraph.add(graphNode.link(edge));
             }
         }
@@ -98,7 +95,7 @@ class GraphvizAdapter implements GraphLibrary {
                     .graph("cluster_" + cluster).toMutable();
 
             var clusterStyle = options.clusterStyleOf(cluster);
-            StylesHelper.applyGraphStyle(clusterGraph, clusterStyle);
+            applyGraphStyle(clusterGraph, clusterStyle);
             clusterGraphs.put(cluster, clusterGraph.toImmutable());
         }
         return clusterGraphs;
@@ -145,10 +142,42 @@ class GraphvizAdapter implements GraphLibrary {
         return allPackages.stream()
                 .map(packag -> {
                     var node = Factory.node(packag.name());
-                    node = StylesHelper.applyNodeStyle(node, options.styleOf(packag));
+                    node = applyNodeStyle(node, options.styleOf(packag));
                     return new AbstractMap.SimpleEntry<>(packag, node);
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
+
+    private static Node applyNodeStyle(Node node, Map<String, String> style) {
+        for (var entry : style.entrySet()) {
+            var value = entry.getValue();
+            if (isNullOrStringNull(value)) {
+                value = null;
+            }
+            node = node.with(entry.getKey(), value);
+        }
+        return node;
+    }
+
+    private static void applyGraphStyle(MutableGraph graph, Map<String, String> styleAttributes) {
+        for (Map.Entry<String, String> entry : styleAttributes.entrySet()) {
+            graph.graphAttrs().add(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private static Link applyEdgeInStyle(Map<String, String> edgeInStyle, Link edge) {
+        for (var entry : edgeInStyle.entrySet()) {
+            var value = entry.getValue();
+            if (isNullOrStringNull(value)) {
+                value = null;
+            }
+            edge = edge.with(entry.getKey(), value);
+        }
+        return edge;
+    }
+
+    private static boolean isNullOrStringNull(Object value) {
+        return value == null || "null".equalsIgnoreCase(String.valueOf(value));
+    }
 }
