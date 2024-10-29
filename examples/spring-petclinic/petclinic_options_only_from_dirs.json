@@ -1,4 +1,5 @@
 {
+  //Enable to include only source files from the directories given
   "includeOnlyFromDirectories": true,
   "directories": [
     "./examples/spring-petclinic/repository/src/main/java"
