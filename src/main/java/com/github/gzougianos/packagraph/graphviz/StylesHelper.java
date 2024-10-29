@@ -43,60 +43,6 @@ final class StylesHelper {
         }
     }
 
-    static void applyGraphStyle(MutableGraph graph, GraphStyle style) {
-
-        applyAttributeIfNotNull(style.damping(), "Damping", graph.graphAttrs());
-        applyAttributeIfNotNull(style.k(), "K", graph.graphAttrs());
-        applyAttributeIfNotNull(style.url(), "URL", graph.graphAttrs());
-        applyAttributeIfNotNull(style.background(), "background", graph.graphAttrs());
-        applyAttributeIfNotNull(style.bb(), "bb", graph.graphAttrs());
-        applyAttributeIfNotNull(style.bgcolor(), "bgcolor", graph.graphAttrs());
-        applyAttributeIfNotNull(style.center(), "center", graph.graphAttrs());
-        applyAttributeIfNotNull(style.charset(), "charset", graph.graphAttrs());
-        applyAttributeIfNotNull(style.clusterrank(), "clusterrank", graph.graphAttrs());
-        applyAttributeIfNotNull(style.color(), "color", graph.graphAttrs());
-        applyAttributeIfNotNull(style.colorscheme(), "colorscheme", graph.graphAttrs());
-        applyAttributeIfNotNull(style.comment(), "comment", graph.graphAttrs());
-        applyAttributeIfNotNull(style.compound(), "compound", graph.graphAttrs());
-        applyAttributeIfNotNull(style.concentrate(), "concentrate", graph.graphAttrs());
-        applyAttributeIfNotNull(style.dpi(), "dpi", graph.graphAttrs());
-        applyAttributeIfNotNull(style.epsilon(), "epsilon", graph.graphAttrs());
-        applyAttributeIfNotNull(style.esep(), "esep", graph.graphAttrs());
-        applyAttributeIfNotNull(style.fontcolor(), "fontcolor", graph.graphAttrs());
-        applyAttributeIfNotNull(style.fontname(), "fontname", graph.graphAttrs());
-        applyAttributeIfNotNull(style.fontpath(), "fontpath", graph.graphAttrs());
-        applyAttributeIfNotNull(style.fontsize(), "fontsize", graph.graphAttrs());
-        applyAttributeIfNotNull(style.id(), "id", graph.graphAttrs());
-        applyAttributeIfNotNull(style.label(), "label", graph.graphAttrs());
-        applyAttributeIfNotNull(style.labeljust(), "labeljust", graph.graphAttrs());
-        applyAttributeIfNotNull(style.labelloc(), "labelloc", graph.graphAttrs());
-        applyAttributeIfNotNull(style.landscape(), "landscape", graph.graphAttrs());
-        applyAttributeIfNotNull(style.layers(), "layers", graph.graphAttrs());
-        applyAttributeIfNotNull(style.layersep(), "layersep", graph.graphAttrs());
-        applyAttributeIfNotNull(style.layout(), "layout", graph.graphAttrs());
-        applyAttributeIfNotNull(style.margin(), "margin", graph.graphAttrs());
-        applyAttributeIfNotNull(style.maxiter(), "maxiter", graph.graphAttrs());
-        applyAttributeIfNotNull(style.mclimit(), "mclimit", graph.graphAttrs());
-        applyAttributeIfNotNull(style.mindist(), "mindist", graph.graphAttrs());
-        applyAttributeIfNotNull(style.mode(), "mode", graph.graphAttrs());
-        applyAttributeIfNotNull(style.model(), "model", graph.graphAttrs());
-        applyAttributeIfNotNull(style.rankdir(), "rankdir", graph.graphAttrs());
-        applyAttributeIfNotNull(style.ranksep(), "ranksep", graph.graphAttrs());
-        applyAttributeIfNotNull(style.ratio(), "ratio", graph.graphAttrs());
-        applyAttributeIfNotNull(style.remincross(), "remincross", graph.graphAttrs());
-        applyAttributeIfNotNull(style.rotate(), "rotate", graph.graphAttrs());
-        applyAttributeIfNotNull(style.scale(), "scale", graph.graphAttrs());
-        applyAttributeIfNotNull(style.searchsize(), "searchsize", graph.graphAttrs());
-        applyAttributeIfNotNull(style.sep(), "sep", graph.graphAttrs());
-        applyAttributeIfNotNull(style.splines(), "splines", graph.graphAttrs());
-        applyAttributeIfNotNull(style.stylesheet(), "stylesheet", graph.graphAttrs());
-        applyAttributeIfNotNull(style.target(), "target", graph.graphAttrs());
-        applyAttributeIfNotNull(style.tooltip(), "tooltip", graph.graphAttrs());
-        applyAttributeIfNotNull(style.truecolor(), "truecolor", graph.graphAttrs());
-        applyAttributeIfNotNull(style.viewport(), "viewport", graph.graphAttrs());
-        applyAttributeIfNotNull(style.xdotversion(), "xdotversion", graph.graphAttrs());
-    }
-
     static Link applyEdgeInStyle(EdgeStyle edgeInStyle, Link edge) {
         edge = applyAttributeIfNotNull(edgeInStyle.label(), "label", edge);
         edge = applyAttributeIfNotNull(edgeInStyle.color(), "color", edge);

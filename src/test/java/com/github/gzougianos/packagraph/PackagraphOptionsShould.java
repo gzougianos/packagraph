@@ -196,10 +196,10 @@ class PackagraphOptionsShould {
         Package java = PackageFactoryForTests.create("java.util");
         assertEquals("something", options.clusterOf(java).orElseThrow());
 
-        GraphStyle clusterStyle = options.clusterStyleOf("something");
-        assertEquals("Something", clusterStyle.label());
-        assertEquals("42", clusterStyle.fontsize());
-        assertEquals("red", clusterStyle.color());
+        var clusterStyle = options.clusterStyleOf("something");
+        assertEquals("Something", clusterStyle.get("label"));
+        assertEquals("42", clusterStyle.get("fontsize"));
+        assertEquals("red", clusterStyle.get("color"));
     }
 
     @Test

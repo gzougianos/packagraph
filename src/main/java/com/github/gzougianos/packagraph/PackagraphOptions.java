@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class PackagraphOptions {
 
+    private static final Map<String, String> EMPTY_STYLE = Map.of();
     private static final String COMMA = ",";
     @Getter
     private boolean includeOnlyFromDirectories;
@@ -69,15 +70,15 @@ public class PackagraphOptions {
     }
 
     public Map<String, String> mainGraphStyle() {
-        return output.style == null ? Map.of() : output.style;
+        return output.style == null ? EMPTY_STYLE : output.style;
     }
 
-    public GraphStyle clusterStyleOf(String clusterName) {
+    public Map<String, String> clusterStyleOf(String clusterName) {
         return alwaysNonNull(clusters).stream()
                 .filter(cluster -> cluster.name().equals(clusterName))
                 .findFirst()
                 .map(Cluster::style)
-                .orElse(GraphStyle.DEFAULT);
+                .orElse(EMPTY_STYLE);
     }
 
 
@@ -131,7 +132,7 @@ public class PackagraphOptions {
         return Optional.empty();
     }
 
-    private record Cluster(String packages, String name, GraphStyle style) {
+    private record Cluster(String packages, String name, Map<String, String> style) {
 
         public boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
