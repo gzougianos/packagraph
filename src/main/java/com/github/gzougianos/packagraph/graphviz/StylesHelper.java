@@ -9,6 +9,8 @@ import guru.nidi.graphviz.model.MutableAttributed;
 import guru.nidi.graphviz.model.MutableGraph;
 import guru.nidi.graphviz.model.Node;
 
+import java.util.Map;
+
 final class StylesHelper {
     private StylesHelper() {
     }
@@ -33,6 +35,12 @@ final class StylesHelper {
         node = applyAttributeIfNotNull(style.sides(), "sides", node);
         node = applyAttributeIfNotNull(style.peripheries(), "peripheries", node);
         return node;
+    }
+
+    static void applyGraphStyle(MutableGraph graph, Map<String, String> styleAttributes) {
+        for (Map.Entry<String, String> entry : styleAttributes.entrySet()) {
+            graph.graphAttrs().add(entry.getKey(), entry.getValue());
+        }
     }
 
     static void applyGraphStyle(MutableGraph graph, GraphStyle style) {

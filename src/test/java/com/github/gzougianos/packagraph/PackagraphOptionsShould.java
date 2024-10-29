@@ -207,9 +207,9 @@ class PackagraphOptionsShould {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
         var style = options.mainGraphStyle();
 
-        assertEquals("a_label", style.label());
-        assertEquals("24", style.fontsize());
-        assertEquals("Tahoma", style.fontname());
+        assertEquals("a_label", style.get("label"));
+        assertEquals("24", style.get("fontsize"));
+        assertEquals("Tahoma", style.get("fontname"));
     }
 
     @Test
@@ -238,7 +238,7 @@ class PackagraphOptionsShould {
     void replace_constants() throws IOException {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
         var style = options.mainGraphStyle();
-        assertEquals("pink", style.fontcolor());
+        assertEquals("pink", style.get("fontcolor"));
     }
 
     @Test

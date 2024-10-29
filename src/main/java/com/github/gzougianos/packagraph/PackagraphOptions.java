@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -67,8 +68,8 @@ public class PackagraphOptions {
         return globalStyle == null ? NodeStyle.DEFAULT : globalStyle;
     }
 
-    public GraphStyle mainGraphStyle() {
-        return output.style == null ? GraphStyle.DEFAULT : output.style;
+    public Map<String, String> mainGraphStyle() {
+        return output.style == null ? Map.of() : output.style;
     }
 
     public GraphStyle clusterStyleOf(String clusterName) {
@@ -167,7 +168,7 @@ public class PackagraphOptions {
     }
 
 
-    private record Output(String path, boolean overwrite, GraphStyle style) {
+    private record Output(String path, boolean overwrite, Map<String, String> style) {
     }
 
     public static PackagraphOptions fromJson(File optionsFile) throws IOException {
