@@ -1,15 +1,14 @@
 package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
-import com.github.gzougianos.packagraph.style.GraphStyle;
 import com.github.gzougianos.packagraph.style.EdgeStyle;
+import com.github.gzougianos.packagraph.style.GraphStyle;
 import com.github.gzougianos.packagraph.style.NodeStyle;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import org.hjson.JsonValue;
 
 import java.io.File;
 import java.io.IOException;
@@ -171,7 +170,6 @@ public class PackagraphOptions {
     private record Output(String path, boolean overwrite, GraphStyle style) {
     }
 
-
     public static PackagraphOptions fromJson(File optionsFile) throws IOException {
         verifyExistsAndIsFile(optionsFile);
 
@@ -183,9 +181,10 @@ public class PackagraphOptions {
     }
 
     public static PackagraphOptions fromJson(String optionsJson) {
-        String humanJsonString = JsonValue.readHjson(optionsJson).toString();
+        String jsonWithConstantsReplaced = HJsonWrapper.readHJsonWithConstants(optionsJson);
+
         Gson gson = new Gson();
-        return verify(gson.fromJson(humanJsonString, PackagraphOptions.class));
+        return verify(gson.fromJson(jsonWithConstantsReplaced, PackagraphOptions.class));
     }
 
     private static PackagraphOptions verify(PackagraphOptions options) {

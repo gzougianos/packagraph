@@ -45,6 +45,12 @@
       }
     }
   ],
+  "constants": [
+    {
+      "name": "MAIN_GRAPH_FONT_COLOR ",
+      "value": "pink"
+    }
+  ],
   "output": {
     "path": "target/packagraph.png",
     "overwrite": true,
@@ -52,7 +58,7 @@
       "label": "a_label",
       "fontsize": 24,
       "fontname": "Tahoma",
-      "fontcolor": "pink"
+      "fontcolor": "${MAIN_GRAPH_FONT_COLOR} "
     }
   },
   "globalStyle": {

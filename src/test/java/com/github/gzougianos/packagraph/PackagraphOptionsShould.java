@@ -210,7 +210,6 @@ class PackagraphOptionsShould {
         assertEquals("a_label", style.label());
         assertEquals("24", style.fontsize());
         assertEquals("Tahoma", style.fontname());
-        assertEquals("pink", style.fontcolor());
     }
 
     @Test
@@ -229,5 +228,12 @@ class PackagraphOptionsShould {
                 
                 }""");
         assertFalse(options.includeOnlyFromDirectories());
+    }
+
+    @Test
+    void replace_constants() throws IOException {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        var style = options.mainGraphStyle();
+        assertEquals("pink", style.fontcolor());
     }
 }

@@ -35,7 +35,7 @@
   ],
   "clusters": [
     {
-      "packages": "packagraph.*",
+      "packages": "${PACKAGRAPH_PACKAGE_PATTERN}",
       "name": "Packagraph",
       "style": {
         "color": "red",
@@ -51,10 +51,21 @@
     "shape": "box"
   },
   "globalEdgeStyle": {
-    "color": "#0000FF",
+    "color": "${BLUE}",
     "style": "dashed",
     "weight": 1
   },
+  "constants": [
+    {
+      "name": "BLUE",
+      "value": "#0000FF"
+    },
+    {
+      "name": "PACKAGRAPH_PACKAGE_PATTERN",
+      "value": "packagraph.*"
+    }
+  ],
+  "textcolor": "${BLUE}",
   "output": {
     "path": "./packagraph.png",
     "overwrite": true,
