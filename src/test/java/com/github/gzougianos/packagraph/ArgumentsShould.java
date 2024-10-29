@@ -21,24 +21,12 @@ class ArgumentsShould {
     @Test
     void be_created() {
         var optionsTxt = new File(ARGUMENTS_TESTING_RESOURCES, "options.txt");
-        var dir1 = new File(ARGUMENTS_TESTING_RESOURCES, "dir1");
-        var dir2 = new File(ARGUMENTS_TESTING_RESOURCES, "dir2");
 
-        var arguments = Arguments.of("-o", optionsTxt.getAbsolutePath(), "-d", dir1.getAbsolutePath(), dir2.getAbsolutePath());
+        var arguments = Arguments.of("-o", optionsTxt.getAbsolutePath());
 
-
-        assertEquals(optionsTxt, arguments.optionsFile().orElse(null));
-        assertEquals(List.of(dir1, dir2), arguments.directories());
+        assertEquals(optionsTxt, arguments.optionsFile());
     }
 
-    @Test
-    void be_created_without_options_file() {
-        var dir1 = new File(ARGUMENTS_TESTING_RESOURCES, "dir1");
-
-        var arguments = Arguments.of("-d", dir1.getAbsolutePath());
-
-        assertEquals(List.of(dir1), arguments.directories());
-    }
 
     @Test
     void not_be_created_if_options_file_does_not_exist() {
