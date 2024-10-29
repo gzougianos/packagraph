@@ -48,7 +48,7 @@
   "constants": [
     {
       "name": "MAIN_GRAPH_FONT_COLOR ",
-      "value": "pink"
+      "value": "pink "
     }
   ],
   "output": {
@@ -58,7 +58,7 @@
       "label": "a_label",
       "fontsize": 24,
       "fontname": "Tahoma",
-      "fontcolor": "${MAIN_GRAPH_FONT_COLOR} "
+      "fontcolor": "${MAIN_GRAPH_FONT_COLOR}"
     }
   },
   "globalStyle": {

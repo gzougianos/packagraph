@@ -1,10 +1,13 @@
 package com.github.gzougianos.packagraph.graphviz;
 
-import com.github.gzougianos.packagraph.style.GraphStyle;
 import com.github.gzougianos.packagraph.style.EdgeStyle;
+import com.github.gzougianos.packagraph.style.GraphStyle;
 import com.github.gzougianos.packagraph.style.NodeStyle;
 import guru.nidi.graphviz.attribute.Attributed;
-import guru.nidi.graphviz.model.*;
+import guru.nidi.graphviz.model.Link;
+import guru.nidi.graphviz.model.MutableAttributed;
+import guru.nidi.graphviz.model.MutableGraph;
+import guru.nidi.graphviz.model.Node;
 
 final class StylesHelper {
     private StylesHelper() {

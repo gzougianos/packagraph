@@ -217,10 +217,14 @@ class PackagraphOptionsShould {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {
                   //Some comments
+                  #Some other
                   "includeOnlyFromDirectories": false,
                   "directories": [
                     "src/main/java",
                   ],
+                  /*
+                   * C style comments should be supported
+                  */
                   "output": {
                     "path": "target/packagraph.png",
                     "overwrite": true,
@@ -235,5 +239,63 @@ class PackagraphOptionsShould {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
         var style = options.mainGraphStyle();
         assertEquals("pink", style.fontcolor());
+    }
+
+    @Test
+    void replace_constants_in_array() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  "constants": [
+                    {
+                        "name": "SRC_DIR",
+                        "value": "src/main/java"
+                    },
+                    {
+                        "name": "TEST_DIR",
+                        "value": "src/test/java"
+                    }
+                  ],
+                  "directories": [
+                    "${SRC_DIR}",
+                    "${TEST_DIR}"
+                  ],
+                  "output": {
+                    "path": "target/packagraph.png",
+                    "overwrite": true,
+                  }
+                
+                }""");
+        File[] directories = options.directories();
+        assertEquals(2, directories.length);
+        assertEquals(new File("src/main/java"), directories[0]);
+        assertEquals(new File("src/test/java"), directories[1]);
+    }
+
+    @Test
+    void replace_multiple_constants_in_single_value() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  "constants": [
+                    {
+                        "name": "SRC_DIR",
+                        "value": "src/main/java"
+                    },
+                    {
+                        "name": "TEST_DIR",
+                        "value": "src/test/java"
+                    }
+                  ],
+                  "directories": [
+                    "${SRC_DIR}/${TEST_DIR}"
+                  ],
+                  "output": {
+                    "path": "target/packagraph.png",
+                    "overwrite": true,
+                  }
+                
+                }""");
+        File[] directories = options.directories();
+        assertEquals(1, directories.length);
+        assertEquals(new File("src/main/java/src/test/java"), directories[0]);
     }
 }
