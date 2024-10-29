@@ -1,0 +1,37 @@
+{
+  "includeOnlyFromDirectories": true,
+  "directories": [
+    "./examples/spring-petclinic/repository/src/main/java"
+  ],
+  "definitions": [
+    //Remove the "org.springframework.samples" prefix and keep only petclinic
+    {
+      "packages": "org.springframework.samples\\.(.*)",
+      "as": "$1"
+    },
+    //Now that we have removed the "org.springframework.samples" prefix, apply color to petclinic packages
+    {
+      "packages": ".*petclinic.*",
+      "as": "$1",
+      "style": {
+        "style": "filled",
+        "fillcolor": "#CC9900"
+      }
+    }
+  ],
+  "constants": [
+  ],
+  "output": {
+    "path": "petclinic.png",
+    "overwrite": true,
+    "style": {
+      "dpi": 96
+    }
+  },
+  "globalStyle": {
+    "shape": "rectangle",
+    "fontsize": 20
+  },
+  "globalEdgeStyle": {
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "includeOnlyFromDirectories": false,
+  "directories": [
+    "./examples/spring-petclinic/repository/src/main/java"
+  ],
+  "definitions": [
+    //ignore all basic Java packages like java.io | java.util etc
+    {
+      "packages": "java.*",
+      "as": ""
+    },
+    //Remove the "org.springframework.samples" prefix and keep only petclinic
+    {
+      "packages": "org.springframework.samples\\.(.*)",
+      "as": "$1"
+    },
+    //Now that we have removed the "org.springframework.samples" prefix, apply color to petclinic packages
+    {
+      "packages": ".*petclinic.*",
+      "as": "$1",
+      "style": {
+        "style": "filled",
+        "fillcolor": "#CC9900"
+      }
+    },
+    //jakarta persistance as Persistence
+    {
+      "packages": "jakarta.persistence.*,org.springframework.data.*,org.springframework.dao.*,org.springframework.transaction.*",
+      "as": "Persistence/JPA",
+      "style": {
+        "style": "filled",
+        "fillcolor": "#989898"
+      },
+      "edgeInStyle": {
+        "color": "#989898"
+      }
+    },
+    //Now that jakarta persistence catched as Persistence, ignore other jakarta libs
+    {
+      "packages": "jakarta.*",
+      "as": ""
+    },
+    {
+      "packages": "org.springframework.web.*,org.springframework.ui.*",
+      "as": "Spring Web/UI",
+      "style": {
+        "style": "filled",
+        "fillcolor": "#90EE90"
+      },
+      "edgeInStyle": {
+        "color": "#90EE90"
+      }
+    },
+    //All org.springframework.* packages but not org.springframework.samples as Spring
+    {
+      "packages": "org.springframework.*",
+      "as": "Spring",
+      "style": {
+        "style": "filled",
+        "fillcolor": "#90EE90"
+      },
+      "edgeInStyle": {
+        "color": "#90EE90"
+      }
+    }
+  ],
+  //In case you want to cluster the internal packages
+  //  "clusters": [
+  //    {
+  //      "packages": "petclinic.*",
+  //      "name": "PetClinic Project",
+  //      "style": {
+  //        "label": "PetClinic Project"
+  //      }
+  //    }
+  //  ],
+  "constants": [
+  ],
+  "output": {
+    "path": "petclinic.png",
+    "overwrite": true,
+    "style": {
+      "dpi": 96
+    }
+  },
+  "globalStyle": {
+    "shape": "rectangle",
+    "fontsize": 20
+  },
+  "globalEdgeStyle": {
+  }
+}
