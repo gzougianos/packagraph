@@ -68,29 +68,14 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_style_of_a_package() throws Exception {
+    void know_the_style_of_a_package_that_inherits_from_global() throws Exception {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
 
         Package java = PackageFactoryForTests.create("java");
         var style = options.styleOf(java);
-        assertEquals("green", style.fillcolor()); //package overwrites only fill color, rest is global
-        assertEquals("rectangle", style.shape());
-        assertEquals("rounded", style.style());
-        assertEquals("black", style.color());
-        assertEquals("black", style.fontcolor());
-        assertEquals(10, style.fontsize());
-        assertEquals("Arial", style.fontname());
-        assertEquals(1, style.width());
-        assertEquals(1, style.height());
-        assertTrue(style.fixedsize());
-        assertEquals("tooltip", style.tooltip());
-        assertEquals("url", style.url());
-        assertEquals("target", style.target());
-        assertEquals(1, style.layer());
-        assertEquals("group", style.group());
-        assertEquals("same", style.rank());
-        assertEquals(4, style.sides());
-        assertEquals(1, style.peripheries());
+        assertEquals("green", style.get("fillcolor")); //package overwrites only fill color, rest is global
+        assertEquals("rectangle", style.get("shape"));
+        assertEquals("rounded", style.get("style"));
     }
 
     @Test
@@ -99,24 +84,9 @@ class PackagraphOptionsShould {
         Package notDefinedPackage = PackageFactoryForTests.create("com.something");
         var style = options.styleOf(notDefinedPackage);
 
-        assertEquals("rectangle", style.shape());
-        assertEquals("rounded", style.style());
-        assertEquals("lightblue", style.fillcolor());
-        assertEquals("black", style.color());
-        assertEquals("black", style.fontcolor());
-        assertEquals(10, style.fontsize());
-        assertEquals("Arial", style.fontname());
-        assertEquals(1, style.width());
-        assertEquals(1, style.height());
-        assertTrue(style.fixedsize());
-        assertEquals("tooltip", style.tooltip());
-        assertEquals("url", style.url());
-        assertEquals("target", style.target());
-        assertEquals(1, style.layer());
-        assertEquals("group", style.group());
-        assertEquals("same", style.rank());
-        assertEquals(4, style.sides());
-        assertEquals(1, style.peripheries());
+        assertEquals("rectangle", style.get("shape"));
+        assertEquals("rounded", style.get("style"));
+        assertEquals("lightblue", style.get("fillcolor"));
     }
 
 
@@ -126,24 +96,8 @@ class PackagraphOptionsShould {
         Package github = PackageFactoryForTests.create("com.github.com");
         var style = options.styleOf(github);
 
-        assertEquals("blue", style.fillcolor());
-        assertNull(style.shape());
-        assertNull(style.style());
-        assertNull(style.color());
-        assertNull(style.fontcolor());
-        assertNull(style.fontsize());
-        assertNull(style.fontname());
-        assertNull(style.width());
-        assertNull(style.height());
-        assertNull(style.fixedsize());
-        assertNull(style.tooltip());
-        assertNull(style.url());
-        assertNull(style.target());
-        assertNull(style.layer());
-        assertNull(style.group());
-        assertNull(style.rank());
-        assertNull(style.sides());
-        assertNull(style.peripheries());
+        assertEquals("blue", style.get("fillcolor"));
+        assertNull(style.get("shape"));
     }
 
 

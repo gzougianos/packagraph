@@ -15,25 +15,14 @@ final class StylesHelper {
     private StylesHelper() {
     }
 
-    static Node applyNodeStyle(Node node, NodeStyle style) {
-        node = applyAttributeIfNotNull(style.shape(), "shape", node);
-        node = applyAttributeIfNotNull(style.style(), "style", node);
-        node = applyAttributeIfNotNull(style.fillcolor(), "fillcolor", node);
-        node = applyAttributeIfNotNull(style.color(), "color", node);
-        node = applyAttributeIfNotNull(style.fontcolor(), "fontcolor", node);
-        node = applyAttributeIfNotNull(style.fontsize(), "fontsize", node);
-        node = applyAttributeIfNotNull(style.fontname(), "fontname", node);
-        node = applyAttributeIfNotNull(style.width(), "width", node);
-        node = applyAttributeIfNotNull(style.height(), "height", node);
-        node = applyAttributeIfNotNull(style.fixedsize(), "fixedsize", node);
-        node = applyAttributeIfNotNull(style.tooltip(), "tooltip", node);
-        node = applyAttributeIfNotNull(style.url(), "url", node);
-        node = applyAttributeIfNotNull(style.target(), "target", node);
-        node = applyAttributeIfNotNull(style.layer(), "layer", node);
-        node = applyAttributeIfNotNull(style.group(), "group", node);
-        node = applyAttributeIfNotNull(style.rank(), "rank", node);
-        node = applyAttributeIfNotNull(style.sides(), "sides", node);
-        node = applyAttributeIfNotNull(style.peripheries(), "peripheries", node);
+    static Node applyNodeStyle(Node node, Map<String, String> style) {
+        for (var entry : style.entrySet()) {
+            var value = entry.getValue();
+            if (isNullValue(value)) {
+                value = null;
+            }
+            node = node.with(entry.getKey(), value);
+        }
         return node;
     }
 

@@ -2,8 +2,6 @@ package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
 import com.github.gzougianos.packagraph.style.EdgeStyle;
-import com.github.gzougianos.packagraph.style.GraphStyle;
-import com.github.gzougianos.packagraph.style.NodeStyle;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,11 +11,10 @@ import lombok.experimental.Accessors;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.unmodifiableMap;
 
 
 @Accessors(fluent = true)
@@ -33,7 +30,7 @@ public class PackagraphOptions {
     private List<Definition> definitions;
     private List<Cluster> clusters;
     private Output output;
-    private NodeStyle globalStyle;
+    private Map<String, String> globalStyle;
     private EdgeStyle globalEdgeStyle;
 
 
@@ -41,11 +38,29 @@ public class PackagraphOptions {
         return output.overwrite;
     }
 
-    public NodeStyle styleOf(Package packag) {
-        return findDefinitionForRenamed(packag)
+    public Map<String, String> styleOf(Package packag) {
+        return unmodifiableMap(findDefinitionForRenamed(packag)
                 .map(Definition::style)
-                .map(style -> style.inheritFrom(globalStyle()))
-                .orElse(globalStyle());
+                .map(style -> inheritProperties(style, globalStyle()))
+                .orElse(globalStyle()));
+    }
+
+    private static Map<String, String> inheritProperties(Map<String, String> style1, Map<String, String> style2) {
+        if (style2 == null)
+            return style1;
+
+        if (inheritGlobalExplictlyDisabled(style1)) {
+            return style1;
+        }
+
+        Map<String, String> result = new HashMap<>(style1);
+
+        style2.forEach(result::putIfAbsent);
+        return unmodifiableMap(result);
+    }
+
+    private static boolean inheritGlobalExplictlyDisabled(Map<String, String> style) {
+        return "false".equalsIgnoreCase(String.valueOf(style.get("inheritGlobal")));
     }
 
     public EdgeStyle edgeInStyleOf(Package packag) {
@@ -65,8 +80,8 @@ public class PackagraphOptions {
         return globalEdgeStyle == null ? EdgeStyle.DEFAULT : globalEdgeStyle;
     }
 
-    public NodeStyle globalStyle() {
-        return globalStyle == null ? NodeStyle.DEFAULT : globalStyle;
+    public Map<String, String> globalStyle() {
+        return globalStyle == null ? EMPTY_STYLE : globalStyle;
     }
 
     public Map<String, String> mainGraphStyle() {
@@ -149,7 +164,7 @@ public class PackagraphOptions {
         return alwaysNonNull(clusters);
     }
 
-    private record Definition(String packages, String as, NodeStyle style, EdgeStyle edgeInStyle) {
+    private record Definition(String packages, String as, Map<String, String> style, EdgeStyle edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
