@@ -1,7 +1,6 @@
 package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
-import com.github.gzougianos.packagraph.style.EdgeStyle;
 import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +30,7 @@ public class PackagraphOptions {
     private List<Cluster> clusters;
     private Output output;
     private Map<String, String> globalStyle;
-    private EdgeStyle globalEdgeStyle;
+    private Map<String, String> globalEdgeStyle;
 
 
     public boolean allowsOverwriteImageOutput() {
@@ -43,6 +42,21 @@ public class PackagraphOptions {
                 .map(Definition::style)
                 .map(style -> inheritProperties(style, globalStyle()))
                 .orElse(globalStyle()));
+    }
+
+    public Map<String, String> edgeInStyleOf(Package packag) {
+        return findDefinitionForRenamed(packag)
+                .map(Definition::edgeInStyle)
+                .map(style -> inheritProperties(style, globalEdgeStyle()))
+                .orElse(globalEdgeStyle());
+    }
+
+    public Map<String, String> clusterStyleOf(String clusterName) {
+        return alwaysNonNull(clusters).stream()
+                .filter(cluster -> cluster.name().equals(clusterName))
+                .findFirst()
+                .map(Cluster::style)
+                .orElse(EMPTY_STYLE);
     }
 
     private static Map<String, String> inheritProperties(Map<String, String> style1, Map<String, String> style2) {
@@ -63,12 +77,6 @@ public class PackagraphOptions {
         return "false".equalsIgnoreCase(String.valueOf(style.get("inheritGlobal")));
     }
 
-    public EdgeStyle edgeInStyleOf(Package packag) {
-        return findDefinitionForRenamed(packag)
-                .map(Definition::edgeInStyle)
-                .map(style -> style.inheritFrom(globalEdgeStyle()))
-                .orElse(globalEdgeStyle());
-    }
 
     private Optional<Definition> findDefinitionForRenamed(Package packag) {
         return definitions().stream()
@@ -76,8 +84,8 @@ public class PackagraphOptions {
                 .findFirst();
     }
 
-    private EdgeStyle globalEdgeStyle() {
-        return globalEdgeStyle == null ? EdgeStyle.DEFAULT : globalEdgeStyle;
+    private Map<String, String> globalEdgeStyle() {
+        return globalEdgeStyle == null ? EMPTY_STYLE : globalEdgeStyle;
     }
 
     public Map<String, String> globalStyle() {
@@ -86,14 +94,6 @@ public class PackagraphOptions {
 
     public Map<String, String> mainGraphStyle() {
         return output.style == null ? EMPTY_STYLE : output.style;
-    }
-
-    public Map<String, String> clusterStyleOf(String clusterName) {
-        return alwaysNonNull(clusters).stream()
-                .filter(cluster -> cluster.name().equals(clusterName))
-                .findFirst()
-                .map(Cluster::style)
-                .orElse(EMPTY_STYLE);
     }
 
 
@@ -164,7 +164,7 @@ public class PackagraphOptions {
         return alwaysNonNull(clusters);
     }
 
-    private record Definition(String packages, String as, Map<String, String> style, EdgeStyle edgeInStyle) {
+    private record Definition(String packages, String as, Map<String, String> style, Map<String, String> edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))

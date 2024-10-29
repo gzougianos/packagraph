@@ -2,16 +2,11 @@ package com.github.gzougianos.packagraph;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.apache.commons.cli.*;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 
 @Accessors(fluent = true)

@@ -74,7 +74,8 @@
       "fontsize": 24,
       "fontname": "Tahoma",
       "fontcolor": "purple",
-      "labeljust": "r"
+      "labeljust": "r",
+      "dpi": 96
     }
   }
 }

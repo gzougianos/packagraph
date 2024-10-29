@@ -69,16 +69,6 @@
   "globalEdgeStyle": {
     "label": "Sample Edge",
     "color": "blue",
-    "style": "dashed",
-    "weight": 2,
-    "penwidth": 1.5,
-    "arrowhead": "diamond",
-    "arrowsize": 1.2,
-    "dir": "both",
-    "constraint": true,
-    "fontsize": 12,
-    "fontcolor": "black",
-    "decorate": true,
-    "url": "https://example.com"
+    "style": "dashed"
   }
 }
