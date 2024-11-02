@@ -1,5 +1,9 @@
-package com.github.gzougianos.packagraph;
+package com.github.gzougianos.packagraph.main;
 
+import com.github.gzougianos.packagraph.Arguments;
+import com.github.gzougianos.packagraph.GraphLibrary;
+import com.github.gzougianos.packagraph.Packagraph;
+import com.github.gzougianos.packagraph.PackagraphOptions;
 import com.github.gzougianos.packagraph.graphviz.GraphvizFactory;
 
 import java.io.IOException;
