@@ -39,3 +39,6 @@ build/
 .DS_Store
 
 *~
+#From shade plugin. For now no needed
+#Read: https://stackoverflow.com/questions/22904573/what-is-the-purpose-of-dependency-reduced-pom-xml-generated-by-the-shade-plugin
+dependency-reduced-pom.xml
