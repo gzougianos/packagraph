@@ -1,5 +1,7 @@
 # packagraph
 
+[![Build and Release JAR](https://github.com/gzougianos/packagraph/actions/workflows/packgraph.yml/badge.svg)](https://github.com/gzougianos/packagraph/actions/workflows/packgraph.yml)
+
 Is a small tool that generates package diagrams from Java source code
 directories and exports them to customizable graphs. Packagraph's input is only a
 [Human JSON](https://hjson.github.io/) file, which contains all the options
