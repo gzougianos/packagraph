@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 class GraphvizManualPlayground {
-    private static final File MANUAL_TESTING_JSON = new File(ResourcesFolder.asFile(), "for_manual_testing.json");
+    private static final File MANUAL_TESTING_JSON = new File(ResourcesFolder.asFile(), "for_manual_testing.hjson");
 
     @Test
     @Disabled

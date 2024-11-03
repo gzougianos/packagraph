@@ -14,9 +14,9 @@
     },
     {
       "packages": "com.github.javaparser.*",
-      "as": "JavaParser",
+      "as": "JavaParser Lib",
       "style": {
-        "color": "blue",
+        "color": "orange",
         "inheritGlobal": false
       }
     },
@@ -38,11 +38,20 @@
       "packages": "${PACKAGRAPH_PACKAGE_PATTERN}",
       "name": "Packagraph",
       "style": {
-        "color": "red",
-        "label": "PackgraphInternals",
+        "color": "gray",
+        "label": "packgraph internals",
         "fontsize": 18,
-        "fontcolor": "lightblue",
-        "labeljust": "l"
+        "fontcolor": "gray"
+      }
+    },
+    {
+      "packages": ".*",
+      "name": "Externals",
+      "style": {
+        "color": "gray",
+        "label": "External Dependencies",
+        "fontsize": 18,
+        "fontcolor": "gray"
       }
     }
   ],
@@ -51,8 +60,7 @@
     "shape": "box"
   },
   "globalEdgeStyle": {
-    "color": "${BLUE}",
-    "style": "dashed",
+    "color": "black",
     "weight": 1
   },
   "constants": [
@@ -70,12 +78,12 @@
     "path": "./packagraph.png",
     "overwrite": true,
     "style": {
-      "label": "ManualTesting",
-      "fontsize": 24,
+      "label": "ManualTestingSample",
+      "fontsize": 18,
       "fontname": "Tahoma",
       "fontcolor": "purple",
       "labeljust": "r",
-      "dpi": 96
+      "dpi": 75
     }
   }
 }
