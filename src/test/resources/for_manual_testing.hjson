@@ -73,7 +73,6 @@
       "value": "packagraph.*"
     }
   ],
-  "textcolor": "${BLUE}",
   "output": {
     "path": "./packagraph.png",
     "overwrite": true,
