@@ -1,0 +1,16 @@
+<configuration>
+
+    <!-- All logging disabled -->
+    <root level="OFF">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Console appender configuration -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- Pattern for console output -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+</configuration>

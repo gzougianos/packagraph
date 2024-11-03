@@ -1,0 +1,20 @@
+<configuration>
+
+    <!-- All logging disabled -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Console appender configuration -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- Pattern for console output -->
+        <!-- Looks like: -->
+        
+        <!-- 23:19:45.313 [WARN] c.g.gzougianos.packagraph.main.Main: HelloWorld -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%level] %logger{36}: %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="ch.qos.logback" level="OFF"/>
+</configuration>
