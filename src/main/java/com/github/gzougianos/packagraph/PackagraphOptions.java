@@ -154,6 +154,13 @@ public class PackagraphOptions {
                     .filter(pattern -> !isEmpty(pattern))
                     .anyMatch(pattern -> packag.name().matches(pattern));
         }
+
+        public String name() {
+            if (this.name != null) {
+                return this.name;
+            }
+            return "CLUSTER:" + packages;
+        }
     }
 
     private List<Definition> definitions() {
