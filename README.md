@@ -12,10 +12,9 @@ Given [for_manual_testing.hjson](./src/test/resources/for_manual_testing.hjson),
 
 ## Motivation:
 
-A "simple & easy to use" tool to visualize Java packages and their dependencies. In a sense, to replace on the
-package-level the
-no-longer maintained ObjectAid (see
-on [WebArchive](https://web.archive.org/web/20200418031122/http://www.objectaid.com/home)).
+A "simple & easy to use" tool to visualize Java packages and their dependencies. In a sense, packagraph
+aims to replace the no-longer maintained ObjectAid (see
+on [WebArchive](https://web.archive.org/web/20200418031122/http://www.objectaid.com/home)) on the package-level.
 
 ## How it works:
 
@@ -34,7 +33,7 @@ As a regular Java command line tool.
 java -jar packagraph.jar -o myOptions.hjson
 ```
 
-Below is all the properties that can be defined in the HJson file and supported by packagraph (*required):
+Below is all the properties that can be defined in the HJson file and supported by packagraph (<b>*</b> required):
 <table>
   <thead>
     <tr>
@@ -46,7 +45,7 @@ Below is all the properties that can be defined in the HJson file and supported 
   </thead>
   <tbody>
     <tr>
-      <td>directories*</td>
+      <td>directories<b>*</b> </td>
       <td>String[]</td>
       <td>Base directories that contain (source code) java packages. Could be as simple as "src/main/java" or directories of multiple modules.</td>
       <td>
@@ -58,7 +57,7 @@ Below is all the properties that can be defined in the HJson file and supported 
       </td>
     </tr>
     <tr>
-      <td>output.path*</td>
+      <td>output.path<b>*</b></td>
       <td>String</td>
       <td>Defines the output file path and file type. Please see the <a href="https://graphviz.org/docs/outputs/">GraphViz output formats</a>.</td>
       <td rowspan="3">
@@ -132,12 +131,12 @@ Below is all the properties that can be defined in the HJson file and supported 
 </td>
     </tr>
     <tr>
-      <td>definition(s).packages*</td>
+      <td>definition(s).packages<b>*</b></td>
       <td>String</td>
       <td>The packages that this definition refers to. You can use comma for multiple packages and regular expressions.</td>
     </tr>
     <tr>
-      <td>definition(s).as*</td>
+      <td>definition(s).as<b>*</b></td>
       <td>String</td>
       <td>The name of the re-defined package. In other words, how the package will be shown in the output graph. If this value is empty, the package is completely excluded from the graph.</td>
     </tr>
@@ -218,7 +217,7 @@ More information on <a href="https://graphviz.org/Gallery/directed/cluster.html"
 </td>
     </tr>
     <tr>
-      <td>cluster(s).packages*</td>
+      <td>cluster(s).packages<b>*</b></td>
       <td>String</td>
       <td>A comma-separated list of packages that will be grouped within the cluster. 
 Please note that at this stage, you have to refer to the packages based in their re-defined
@@ -256,12 +255,12 @@ Use the <code>${MY_CONSTANT}</code> syntax to refer to a constant.</td>
 </pre></td>
     </tr>
     <tr>
-      <td>constant(s).name*</td>
+      <td>constant(s).name<b>*</b></td>
       <td>String</td>
       <td>The name of the constant</td>
     </tr>
     <tr>
-      <td>constant(s).value*</td>
+      <td>constant(s).value<b>*</b></td>
       <td>String</td>
       <td>The value of the constant</td>
     </tr>
