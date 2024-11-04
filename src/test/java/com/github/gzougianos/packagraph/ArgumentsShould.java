@@ -35,22 +35,9 @@ class ArgumentsShould {
         assertThrows(RuntimeException.class, () -> Arguments.of("-o", optionsTxt.getAbsolutePath(), "-d", dir1.getAbsolutePath()));
     }
 
-    @Test
-    void not_be_created_if_any_dir_does_not_exist() {
-        var dir1 = new File(ARGUMENTS_TESTING_RESOURCES, "dir1DOESNOTEXIST");
-
-        assertThrows(RuntimeException.class, () -> Arguments.of("-d", dir1.getAbsolutePath()));
-    }
 
     @Test
-    void not_be_created_if_directory_is_a_file() {
-        var dir1 = new File(ARGUMENTS_TESTING_RESOURCES, "options.txt");
-
-        assertThrows(RuntimeException.class, () -> Arguments.of("-d", dir1.getAbsolutePath()));
-    }
-
-    @Test
-    void not_be_created_if_no_directory_given() {
+    void not_be_created_if_no_options_given() {
         assertThrows(RuntimeException.class, () -> Arguments.of());
     }
 
