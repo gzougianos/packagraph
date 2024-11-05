@@ -119,7 +119,7 @@ Below is all the properties that can be defined in the HJson file and supported 
       "as": "" //exclude from the graph
     },
     {
-      //Trim the 'com.something.' prefix
+      //Trim the 'com.smth.' prefix
       //com.smth.pack1 and com.smth.pack2 
       //will become just 'pack1' and 'pack2'
       "packages": "com.smth\\.(.*)",
