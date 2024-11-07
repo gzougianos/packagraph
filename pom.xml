@@ -65,6 +65,14 @@
             </exclusions>
         </dependency>
 
+        <!-- Please read: https://github.com/nidi3/graphviz-java why we need it -->
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js</artifactId>
+            <!-- newer versions do not seem to work, keep this -->
+            <version>20.0.0</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.hjson/hjson -->
         <dependency>
             <groupId>org.hjson</groupId>
