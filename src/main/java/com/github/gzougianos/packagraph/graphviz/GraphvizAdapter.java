@@ -6,6 +6,7 @@ import com.github.gzougianos.packagraph.PackagraphOptions;
 import com.github.gzougianos.packagraph.analysis.Package;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
+import guru.nidi.graphviz.engine.GraphvizV8Engine;
 import guru.nidi.graphviz.model.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,6 +18,11 @@ import static guru.nidi.graphviz.model.Link.to;
 
 @Slf4j
 class GraphvizAdapter implements GraphLibrary {
+    static {
+        GraphvizV8Engine engine = new GraphvizV8Engine();
+        Graphviz.useEngine(engine);
+    }
+
     @Override
     public void createGraph(Collection<PackageNode> nodes, PackagraphOptions options) {
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
