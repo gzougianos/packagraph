@@ -1,0 +1,45 @@
+{
+  "includeOnlyFromDirectories": false,
+  "directories": [
+    "./src/main/java"
+  ],
+  "definitions": [
+    # Ignore java basics
+    {
+      "packages": "java.*,lombok.*",
+      "as": ""
+    }
+  ],
+  "clusters": [
+    # Cluster skeleton
+    /*
+    {
+      "packages": "com.something.*",
+      "name": "Packagraph",
+      "style": {
+        "color": "gray",
+      }
+    }
+    */
+  ],
+  "globalStyle": {
+
+  },
+  "globalEdgeStyle": {
+
+  },
+  "constants": [
+    {
+      "name": "MY_CONSTANT",
+      "value": "MY_VALUE"
+    }
+  ],
+  "output": {
+    "path": "./packagraph.png",
+    "overwrite": true,
+    "style": {
+      "label": "Package Diagram",
+      "dpi": 75
+    }
+  }
+}
