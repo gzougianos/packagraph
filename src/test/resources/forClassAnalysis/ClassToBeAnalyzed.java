@@ -5,6 +5,8 @@ import java.io.*;
 
 import static java.lang.System.setErr;
 
+import static javax.swing.SwingUtilities.*;
+
 public class ClassToBeAnalyzed {
 
     public static void main(String[] args) {

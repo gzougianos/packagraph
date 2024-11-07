@@ -69,29 +69,35 @@ public final class JavaClass {
     }
 
     private static Package adaptImport(ImportDeclaration importt) {
-        var name = importt.getNameAsString();
+        final var importName = importt.getNameAsString();
 
+        //import java.io.*, library gives: java.io
         if (!importt.isStatic() && importt.isAsterisk()) {
-            return new Package(name);
+            return new Package(importName);
         }
 
-        var withoutLastDot = name.substring(0, name.lastIndexOf('.'));
-        //Assume static import: java.lang.System.setErr
-        //Library gives: java.lang.System.setErr
-        //So need to trim the last dot part
-        if (importt.isStatic()) {
-            return new Package(withoutLastDot);
+        //import java.util.HashMap, library gives: java.util.HashMap
+        //So need to trim className
+        if (!importt.isStatic() && !importt.isAsterisk()) {
+            return new Package(trimUpToLastDot(importName));
         }
 
-        //Assume regular import: java.io.File
-        //Library gives: java.io.File
-        //So need to trim the last dot part
-        if (!importt.isAsterisk())
-            return new Package(name.substring(0, name.lastIndexOf('.')));
+        //import static java.lang.System.setErr, library gives: java.lang.System.setErr
+        //So need to trim method name + class name
+        if (importt.isStatic() && !importt.isAsterisk()) {
+            return new Package(trimUpToLastDot(trimUpToLastDot(importName)));
+        }
 
-        //Assume wildcard import: java.io.*
-        //Library gives: java.io
-        return new Package(name);
+        //import static javax.swing.SwingUtilities.*, library gives: javax.swing.SwingUtilities
+        //So need to trim class name
+        return new Package(trimUpToLastDot(importName));
+    }
+
+    private static String trimUpToLastDot(String str) {
+        if (!str.contains("."))
+            return str;
+
+        return str.substring(0, str.lastIndexOf('.'));
     }
 
     public static JavaClass of(File sourceFile) throws ClassAnalysisFailedException {

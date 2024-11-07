@@ -27,16 +27,12 @@ class JavaClassShould {
 
         Collection<Package> imports = javaClass.imports();
 
-        assertEquals(3, imports.size());
+        assertEquals(4, imports.size());
 
-        var javaIo = getImport("java.io", imports);
-        assertEquals("java.io", javaIo.name());
-
-        var staticMethod = getImport("java.lang.System", imports);
-        assertEquals("java.lang.System", staticMethod.name());
-
-        var hashMapImport = getImport("java.util", imports);
-        assertEquals("java.util", hashMapImport.name());
+        assertImport("java.io", imports);
+        assertImport("java.util", imports);
+        assertImport("java.lang", imports);
+        assertImport("javax.swing", imports);
     }
 
     @Test
@@ -44,7 +40,7 @@ class JavaClassShould {
         assertThrows(ClassAnalysisFailedException.class, () -> JavaClass.of(NON_COMPILABLE_CLASS));
     }
 
-    private static Package getImport(String name, Collection<Package> imports) {
-        return imports.stream().filter(i -> i.name().equals(name)).findFirst().orElseThrow();
+    private static void assertImport(String name, Collection<Package> imports) {
+        imports.stream().filter(i -> i.name().equals(name)).findFirst().orElseThrow();
     }
 }
