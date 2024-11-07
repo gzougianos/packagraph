@@ -204,6 +204,25 @@ class PackagraphOptionsShould {
     }
 
     @Test
+    void throws_human_message_when_constant_does_not_exist() throws Exception {
+        var exception = assertThrows(RuntimeException.class, () -> PackagraphOptions.fromJson("""
+                {
+                  "constants": [
+                
+                  ],
+                  "directories": [
+                    "${NON_EXISTENT_CONSTANT}/subfolder"
+                  ],
+                  "output": {
+                    "path": "target/packagraph.png",
+                    "overwrite": true,
+                  }
+                }"""));
+        assertTrue(exception.getMessage().toLowerCase().contains("not found")
+                && exception.getMessage().contains("${NON_EXISTENT_CONSTANT}"));
+    }
+
+    @Test
     void replace_multiple_constants_in_single_value() throws Exception {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {

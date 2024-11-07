@@ -114,7 +114,10 @@ final class HJsonWrapper {
 
         while (matcher.find()) {
             String placeholder = matcher.group(1); // Extract the placeholder name
-            String replacement = constants.getOrDefault(placeholder, matcher.group(0)); // Replace if constant exists
+            String replacement = constants.get(placeholder);
+            if (replacement == null) {
+                throw new IllegalArgumentException("Constant not found: ${" + placeholder + "}");
+            }
             matcher.appendReplacement(result, replacement);
         }
         matcher.appendTail(result);
