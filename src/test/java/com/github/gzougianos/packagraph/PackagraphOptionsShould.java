@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -248,5 +249,14 @@ class PackagraphOptionsShould {
         File[] directories = options.directories();
         assertEquals(1, directories.length);
         assertEquals(new File("src/main/java/src/test/java"), directories[0]);
+    }
+
+    @Test
+    void adds_tooltip_to_nodes_from_definitions() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        Package java = PackageFactoryForTests.create("java.util");
+
+        Map<String, String> style = options.styleOf(java);
+        assertEquals("java.util.*", style.get("tooltip"));
     }
 }

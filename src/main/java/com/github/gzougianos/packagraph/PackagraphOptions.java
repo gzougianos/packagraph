@@ -38,10 +38,13 @@ public class PackagraphOptions {
     }
 
     public Map<String, String> styleOf(Package packag) {
-        return unmodifiableMap(findDefinitionForRenamed(packag)
-                .map(Definition::style)
-                .map(style -> inheritProperties(style, globalStyle()))
-                .orElse(globalStyle()));
+        return findDefinitionForRenamed(packag)
+                .map(def -> {
+                    var style = new HashMap<>(inheritProperties(def.style(), globalStyle()));
+                    style.putIfAbsent("tooltip", def.packages());
+                    return Collections.unmodifiableMap(style);
+                })
+                .orElse(globalStyle());
     }
 
     public Map<String, String> edgeInStyleOf(Package packag) {
