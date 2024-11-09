@@ -136,6 +136,28 @@ class PackagraphOptionsShould {
     }
 
     @Test
+    void know_the_node_inner_style_of_a_package() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "nodeStyle": {
+                        "fillcolor": "green"
+                      }
+                    }
+                  ]
+                """);
+
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.styleOf(java);
+        assertEquals("green", style.get("fillcolor"));
+    }
+
+    @Test
     void give_the_default_node_style_if_not_specified() throws Exception {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
@@ -376,9 +398,25 @@ class PackagraphOptionsShould {
 
     @Test
     void replace_constants() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        var style = options.mainGraphStyle();
-        assertEquals("pink", style.get("fontcolor"));
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  "constants": [
+                    {
+                        "name": "OUTPUT_FILE",
+                        "value": "src/main/java.png"
+                    }
+                  ],
+                  "directories": [
+                    "src/main/java"
+                  ],
+                  "output": {
+                    "path": "${OUTPUT_FILE}",
+                    "overwrite": true,
+                  }
+                
+                }""");
+
+        assertEquals(new File("src/main/java.png"), options.outputFile());
     }
 
     @Test
@@ -460,10 +498,21 @@ class PackagraphOptionsShould {
 
     @Test
     void adds_tooltip_to_nodes_from_definitions() throws Exception {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        Package java = PackageFactoryForTests.create("java.util");
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java"
+                    }
+                  ]
+                """);
 
-        Map<String, String> style = options.styleOf(java);
+        Package java = PackageFactoryForTests.create("java");
+
+        var style = options.styleOf(java);
         assertEquals("java.util.*", style.get("tooltip"));
     }
 }

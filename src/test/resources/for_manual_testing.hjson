@@ -15,11 +15,6 @@
     "graphviz-lib": {
       "style": "filled",
       "fillcolor": "green"
-    },
-    "gson-lib": {
-      "style": "filled",
-      "fillcolor": "orange",
-      "shape": "null"
     }
   },
   "edgeStyles": {
@@ -44,7 +39,11 @@
     {
       "packages": "com.google.gson.*",
       "as": "Gson",
-      "nodeStyle": "gson-lib"
+      "nodeStyle": {
+        "fillcolor": "orange",
+        "shape": "null",
+        "style": "filled"
+      }
     },
     {
       "packages": "com.github.javaparser.*",

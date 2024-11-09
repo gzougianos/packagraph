@@ -44,14 +44,19 @@ public class PackagraphOptions {
         return output().overwrite();
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, String> styleOf(Package packag) {
         final var defaultStyle = nodeStyleWithName("default").orElse(DEFAULT_STYLE);
 
         return findDefinitionForRenamed(packag)
                 .map(def -> {
-                    var nodeStyle = nodeStyleWithName(def.nodeStyle()).orElse(DEFAULT_STYLE);
-
-                    var style = new HashMap<>(inheritProperties(nodeStyle.attributes(), defaultStyle.attributes()));
+                    var style = new HashMap<>(defaultStyle.attributes());
+                    if (def.nodeStyle() instanceof String styleName) {
+                        var nodeStyle = nodeStyleWithName(styleName).orElse(DEFAULT_STYLE);
+                        style = new HashMap<>(inheritProperties(nodeStyle.attributes(), defaultStyle.attributes()));
+                    } else if (def.nodeStyle() instanceof Map<?, ?> nodeStyle) {
+                        style = new HashMap<>(inheritProperties((Map<String, String>) nodeStyle, defaultStyle.attributes()));
+                    }
                     style.putIfAbsent("tooltip", def.packages());
                     return unmodifiableMap(style);
                 })
@@ -97,6 +102,11 @@ public class PackagraphOptions {
 
     private static Map<String, String> inheritProperties(Map<String, String> style, Map<String, String> defaultStyle) {
         Objects.requireNonNull(style);
+        
+        if (Objects.equals(style, defaultStyle)) {
+            return style;
+        }
+
         if (inheritGlobalExplictlyDisabled(style)) {
             return style;
         }
@@ -208,7 +218,7 @@ public class PackagraphOptions {
         return alwaysNonNull(clusters);
     }
 
-    private record Definition(String packages, String as, String nodeStyle, String edgeInStyle) {
+    private record Definition(String packages, String as, Object nodeStyle, String edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))

@@ -157,7 +157,7 @@ class GraphvizAdapter implements GraphLibrary {
 
     private static Node applyNodeStyle(Node node, Map<String, String> style) {
         for (var entry : style.entrySet()) {
-            var value = entry.getValue();
+            var value = String.valueOf(entry.getValue());
             if (isNullOrStringNull(value)) {
                 value = null;
             }
