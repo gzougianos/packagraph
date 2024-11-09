@@ -3,6 +3,35 @@
   "directories": [
     "./src/main/java"
   ],
+  "nodeStyles": {
+    "default": {
+      "fontsize": 20,
+      "shape": "box"
+    },
+    "java-parser-lib": {
+      "color": "orange",
+      "inheritDefault": false
+    },
+    "graphviz-lib": {
+      "style": "filled",
+      "fillcolor": "green"
+    },
+    "gson-lib": {
+      "style": "filled",
+      "fillcolor": "orange",
+      "shape": "null"
+    }
+  },
+  "edgeStyles": {
+    "default": {
+      "color": "black",
+      "weight": 1
+    },
+    "solid-green": {
+      "style": "solid",
+      "color": "green"
+    }
+  },
   "definitions": [
     {
       "packages": "com.github.gzougianos\\.(.*)",
@@ -13,24 +42,20 @@
       "as": ""
     },
     {
+      "packages": "com.google.gson.*",
+      "as": "Gson",
+      "nodeStyle": "gson-lib"
+    },
+    {
       "packages": "com.github.javaparser.*",
       "as": "JavaParser Lib",
-      "style": {
-        "color": "orange",
-        "inheritGlobal": false
-      }
+      "nodeStyle": "java-parser-lib"
     },
     {
       "packages": "guru.nidi.*",
       "as": "Graphviz",
-      "style": {
-        "style": "filled",
-        "fillcolor": "green"
-      },
-      "edgeInStyle": {
-        "style": "solid",
-        "color": "green"
-      }
+      "nodeStyle": "graphviz-lib",
+      "edgeInStyle": "solid-green"
     }
   ],
   "clusters": [
@@ -55,14 +80,6 @@
       }
     }
   ],
-  "globalStyle": {
-    "fontsize": 20,
-    "shape": "box"
-  },
-  "globalEdgeStyle": {
-    "color": "black",
-    "weight": 1
-  },
   "constants": [
     {
       "name": "BLUE",
