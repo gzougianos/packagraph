@@ -116,7 +116,7 @@ class GraphvizAdapter implements GraphLibrary {
     }
 
     private static boolean fileExistsAndCantOverwrite(PackagraphOptions options) {
-        return options.outputFile().exists() && !options.allowsOverwriteImageOutput();
+        return options.outputFile().exists() && !options.allowsOverwriteOutput();
     }
 
     private static Format getFormatOutput(PackagraphOptions options) {

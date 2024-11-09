@@ -30,15 +30,42 @@ class PackagraphOptionsShould {
 
     @Test
     void parse_output_from_json() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                        "directories": [
+                           "src/main/java",
+                           "src/test/java"
+                        ],
+                        "output": {
+                            "path": "target/packagraph.png",
+                            "overwrite": true
+                        }
+                """);
 
         assertEquals(new File("target/packagraph.png"), options.outputFile());
-        assertTrue(options.allowsOverwriteImageOutput());
+        assertTrue(options.allowsOverwriteOutput());
     }
 
     @Test
     void rename_packages() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                    },
+                    {
+                      "packages": "com.github.com",
+                      "as": "",
+                    },
+                    {
+                      "packages": "com.something\\\\.(.*)",
+                      "as": "$1"
+                    }
+                  ]
+                """);
 
         Package java = PackageFactoryForTests.create("java.util");
         Package renamedJava = options.rename(java);
@@ -57,7 +84,18 @@ class PackagraphOptionsShould {
     //    }
     @Test
     void rename_packages_with_regex_groups() throws Exception {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "com.something\\\\.(.*)",
+                      "as": "$1"
+                    }
+                  ]
+                """);
+        
         Package pack1 = PackageFactoryForTests.create("com.something.pack1");
         Package pack2 = PackageFactoryForTests.create("com.something.pack2");
         Package pack1Subpack = PackageFactoryForTests.create("com.something.pack1.subpack");

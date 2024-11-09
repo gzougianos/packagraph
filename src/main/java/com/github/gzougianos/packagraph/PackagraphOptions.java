@@ -35,7 +35,7 @@ public class PackagraphOptions {
     private Map<String, String> globalEdgeStyle;
 
 
-    public boolean allowsOverwriteImageOutput() {
+    public boolean allowsOverwriteOutput() {
         return output().overwrite();
     }
 
@@ -226,7 +226,7 @@ public class PackagraphOptions {
         if (options.outputFile().exists() && options.outputFile().isDirectory())
             throw new IllegalArgumentException("Output file already exists and is directory: " + options.outputFile().getAbsolutePath());
 
-        if (options.outputFile().exists() && !options.allowsOverwriteImageOutput())
+        if (options.outputFile().exists() && !options.allowsOverwriteOutput())
             throw new IllegalArgumentException("Output file already exists: " + options.outputFile().getAbsolutePath());
 
         return options;
