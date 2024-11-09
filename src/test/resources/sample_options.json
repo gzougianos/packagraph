@@ -7,27 +7,11 @@
   "definitions": [
     {
       "packages": "java.util.*",
-      "as": "java",
-      "style": {
-        "fillcolor": "green",
-        "inheritGlobal": true
-      },
-      "edgeInStyle": {
-        "style": "solid",
-        "color": "red"
-      }
+      "as": "java"
     },
     {
       "packages": "com.github.com",
-      "as": "",
-      "style": {
-        "fillcolor": "blue",
-        "inheritGlobal": false
-      },
-      "edgeInStyle": {
-        "inheritGlobal": false,
-        "color": "green"
-      }
+      "as": ""
     },
     {
       "packages": "com.something\\.(.*)",

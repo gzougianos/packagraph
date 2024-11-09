@@ -221,25 +221,113 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_edge_in_style() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        Package java = PackageFactoryForTests.create("java");
-        var edgeStyle = options.edgeInStyleOf(java);
+    void know_the_edge_in_style_of_a_package() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "edgeInStyle": "JAVA_STYLE"
+                    }
+                  ],
+                  "edgeStyles": {
+                    "JAVA_STYLE": {
+                      "color": "green"
+                    }
+                  }
+                """);
 
-        assertEquals("Sample Edge", edgeStyle.get("label"));
-        assertEquals("red", edgeStyle.get("color"));
-        assertEquals("solid", edgeStyle.get("style"));
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.edgeInStyleOf(java);
+        assertEquals("green", style.get("color"));
     }
 
     @Test
-    void know_the_edge_in_style_without_inherit() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        Package java = PackageFactoryForTests.create("com.github.com");
-        var edgeStyle = options.edgeInStyleOf(java);
+    void give_default_edge_in_style_if_not_specified() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                    }
+                  ],
+                  "edgeStyles": {
+                    "default": {
+                      "color": "green"
+                    }
+                  }
+                """);
 
-        assertEquals("green", edgeStyle.get("color"));
-        assertNull(edgeStyle.get("label"));
-        assertNull(edgeStyle.get("style"));
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.edgeInStyleOf(java);
+        assertEquals("green", style.get("color"));
+    }
+
+    @Test
+    void inherit_default_edge_in_style() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "edgeInStyle": "JAVA_STYLE"
+                    }
+                  ],
+                  "edgeStyles": {
+                    "default": {
+                      "fillcolor": "green",
+                      "fontcolor": "blue"
+                    },
+                    "JAVA_STYLE": {
+                      "fillcolor": "pink",
+                    }
+                  }
+                """);
+
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.edgeInStyleOf(java);
+        assertEquals("pink", style.get("fillcolor"));
+        assertEquals("blue", style.get("fontcolor"));
+    }
+
+    @Test
+    void not_inherit_default_edge_in_style() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "edgeInStyle": "JAVA_STYLE"
+                    }
+                  ],
+                  "edgeStyles": {
+                    "default": {
+                      "fillcolor": "green",
+                      "fontcolor": "blue"
+                    },
+                    "JAVA_STYLE": {
+                      "fillcolor": "pink",
+                      "inheritDefault": false
+                    }
+                  }
+                """);
+
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.edgeInStyleOf(java);
+        assertEquals("pink", style.get("fillcolor"));
+        assertNull(style.get("fontcolor"));
     }
 
     @Test

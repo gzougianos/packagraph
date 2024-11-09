@@ -37,6 +37,7 @@ public class PackagraphOptions {
     private Map<String, String> globalStyle;
     private Map<String, String> globalEdgeStyle;
     private List<Style> nodeStyles;
+    private List<Style> edgeStyles;
 
 
     public boolean allowsOverwriteOutput() {
@@ -62,15 +63,28 @@ public class PackagraphOptions {
                 .findFirst();
     }
 
+    private Optional<Style> edgeStyleWithName(String name) {
+        return edgeStyles().stream().filter(style -> style.name().equals(name))
+                .findFirst();
+    }
+
     private List<Style> nodeStyles() {
         return isEmpty(nodeStyles) ? List.of(DEFAULT_STYLE) : nodeStyles;
     }
 
+    private List<Style> edgeStyles() {
+        return isEmpty(edgeStyles) ? List.of(DEFAULT_STYLE) : edgeStyles;
+    }
+
     public Map<String, String> edgeInStyleOf(Package packag) {
+        final var defaultStyle = edgeStyleWithName("default").orElse(DEFAULT_STYLE);
+
         return findDefinitionForRenamed(packag)
-                .map(Definition::edgeInStyle)
-                .map(style -> inheritProperties(style, globalEdgeStyle()))
-                .orElse(globalEdgeStyle());
+                .map(def -> {
+                    var edgeStyle = edgeStyleWithName(def.edgeInStyle()).orElse(DEFAULT_STYLE);
+                    return unmodifiableMap(inheritProperties(edgeStyle.attributes(), defaultStyle.attributes()));
+                })
+                .orElse(defaultStyle.attributes());
     }
 
     public Map<String, String> clusterStyleOf(String clusterName) {
@@ -194,7 +208,7 @@ public class PackagraphOptions {
         return alwaysNonNull(clusters);
     }
 
-    private record Definition(String packages, String as, String nodeStyle, Map<String, String> edgeInStyle) {
+    private record Definition(String packages, String as, String nodeStyle, String edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
