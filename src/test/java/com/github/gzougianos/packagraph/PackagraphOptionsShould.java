@@ -16,7 +16,12 @@ class PackagraphOptionsShould {
 
     @Test
     void parse_directories_from_json() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                        "directories": [
+                           "src/main/java",
+                           "src/test/java"
+                        ]
+                """);
         assertFalse(options.includeOnlyFromDirectories());
         assertEquals(2, options.directories().length);
         assertEquals(new File("src/main/java"), options.directories()[0]);

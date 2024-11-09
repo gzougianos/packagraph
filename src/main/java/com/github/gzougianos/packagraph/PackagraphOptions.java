@@ -20,9 +20,11 @@ import static java.util.Collections.unmodifiableMap;
 @Builder
 @AllArgsConstructor
 public class PackagraphOptions {
-
     private static final Map<String, String> EMPTY_STYLE = Map.of();
     private static final String COMMA = ",";
+
+    private static final Output DEFAULT_OUTPUT = new Output("/packagraph.png", false, EMPTY_STYLE);
+
     @Getter
     private boolean includeOnlyFromDirectories;
     private String[] directories;
@@ -34,7 +36,7 @@ public class PackagraphOptions {
 
 
     public boolean allowsOverwriteImageOutput() {
-        return output.overwrite;
+        return output().overwrite();
     }
 
     public Map<String, String> styleOf(Package packag) {
@@ -96,12 +98,15 @@ public class PackagraphOptions {
     }
 
     public Map<String, String> mainGraphStyle() {
-        return output.style == null ? EMPTY_STYLE : output.style;
+        return output().style() == null ? EMPTY_STYLE : output().style();
     }
 
+    private Output output() {
+        return output == null ? DEFAULT_OUTPUT : output;
+    }
 
     public File outputFile() {
-        return new File(output.path);
+        return new File(output().path());
     }
 
     public String outputFileType() {
@@ -194,7 +199,7 @@ public class PackagraphOptions {
     }
 
 
-    private record Output(String path, boolean overwrite, Map<String, String> style) {
+    private record Output(String path, Boolean overwrite, Map<String, String> style) {
     }
 
     public static PackagraphOptions fromJson(File optionsFile) throws IOException {
@@ -218,13 +223,10 @@ public class PackagraphOptions {
         if (options.directories == null || options.directories.length == 0)
             throw new IllegalArgumentException("No directories specified");
 
-        if (options.output == null || options.output.path == null)
-            throw new IllegalArgumentException("No output specified");
-
         if (options.outputFile().exists() && options.outputFile().isDirectory())
             throw new IllegalArgumentException("Output file already exists and is directory: " + options.outputFile().getAbsolutePath());
 
-        if (options.outputFile().exists() && !options.output.overwrite)
+        if (options.outputFile().exists() && !options.allowsOverwriteImageOutput())
             throw new IllegalArgumentException("Output file already exists: " + options.outputFile().getAbsolutePath());
 
         return options;
