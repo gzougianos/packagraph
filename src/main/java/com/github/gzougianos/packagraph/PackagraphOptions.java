@@ -1,7 +1,8 @@
 package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.Package;
-import com.google.gson.Gson;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.experimental.Accessors;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ import static java.util.Collections.unmodifiableMap;
 @AllArgsConstructor
 public class PackagraphOptions {
     private static final Map<String, String> EMPTY_STYLE = Map.of();
+    private static final Style DEFAULT_STYLE = new Style("default", EMPTY_STYLE);
     private static final String COMMA = ",";
 
     private static final Output DEFAULT_OUTPUT = new Output("/packagraph.png", false, EMPTY_STYLE);
@@ -33,6 +36,7 @@ public class PackagraphOptions {
     private Output output;
     private Map<String, String> globalStyle;
     private Map<String, String> globalEdgeStyle;
+    private List<Style> nodeStyles;
 
 
     public boolean allowsOverwriteOutput() {
@@ -40,13 +44,26 @@ public class PackagraphOptions {
     }
 
     public Map<String, String> styleOf(Package packag) {
+        final var defaultStyle = nodeStyleWithName("default").orElse(DEFAULT_STYLE);
+
         return findDefinitionForRenamed(packag)
                 .map(def -> {
-                    var style = new HashMap<>(inheritProperties(def.style(), globalStyle()));
+                    var nodeStyle = nodeStyleWithName(def.nodeStyle()).orElse(DEFAULT_STYLE);
+
+                    var style = new HashMap<>(inheritProperties(nodeStyle.attributes(), defaultStyle.attributes()));
                     style.putIfAbsent("tooltip", def.packages());
-                    return Collections.unmodifiableMap(style);
+                    return unmodifiableMap(style);
                 })
-                .orElse(globalStyle());
+                .orElse(defaultStyle.attributes());
+    }
+
+    private Optional<Style> nodeStyleWithName(String name) {
+        return nodeStyles().stream().filter(style -> style.name().equals(name))
+                .findFirst();
+    }
+
+    private List<Style> nodeStyles() {
+        return isEmpty(nodeStyles) ? List.of(DEFAULT_STYLE) : nodeStyles;
     }
 
     public Map<String, String> edgeInStyleOf(Package packag) {
@@ -64,22 +81,20 @@ public class PackagraphOptions {
                 .orElse(EMPTY_STYLE);
     }
 
-    private static Map<String, String> inheritProperties(Map<String, String> style1, Map<String, String> style2) {
-        if (style2 == null)
-            return style1;
-
-        if (inheritGlobalExplictlyDisabled(style1)) {
-            return style1;
+    private static Map<String, String> inheritProperties(Map<String, String> style, Map<String, String> defaultStyle) {
+        Objects.requireNonNull(style);
+        if (inheritGlobalExplictlyDisabled(style)) {
+            return style;
         }
 
-        Map<String, String> result = new HashMap<>(style1);
+        Map<String, String> result = new HashMap<>(style);
 
-        style2.forEach(result::putIfAbsent);
+        defaultStyle.forEach(result::putIfAbsent);
         return unmodifiableMap(result);
     }
 
     private static boolean inheritGlobalExplictlyDisabled(Map<String, String> style) {
-        return "false".equalsIgnoreCase(String.valueOf(style.get("inheritGlobal")));
+        return "false".equalsIgnoreCase(String.valueOf(style.get("inheritDefault")));
     }
 
 
@@ -179,7 +194,7 @@ public class PackagraphOptions {
         return alwaysNonNull(clusters);
     }
 
-    private record Definition(String packages, String as, Map<String, String> style, Map<String, String> edgeInStyle) {
+    private record Definition(String packages, String as, String nodeStyle, Map<String, String> edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
@@ -190,16 +205,33 @@ public class PackagraphOptions {
             return refersTo(packag) || packag.name().equals(as.trim());
         }
 
-        public String findMatchingPattern(Package packag) {
+        String findMatchingPattern(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
                     .filter(pattern -> packag.name().matches(pattern))
                     .findFirst().orElseThrow();
         }
+
     }
 
 
     private record Output(String path, Boolean overwrite, Map<String, String> style) {
+    }
+
+    private record Style(String name, Map<String, String> attributes) {
+
+        Style {
+            if (isEmpty(name)) {
+                throw new IllegalArgumentException("Style must have a name");
+            }
+        }
+
+        public Map<String, String> attributes() {
+            if (this.attributes == null) {
+                return EMPTY_STYLE;
+            }
+            return unmodifiableMap(this.attributes);
+        }
     }
 
     public static PackagraphOptions fromJson(File optionsFile) throws IOException {
@@ -215,7 +247,10 @@ public class PackagraphOptions {
     public static PackagraphOptions fromJson(String optionsJson) {
         String jsonWithConstantsReplaced = HJsonWrapper.readHJsonWithConstants(optionsJson);
 
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(new TypeToken<List<Style>>() {
+        }.getType(), new StyleDeserializer());
+        Gson gson = gsonBuilder.create();
         return verify(gson.fromJson(jsonWithConstantsReplaced, PackagraphOptions.class));
     }
 
@@ -250,5 +285,30 @@ public class PackagraphOptions {
 
         if (optionsFile.isDirectory())
             throw new IllegalArgumentException("Options file is a directory: " + optionsFile.getAbsolutePath());
+    }
+
+
+    private static class StyleDeserializer implements JsonDeserializer<List<Style>> {
+        @Override
+        public List<Style> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            List<Style> styles = new ArrayList<>();
+            JsonObject nodeStylesObject = json.getAsJsonObject();
+
+            for (Map.Entry<String, JsonElement> entry : nodeStylesObject.entrySet()) {
+                String styleName = entry.getKey();
+                JsonObject attributesObject = entry.getValue().getAsJsonObject();
+
+                // Map attributes to a HashMap
+                Map<String, String> attributes = new HashMap<>();
+                for (Map.Entry<String, JsonElement> attributeEntry : attributesObject.entrySet()) {
+                    attributes.put(attributeEntry.getKey(), attributeEntry.getValue().getAsString());
+                }
+
+                // Add the new Style object to the list
+                styles.add(new Style(styleName, attributes));
+            }
+
+            return styles;
+        }
     }
 }

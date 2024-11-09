@@ -95,7 +95,7 @@ class PackagraphOptionsShould {
                     }
                   ]
                 """);
-        
+
         Package pack1 = PackageFactoryForTests.create("com.something.pack1");
         Package pack2 = PackageFactoryForTests.create("com.something.pack2");
         Package pack1Subpack = PackageFactoryForTests.create("com.something.pack1.subpack");
@@ -111,38 +111,114 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_style_of_a_package_that_inherits_from_global() throws Exception {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+    void know_the_node_style_of_a_package() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "nodeStyle": "JAVA_STYLE"
+                    }
+                  ],
+                  "nodeStyles": {
+                    "JAVA_STYLE": {
+                      "fillcolor": "green"
+                    }
+                  }
+                """);
 
         Package java = PackageFactoryForTests.create("java");
         var style = options.styleOf(java);
-        assertEquals("green", style.get("fillcolor")); //package overwrites only fill color, rest is global
-        assertEquals("rectangle", style.get("shape"));
-        assertEquals("rounded", style.get("style"));
+        assertEquals("green", style.get("fillcolor"));
     }
 
     @Test
-    void know_the_global_style() throws Exception {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        Package notDefinedPackage = PackageFactoryForTests.create("com.something");
-        var style = options.styleOf(notDefinedPackage);
+    void give_the_default_node_style_if_not_specified() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java"
+                    }
+                  ],
+                  "nodeStyles": {
+                    "default": {
+                      "fillcolor": "green"
+                    }
+                  }
+                """);
 
-        assertEquals("rectangle", style.get("shape"));
-        assertEquals("rounded", style.get("style"));
-        assertEquals("lightblue", style.get("fillcolor"));
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.styleOf(java);
+        assertEquals("green", style.get("fillcolor"));
     }
-
 
     @Test
-    void not_inherit_global_style() throws Exception {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        Package github = PackageFactoryForTests.create("com.github.com");
-        var style = options.styleOf(github);
+    void inherit_default_node_style() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "nodeStyle": "JAVA_STYLE"
+                    }
+                  ],
+                  "nodeStyles": {
+                    "default": {
+                      "fillcolor": "green",
+                      "fontcolor": "blue"
+                    },
+                    "JAVA_STYLE": {
+                      "fillcolor": "pink",
+                    }
+                  }
+                """);
 
-        assertEquals("blue", style.get("fillcolor"));
-        assertNull(style.get("shape"));
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.styleOf(java);
+        assertEquals("pink", style.get("fillcolor"));
+        assertEquals("blue", style.get("fontcolor"));
     }
 
+    @Test
+    void not_inherit_node_style_if_disabled() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "nodeStyle": "JAVA_STYLE"
+                    }
+                  ],
+                  "nodeStyles": {
+                    "default": {
+                      "fillcolor": "green",
+                      "fontcolor": "blue"
+                    },
+                    "JAVA_STYLE": {
+                      "fillcolor": "pink",
+                      "inheritDefault": false
+                    }
+                  }
+                """);
+
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.styleOf(java);
+        assertEquals("pink", style.get("fillcolor"));
+        assertNull(style.get("fontcolor"));
+    }
 
     @Test
     void know_the_edge_in_style() throws IOException {
