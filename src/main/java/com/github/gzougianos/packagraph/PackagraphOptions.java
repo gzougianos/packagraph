@@ -34,8 +34,6 @@ public class PackagraphOptions {
     private List<Definition> definitions;
     private List<Cluster> clusters;
     private Output output;
-    private Map<String, String> globalStyle;
-    private Map<String, String> globalEdgeStyle;
     private List<Style> nodeStyles;
     private List<Style> edgeStyles;
 
@@ -102,7 +100,7 @@ public class PackagraphOptions {
 
     private static Map<String, String> inheritProperties(Map<String, String> style, Map<String, String> defaultStyle) {
         Objects.requireNonNull(style);
-        
+
         if (Objects.equals(style, defaultStyle)) {
             return style;
         }
@@ -126,14 +124,6 @@ public class PackagraphOptions {
         return definitions().stream()
                 .filter(definition -> definition.refersToRenamed(packag))
                 .findFirst();
-    }
-
-    private Map<String, String> globalEdgeStyle() {
-        return globalEdgeStyle == null ? EMPTY_STYLE : globalEdgeStyle;
-    }
-
-    public Map<String, String> globalStyle() {
-        return globalStyle == null ? EMPTY_STYLE : globalStyle;
     }
 
     public Map<String, String> mainGraphStyle() {
