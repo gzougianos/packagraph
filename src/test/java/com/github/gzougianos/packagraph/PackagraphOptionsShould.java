@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -131,7 +130,7 @@ class PackagraphOptionsShould {
                 """);
 
         Package java = PackageFactoryForTests.create("java");
-        var style = options.styleOf(java);
+        var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
 
@@ -153,7 +152,7 @@ class PackagraphOptionsShould {
                 """);
 
         Package java = PackageFactoryForTests.create("java");
-        var style = options.styleOf(java);
+        var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
 
@@ -177,7 +176,7 @@ class PackagraphOptionsShould {
                 """);
 
         Package java = PackageFactoryForTests.create("java");
-        var style = options.styleOf(java);
+        var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
 
@@ -206,7 +205,7 @@ class PackagraphOptionsShould {
                 """);
 
         Package java = PackageFactoryForTests.create("java");
-        var style = options.styleOf(java);
+        var style = options.nodeStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertEquals("blue", style.get("fontcolor"));
     }
@@ -237,7 +236,7 @@ class PackagraphOptionsShould {
                 """);
 
         Package java = PackageFactoryForTests.create("java");
-        var style = options.styleOf(java);
+        var style = options.nodeStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertNull(style.get("fontcolor"));
     }
@@ -512,7 +511,7 @@ class PackagraphOptionsShould {
 
         Package java = PackageFactoryForTests.create("java");
 
-        var style = options.styleOf(java);
+        var style = options.nodeStyleOf(java);
         assertEquals("java.util.*", style.get("tooltip"));
     }
 }

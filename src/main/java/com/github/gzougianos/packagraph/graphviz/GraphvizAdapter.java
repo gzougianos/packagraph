@@ -148,7 +148,7 @@ class GraphvizAdapter implements GraphLibrary {
         return allPackages.stream()
                 .map(packag -> {
                     var node = Factory.node(packag.name());
-                    node = applyNodeStyle(node, options.styleOf(packag));
+                    node = applyNodeStyle(node, options.nodeStyleOf(packag));
                     return new AbstractMap.SimpleEntry<>(packag, node);
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

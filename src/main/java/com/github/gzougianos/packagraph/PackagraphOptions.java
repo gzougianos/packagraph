@@ -45,11 +45,22 @@ public class PackagraphOptions {
         return output().overwrite();
     }
 
-    public Map<String, String> styleOf(Package packag) {
+    public Map<String, String> nodeStyleOf(Package packag) {
         final var defaultStyle = nodeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
         return findDefinitionForRenamed(packag)
                 .map(def -> getNodeStyleForDefinition(def, defaultStyle))
+                .orElse(defaultStyle.attributes());
+    }
+
+    public Map<String, String> edgeInStyleOf(Package packag) {
+        final var defaultStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
+
+        return findDefinitionForRenamed(packag)
+                .map(def -> {
+                    var edgeStyle = edgeStyleWithName(def.edgeInStyle()).orElse(DEFAULT_STYLE);
+                    return unmodifiableMap(inheritProperties(edgeStyle.attributes(), defaultStyle.attributes()));
+                })
                 .orElse(defaultStyle.attributes());
     }
 
@@ -100,16 +111,6 @@ public class PackagraphOptions {
         return isEmpty(edgeStyles) ? List.of(DEFAULT_STYLE) : edgeStyles;
     }
 
-    public Map<String, String> edgeInStyleOf(Package packag) {
-        final var defaultStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
-
-        return findDefinitionForRenamed(packag)
-                .map(def -> {
-                    var edgeStyle = edgeStyleWithName(def.edgeInStyle()).orElse(DEFAULT_STYLE);
-                    return unmodifiableMap(inheritProperties(edgeStyle.attributes(), defaultStyle.attributes()));
-                })
-                .orElse(defaultStyle.attributes());
-    }
 
     public Map<String, String> clusterStyleOf(String clusterName) {
         return alwaysNonNull(clusters).stream()
