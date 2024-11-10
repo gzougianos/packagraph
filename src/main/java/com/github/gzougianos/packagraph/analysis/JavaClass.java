@@ -64,7 +64,7 @@ public final class JavaClass {
 
     private Collection<PackageName> findImports(CompilationUnit unit) {
         return unit.getImports().stream()
-                .map(x -> adaptImport(x))
+                .map(JavaClass::adaptImport)
                 .toList();
     }
 
