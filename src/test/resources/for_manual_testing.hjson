@@ -48,7 +48,10 @@
     {
       "packages": "com.github.javaparser.*",
       "as": "JavaParser Lib",
-      "nodeStyle": "java-parser-lib"
+      "nodeStyle": "java-parser-lib",
+      "edgeInStyle": {
+        "color": "gray"
+      }
     },
     {
       "packages": "guru.nidi.*",
