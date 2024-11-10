@@ -58,10 +58,21 @@ public class PackagraphOptions {
 
         return findDefinitionForRenamed(packag)
                 .map(def -> {
-                    var edgeStyle = edgeStyleWithName(def.edgeInStyle()).orElse(DEFAULT_STYLE);
-                    return unmodifiableMap(inheritProperties(edgeStyle.attributes(), defaultStyle.attributes()));
+                    return getEdgeInStyleForDefinition(def, defaultStyle);
                 })
                 .orElse(defaultStyle.attributes());
+    }
+
+    private Map<String, String> getEdgeInStyleForDefinition(Definition def, Style defaultStyle) {
+        var defaultEdgeStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
+        if (def.edgeInStyle() instanceof String edgeStyleName) {
+            var edgeStyle = edgeStyleWithName(edgeStyleName).orElse(defaultEdgeStyle);
+            return unmodifiableMap(inheritProperties(edgeStyle.attributes(), defaultStyle.attributes()));
+        } else if (def.edgeInStyle() instanceof Map<?, ?> innerEdgeStyle) {
+            var edgeStyle = inheritProperties(stringifyMap(innerEdgeStyle), defaultEdgeStyle.attributes());
+            return unmodifiableMap(edgeStyle);
+        }
+        return defaultEdgeStyle.attributes();
     }
 
     private Map<String, String> getNodeStyleForDefinition(Definition def, final Style defaultStyle) {
@@ -230,7 +241,7 @@ public class PackagraphOptions {
         return alwaysNonNull(clusters);
     }
 
-    private record Definition(String packages, String as, Object nodeStyle, String edgeInStyle) {
+    private record Definition(String packages, String as, Object nodeStyle, Object edgeInStyle) {
         private boolean refersTo(Package packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))

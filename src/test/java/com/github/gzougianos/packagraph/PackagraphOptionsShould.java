@@ -267,6 +267,28 @@ class PackagraphOptionsShould {
     }
 
     @Test
+    void know_the_anonymous_inner_edge_in_style_of_a_package() throws Exception {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                  "directories": [
+                       "src/main/java"
+                   ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java",
+                      "edgeInStyle": {
+                         "color": "green"
+                      }
+                    }
+                  ]
+                """);
+
+        Package java = PackageFactoryForTests.create("java");
+        var style = options.edgeInStyleOf(java);
+        assertEquals("green", style.get("color"));
+    }
+
+    @Test
     void give_default_edge_in_style_if_not_specified() throws Exception {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
