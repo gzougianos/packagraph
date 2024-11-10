@@ -58,7 +58,7 @@ class GraphvizAdapter implements GraphLibrary {
                 var dependencyNode = allNodesForAllPackages.get(dependency.packag());
 
                 var style = options.edgeInStyleOf(dependency.packag());
-                var edge = applyEdgeInStyle(style, to(dependencyNode));
+                var edge = applyEdgeInStyle(style, graphNode, to(dependencyNode));
                 mainGraph.add(graphNode.link(edge));
             }
         }
@@ -172,13 +172,16 @@ class GraphvizAdapter implements GraphLibrary {
         }
     }
 
-    private static Link applyEdgeInStyle(Map<String, String> edgeInStyle, Link edge) {
+    private static Link applyEdgeInStyle(Map<String, String> edgeInStyle, Node fromNode, Link edge) {
         for (var entry : edgeInStyle.entrySet()) {
             var value = entry.getValue();
             if (isNullOrStringNull(value)) {
                 value = null;
             }
             edge = edge.with(entry.getKey(), value);
+        }
+        if (!edgeInStyle.containsKey("tooltip")) {
+            edge = edge.with("tooltip", fromNode.name() + " -> " + edge.to().name());
         }
         return edge;
     }
