@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph;
 
-import com.github.gzougianos.packagraph.analysis.Package;
+import com.github.gzougianos.packagraph.analysis.PackageName;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;
@@ -45,7 +45,7 @@ public class PackagraphOptions {
         return output().overwrite();
     }
 
-    public Map<String, String> nodeStyleOf(Package packag) {
+    public Map<String, String> nodeStyleOf(PackageName packag) {
         final var defaultStyle = nodeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
         return findDefinitionForRenamed(packag)
@@ -53,7 +53,7 @@ public class PackagraphOptions {
                 .orElse(defaultStyle.attributes());
     }
 
-    public Map<String, String> edgeInStyleOf(Package packag) {
+    public Map<String, String> edgeInStyleOf(PackageName packag) {
         final var defaultStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
         return findDefinitionForRenamed(packag)
@@ -153,7 +153,7 @@ public class PackagraphOptions {
     }
 
 
-    private Optional<Definition> findDefinitionForRenamed(Package packag) {
+    private Optional<Definition> findDefinitionForRenamed(PackageName packag) {
         return definitions().stream()
                 .filter(definition -> definition.refersToRenamed(packag))
                 .findFirst();
@@ -186,7 +186,7 @@ public class PackagraphOptions {
     }
 
 
-    Package rename(Package packag) {
+    PackageName rename(PackageName packag) {
         if (isEmpty(definitions))
             return packag;
 
@@ -205,7 +205,7 @@ public class PackagraphOptions {
     }
 
 
-    public Optional<String> clusterOf(Package packag) {
+    public Optional<String> clusterOf(PackageName packag) {
         if (isEmpty(clusters))
             return Optional.empty();
 
@@ -219,7 +219,7 @@ public class PackagraphOptions {
 
     private record Cluster(String packages, String name, Map<String, String> style) {
 
-        public boolean refersTo(Package packag) {
+        public boolean refersTo(PackageName packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
                     .anyMatch(pattern -> packag.name().matches(pattern));
@@ -242,17 +242,17 @@ public class PackagraphOptions {
     }
 
     private record Definition(String packages, String as, Object nodeStyle, Object edgeInStyle) {
-        private boolean refersTo(Package packag) {
+        private boolean refersTo(PackageName packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
                     .anyMatch(pattern -> packag.name().matches(pattern));
         }
 
-        private boolean refersToRenamed(Package packag) {
+        private boolean refersToRenamed(PackageName packag) {
             return refersTo(packag) || packag.name().equals(as.trim());
         }
 
-        String findMatchingPattern(Package packag) {
+        String findMatchingPattern(PackageName packag) {
             return Arrays.stream(packages.split(COMMA))
                     .filter(pattern -> !isEmpty(pattern))
                     .filter(pattern -> packag.name().matches(pattern))

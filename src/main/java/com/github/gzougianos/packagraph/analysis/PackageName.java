@@ -9,15 +9,15 @@ import lombok.experimental.Accessors;
 @Getter
 @ToString
 @EqualsAndHashCode
-public final class Package {
-    static final Package ROOT = new Package("<no_package>");
+public final class PackageName {
+    static final PackageName ROOT = new PackageName("<no_package>");
     private final String name;
 
-    Package(String name) {
+    PackageName(String name) {
         this.name = name.trim();
     }
 
-    public Package renamed(String name) {
-        return new Package(name.trim());
+    public PackageName renamed(String name) {
+        return new PackageName(name.trim());
     }
 }

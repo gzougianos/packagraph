@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph;
 
-import com.github.gzougianos.packagraph.analysis.Package;
+import com.github.gzougianos.packagraph.analysis.PackageName;
 import com.github.gzougianos.packagraph.analysis.PackageFactoryForTests;
 import org.junit.jupiter.api.Test;
 
@@ -66,12 +66,12 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        Package java = PackageFactoryForTests.create("java.util");
-        Package renamedJava = options.rename(java);
+        PackageName java = PackageFactoryForTests.create("java.util");
+        PackageName renamedJava = options.rename(java);
         assertEquals("java", renamedJava.name());
 
-        Package github = PackageFactoryForTests.create("com.github.com");
-        Package renamedGithub = options.rename(github);
+        PackageName github = PackageFactoryForTests.create("com.github.com");
+        PackageName renamedGithub = options.rename(github);
         assertEquals("", renamedGithub.name());
     }
 
@@ -95,17 +95,17 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        Package pack1 = PackageFactoryForTests.create("com.something.pack1");
-        Package pack2 = PackageFactoryForTests.create("com.something.pack2");
-        Package pack1Subpack = PackageFactoryForTests.create("com.something.pack1.subpack");
+        PackageName pack1 = PackageFactoryForTests.create("com.something.pack1");
+        PackageName pack2 = PackageFactoryForTests.create("com.something.pack2");
+        PackageName pack1Subpack = PackageFactoryForTests.create("com.something.pack1.subpack");
 
-        Package renamedPack1 = options.rename(pack1);
+        PackageName renamedPack1 = options.rename(pack1);
         assertEquals("pack1", renamedPack1.name());
 
-        Package renamedPack2 = options.rename(pack2);
+        PackageName renamedPack2 = options.rename(pack2);
         assertEquals("pack2", renamedPack2.name());
 
-        Package renamedPack1Subpack = options.rename(pack1Subpack);
+        PackageName renamedPack1Subpack = options.rename(pack1Subpack);
         assertEquals("pack1.subpack", renamedPack1Subpack.name());
     }
 
@@ -129,7 +129,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
@@ -151,7 +151,7 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
@@ -175,7 +175,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
@@ -204,7 +204,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.nodeStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertEquals("blue", style.get("fontcolor"));
@@ -235,7 +235,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.nodeStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertNull(style.get("fontcolor"));
@@ -261,7 +261,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("green", style.get("color"));
     }
@@ -283,7 +283,7 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("green", style.get("color"));
     }
@@ -307,7 +307,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("green", style.get("color"));
     }
@@ -336,7 +336,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertEquals("blue", style.get("fontcolor"));
@@ -367,7 +367,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertNull(style.get("fontcolor"));
@@ -376,7 +376,7 @@ class PackagraphOptionsShould {
     @Test
     void know_the_cluster_style() throws IOException {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        Package java = PackageFactoryForTests.create("java.util");
+        PackageName java = PackageFactoryForTests.create("java.util");
         assertEquals("something", options.clusterOf(java).orElseThrow());
 
         var clusterStyle = options.clusterStyleOf("something");
@@ -531,7 +531,7 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        Package java = PackageFactoryForTests.create("java");
+        PackageName java = PackageFactoryForTests.create("java");
 
         var style = options.nodeStyleOf(java);
         assertEquals("java.util.*", style.get("tooltip"));

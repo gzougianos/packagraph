@@ -3,7 +3,7 @@ package com.github.gzougianos.packagraph.graphviz;
 import com.github.gzougianos.packagraph.GraphLibrary;
 import com.github.gzougianos.packagraph.PackageNode;
 import com.github.gzougianos.packagraph.PackagraphOptions;
-import com.github.gzougianos.packagraph.analysis.Package;
+import com.github.gzougianos.packagraph.analysis.PackageName;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.engine.GraphvizV8Engine;
@@ -33,9 +33,9 @@ class GraphvizAdapter implements GraphLibrary {
 
         Map<String, Graph> clusterGraphs = createClusterGraphs(nodes, options);
 
-        Map<Package, Node> allNodesForAllPackages = createNodesForAllPackages(nodes, options);
+        Map<PackageName, Node> allNodesForAllPackages = createNodesForAllPackages(nodes, options);
 
-        for (Map.Entry<Package, Node> entry : allNodesForAllPackages.entrySet()) {
+        for (Map.Entry<PackageName, Node> entry : allNodesForAllPackages.entrySet()) {
             var packag = entry.getKey();
             PackageNode packageNode = findNodeOfPackage(nodes, packag);
 
@@ -85,7 +85,7 @@ class GraphvizAdapter implements GraphLibrary {
         }
     }
 
-    private static PackageNode findNodeOfPackage(Collection<PackageNode> nodes, Package packag) {
+    private static PackageNode findNodeOfPackage(Collection<PackageNode> nodes, PackageName packag) {
         return nodes.stream()
                 .filter(p -> p.packag().equals(packag))
                 .findFirst()
@@ -133,12 +133,12 @@ class GraphvizAdapter implements GraphLibrary {
         throw new IllegalArgumentException("Unknown output file type: " + fileSuffix + ". Supported formats: " + supportedFormats);
     }
 
-    private Map<Package, Node> createNodesForAllPackages(Collection<PackageNode> nodes, PackagraphOptions options) {
-        Set<Package> allPackages = nodes.stream()
+    private Map<PackageName, Node> createNodesForAllPackages(Collection<PackageNode> nodes, PackagraphOptions options) {
+        Set<PackageName> allPackages = nodes.stream()
                 .map(PackageNode::packag)
                 .collect(Collectors.toSet());
 
-        Set<Package> dependencies = nodes.stream()
+        Set<PackageName> dependencies = nodes.stream()
                 .flatMap(packageNode -> packageNode.dependencies().stream())
                 .map(PackageNode::packag)
                 .collect(Collectors.toSet());

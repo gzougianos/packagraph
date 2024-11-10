@@ -25,7 +25,7 @@ class JavaClassShould {
     void know_imports() {
         JavaClass javaClass = JavaClass.of(CLASS_FILE_TO_ANALYZE);
 
-        Collection<Package> imports = javaClass.imports();
+        Collection<PackageName> imports = javaClass.imports();
 
         assertEquals(4, imports.size());
 
@@ -40,7 +40,7 @@ class JavaClassShould {
         assertThrows(ClassAnalysisFailedException.class, () -> JavaClass.of(NON_COMPILABLE_CLASS));
     }
 
-    private static void assertImport(String name, Collection<Package> imports) {
+    private static void assertImport(String name, Collection<PackageName> imports) {
         imports.stream().filter(i -> i.name().equals(name)).findFirst().orElseThrow();
     }
 }

@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph;
 
-import com.github.gzougianos.packagraph.analysis.Package;
+import com.github.gzougianos.packagraph.analysis.PackageName;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,11 +17,11 @@ public class PackageNode {
 
     @Getter
     @EqualsAndHashCode.Include
-    private final Package packag;
+    private final PackageName packag;
     private final String cluster;
     private final Collection<PackageNode> dependencies = new HashSet<>();
 
-    PackageNode(Package packag, String cluster) {
+    PackageNode(PackageName packag, String cluster) {
         this.packag = packag;
         this.cluster = cluster;
     }

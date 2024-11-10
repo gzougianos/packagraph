@@ -2,7 +2,7 @@ package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.ClassAnalysisFailedException;
 import com.github.gzougianos.packagraph.analysis.JavaClass;
-import com.github.gzougianos.packagraph.analysis.Package;
+import com.github.gzougianos.packagraph.analysis.PackageName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +38,9 @@ public class Packagraph {
 
         final var dependencies = findDependencies(analyzed, internalPackages);
 
-        final Set<Package> allPackages = combinePackages(internalPackages, dependencies);
+        final Set<PackageName> allPackages = combinePackages(internalPackages, dependencies);
 
-        final Map<Package, PackageNode> allNodes = allPackages.stream()
+        final Map<PackageName, PackageNode> allNodes = allPackages.stream()
                 .map(this::createPackageNodeFor)
                 .collect(Collectors.toMap(PackageNode::packag, Function.identity()));
 
@@ -50,12 +50,12 @@ public class Packagraph {
         return allNodes.values();
     }
 
-    private PackageNode createPackageNodeFor(Package packag) {
+    private PackageNode createPackageNodeFor(PackageName packag) {
         return new PackageNode(packag, options.clusterOf(packag).orElse(null));
     }
 
-    private static Set<Package> combinePackages(Set<Package> internalPackages, HashSet<Dependency> dependencies) {
-        HashSet<Package> packages = new HashSet<>(internalPackages);
+    private static Set<PackageName> combinePackages(Set<PackageName> internalPackages, HashSet<Dependency> dependencies) {
+        HashSet<PackageName> packages = new HashSet<>(internalPackages);
 
         for (var dependency : dependencies) {
             packages.add(dependency.to());
@@ -65,11 +65,11 @@ public class Packagraph {
         return packages;
     }
 
-    private Package rename(Package packag) {
+    private PackageName rename(PackageName packag) {
         return options.rename(packag);
     }
 
-    private HashSet<Dependency> findDependencies(List<JavaClass> analyzedClasses, Set<Package> internalPackages) {
+    private HashSet<Dependency> findDependencies(List<JavaClass> analyzedClasses, Set<PackageName> internalPackages) {
         final HashSet<Dependency> dependencies = new HashSet<>();
         analyzedClasses.forEach(javaClass -> {
             var renamedFromPackage = rename(javaClass.packag());
@@ -90,11 +90,11 @@ public class Packagraph {
         return dependencies;
     }
 
-    private static boolean isIncluded(Package packag) {
+    private static boolean isIncluded(PackageName packag) {
         return !packag.name().trim().isEmpty();
     }
 
-    private record Dependency(Package from, Package to) {
+    private record Dependency(PackageName from, PackageName to) {
     }
 
     private static JavaClass asClass(File javaFile) {

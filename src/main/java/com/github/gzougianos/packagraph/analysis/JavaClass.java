@@ -30,8 +30,8 @@ public final class JavaClass {
     }
 
     private final File sourceFile;
-    private final Collection<Package> imports;
-    private final Package packag;
+    private final Collection<PackageName> imports;
+    private final PackageName packag;
 
     private JavaClass(File sourceFile) throws IOException {
         this.sourceFile = sourceFile;
@@ -41,11 +41,11 @@ public final class JavaClass {
         this.packag = findPackage(compilationUnit);
     }
 
-    private Package findPackage(CompilationUnit compilationUnit) {
+    private PackageName findPackage(CompilationUnit compilationUnit) {
         return compilationUnit.getPackageDeclaration()
                 .map(PackageDeclaration::getNameAsString)
-                .map(Package::new)
-                .orElse(Package.ROOT);
+                .map(PackageName::new)
+                .orElse(PackageName.ROOT);
     }
 
     private static CompilationUnit parse(File sourceFile) throws FileNotFoundException {
@@ -62,35 +62,35 @@ public final class JavaClass {
                 .orElseThrow(() -> new ClassAnalysisFailedException("Failed to parse file: " + sourceFile.getAbsolutePath()));
     }
 
-    private Collection<Package> findImports(CompilationUnit unit) {
+    private Collection<PackageName> findImports(CompilationUnit unit) {
         return unit.getImports().stream()
                 .map(x -> adaptImport(x))
                 .toList();
     }
 
-    private static Package adaptImport(ImportDeclaration importt) {
+    private static PackageName adaptImport(ImportDeclaration importt) {
         final var importName = importt.getNameAsString();
 
         //import java.io.*, library gives: java.io
         if (!importt.isStatic() && importt.isAsterisk()) {
-            return new Package(importName);
+            return new PackageName(importName);
         }
 
         //import java.util.HashMap, library gives: java.util.HashMap
         //So need to trim className
         if (!importt.isStatic() && !importt.isAsterisk()) {
-            return new Package(trimUpToLastDot(importName));
+            return new PackageName(trimUpToLastDot(importName));
         }
 
         //import static java.lang.System.setErr, library gives: java.lang.System.setErr
         //So need to trim method name + class name
         if (importt.isStatic() && !importt.isAsterisk()) {
-            return new Package(trimUpToLastDot(trimUpToLastDot(importName)));
+            return new PackageName(trimUpToLastDot(trimUpToLastDot(importName)));
         }
 
         //import static javax.swing.SwingUtilities.*, library gives: javax.swing.SwingUtilities
         //So need to trim class name
-        return new Package(trimUpToLastDot(importName));
+        return new PackageName(trimUpToLastDot(importName));
     }
 
     private static String trimUpToLastDot(String str) {
