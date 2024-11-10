@@ -1,7 +1,6 @@
 package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.analysis.PackageName;
-import com.github.gzougianos.packagraph.analysis.PackageFactoryForTests;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -66,11 +65,11 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java.util");
+        PackageName java = new PackageName("java.util");
         PackageName renamedJava = options.rename(java);
         assertEquals("java", renamedJava.name());
 
-        PackageName github = PackageFactoryForTests.create("com.github.com");
+        PackageName github = new PackageName("com.github.com");
         PackageName renamedGithub = options.rename(github);
         assertEquals("", renamedGithub.name());
     }
@@ -95,9 +94,9 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        PackageName pack1 = PackageFactoryForTests.create("com.something.pack1");
-        PackageName pack2 = PackageFactoryForTests.create("com.something.pack2");
-        PackageName pack1Subpack = PackageFactoryForTests.create("com.something.pack1.subpack");
+        PackageName pack1 = new PackageName("com.something.pack1");
+        PackageName pack2 = new PackageName("com.something.pack2");
+        PackageName pack1Subpack = new PackageName("com.something.pack1.subpack");
 
         PackageName renamedPack1 = options.rename(pack1);
         assertEquals("pack1", renamedPack1.name());
@@ -129,7 +128,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
@@ -151,7 +150,7 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
@@ -175,7 +174,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.nodeStyleOf(java);
         assertEquals("green", style.get("fillcolor"));
     }
@@ -204,7 +203,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.nodeStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertEquals("blue", style.get("fontcolor"));
@@ -235,7 +234,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.nodeStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertNull(style.get("fontcolor"));
@@ -261,7 +260,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("green", style.get("color"));
     }
@@ -283,7 +282,7 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("green", style.get("color"));
     }
@@ -307,7 +306,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("green", style.get("color"));
     }
@@ -336,7 +335,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertEquals("blue", style.get("fontcolor"));
@@ -367,7 +366,7 @@ class PackagraphOptionsShould {
                   }
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
         var style = options.edgeInStyleOf(java);
         assertEquals("pink", style.get("fillcolor"));
         assertNull(style.get("fontcolor"));
@@ -376,7 +375,7 @@ class PackagraphOptionsShould {
     @Test
     void know_the_cluster_style() throws IOException {
         PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
-        PackageName java = PackageFactoryForTests.create("java.util");
+        PackageName java = new PackageName("java.util");
         assertEquals("something", options.clusterOf(java).orElseThrow());
 
         var clusterStyle = options.clusterStyleOf("something");
@@ -531,7 +530,7 @@ class PackagraphOptionsShould {
                   ]
                 """);
 
-        PackageName java = PackageFactoryForTests.create("java");
+        PackageName java = new PackageName("java");
 
         var style = options.nodeStyleOf(java);
         assertEquals("java.util.*", style.get("tooltip"));

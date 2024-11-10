@@ -194,7 +194,7 @@ public class PackagraphOptions {
             if (rename.refersTo(packag)) {
                 String pattern = rename.findMatchingPattern(packag);
                 String result = packag.name().replaceAll(pattern, rename.as()).trim();
-                return packag.renamed(result);
+                return new PackageName(result);
             }
         }
         return packag;
