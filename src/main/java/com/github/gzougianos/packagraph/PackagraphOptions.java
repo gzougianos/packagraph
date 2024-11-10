@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,10 +21,12 @@ import static java.util.Collections.unmodifiableMap;
 
 @Accessors(fluent = true)
 @Builder
+@Slf4j
 @AllArgsConstructor
 public class PackagraphOptions {
     private static final Map<String, String> EMPTY_STYLE = Map.of();
-    private static final Style DEFAULT_STYLE = new Style("default", EMPTY_STYLE);
+    public static final String DEFAULT_STYLE_NAME = "default";
+    private static final Style DEFAULT_STYLE = new Style(DEFAULT_STYLE_NAME, EMPTY_STYLE);
     private static final String COMMA = ",";
 
     private static final Output DEFAULT_OUTPUT = new Output("/packagraph.png", false, EMPTY_STYLE);
@@ -42,23 +45,41 @@ public class PackagraphOptions {
         return output().overwrite();
     }
 
-    @SuppressWarnings("unchecked")
     public Map<String, String> styleOf(Package packag) {
-        final var defaultStyle = nodeStyleWithName("default").orElse(DEFAULT_STYLE);
+        final var defaultStyle = nodeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
         return findDefinitionForRenamed(packag)
-                .map(def -> {
-                    var style = new HashMap<>(defaultStyle.attributes());
-                    if (def.nodeStyle() instanceof String styleName) {
-                        var nodeStyle = nodeStyleWithName(styleName).orElse(DEFAULT_STYLE);
-                        style = new HashMap<>(inheritProperties(nodeStyle.attributes(), defaultStyle.attributes()));
-                    } else if (def.nodeStyle() instanceof Map<?, ?> nodeStyle) {
-                        style = new HashMap<>(inheritProperties((Map<String, String>) nodeStyle, defaultStyle.attributes()));
-                    }
-                    style.putIfAbsent("tooltip", def.packages());
-                    return unmodifiableMap(style);
-                })
+                .map(def -> getNodeStyleForDefinition(def, defaultStyle))
                 .orElse(defaultStyle.attributes());
+    }
+
+    private Map<String, String> getNodeStyleForDefinition(Definition def, final Style defaultStyle) {
+        final var toolTip = def.packages();
+        var style = defaultStyle.attributes();
+
+        if (def.nodeStyle() instanceof String styleName) {
+            var nodeStyle = nodeStyleWithName(styleName).orElseGet(() -> {
+                log.warn("Node style with name {} not found. Will use default style.", styleName);
+                return DEFAULT_STYLE;
+            });
+            style = inheritProperties(nodeStyle.attributes(), defaultStyle.attributes());
+        } else if (def.nodeStyle() instanceof Map<?, ?> innerNodeStyle) {
+            style = inheritProperties(stringifyMap(innerNodeStyle), defaultStyle.attributes());
+        }
+
+        return withTooltip(style, toolTip);
+    }
+
+    private static Map<String, String> withTooltip(Map<String, String> style, String tooltip) {
+        var copy = new HashMap<>(style);
+        copy.putIfAbsent("tooltip", tooltip);
+        return unmodifiableMap(copy);
+    }
+
+    private static Map<String, String> stringifyMap(Map<?, ?> map) {
+        return map.entrySet().stream()
+                .map(entry -> new AbstractMap.SimpleEntry<>(String.valueOf(entry.getKey()), String.valueOf(entry.getValue())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     private Optional<Style> nodeStyleWithName(String name) {
@@ -80,7 +101,7 @@ public class PackagraphOptions {
     }
 
     public Map<String, String> edgeInStyleOf(Package packag) {
-        final var defaultStyle = edgeStyleWithName("default").orElse(DEFAULT_STYLE);
+        final var defaultStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
         return findDefinitionForRenamed(packag)
                 .map(def -> {
