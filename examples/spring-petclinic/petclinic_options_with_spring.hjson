@@ -18,7 +18,7 @@
     {
       "packages": ".*petclinic.*",
       "as": "$1",
-      "style": {
+      "nodeStyle": {
         "style": "filled",
         "fillcolor": "#CC9900"
       }
@@ -27,7 +27,7 @@
     {
       "packages": "jakarta.persistence.*,org.springframework.data.*,org.springframework.dao.*,org.springframework.transaction.*",
       "as": "Persistence/JPA",
-      "style": {
+      "nodeStyle": {
         "style": "filled",
         "fillcolor": "#989898"
       },
@@ -43,7 +43,7 @@
     {
       "packages": "org.springframework.web.*,org.springframework.ui.*",
       "as": "Spring Web/UI",
-      "style": {
+      "nodeStyle": {
         "style": "filled",
         "fillcolor": "#90EE90"
       },
@@ -55,7 +55,7 @@
     {
       "packages": "org.springframework.*",
       "as": "Spring",
-      "style": {
+      "nodeStyle": {
         "style": "filled",
         "fillcolor": "#90EE90"
       },
@@ -69,7 +69,7 @@
   //    {
   //      "packages": "petclinic.*",
   //      "name": "PetClinic Project",
-  //      "style": {
+  //      "nodeStyle": {
   //        "label": "PetClinic Project"
   //      }
   //    }
@@ -79,14 +79,14 @@
   "output": {
     "path": "petclinic.png",
     "overwrite": true,
-    "style": {
+    "graphStyle": {
       "dpi": 96
     }
   },
-  "globalStyle": {
-    "shape": "rectangle",
-    "fontsize": 20
-  },
-  "globalEdgeStyle": {
+  "nodeStyles": {
+    "default": {
+      "shape": "rectangle",
+      "fontsize": 20
+    }
   }
 }
