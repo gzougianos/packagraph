@@ -440,6 +440,40 @@ class PackagraphOptionsShould {
     }
 
     @Test
+    void give_default_style_to_cluster() {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  "directories": [
+                    "src/test/java"
+                  ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java"
+                    }
+                  ],
+                  "clusters": [
+                    {
+                      "packages": "java.util.*",
+                      "name": "something",
+                    }
+                  ],
+                  "graphStyles": {
+                    "default": {
+                        "color": "red",
+                        "label": "Something",
+                     }
+                  }
+                }""");
+        PackageName java = new PackageName("java.util");
+        assertEquals("something", options.clusterOf(java).orElseThrow());
+
+        var clusterStyle = options.clusterStyleOf("something");
+        assertEquals("Something", clusterStyle.get("label"));
+        assertEquals("red", clusterStyle.get("color"));
+    }
+
+    @Test
     void know_the_main_graph_style() throws IOException {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {

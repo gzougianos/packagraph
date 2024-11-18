@@ -48,12 +48,14 @@ public class PackagraphOptions {
 
 
     public Map<String, String> clusterStyleOf(String clusterName) {
+        var defaultStyle = searchNamedStyle(DEFAULT_STYLE_NAME, graphStyles).orElse(DEFAULT_STYLE);
+
         return alwaysNonNull(clusters).stream()
                 .filter(cluster -> cluster.name().equals(clusterName))
                 .findFirst()
                 .map(Cluster::graphStyle)
                 .map(this::innerOrNamedClusterStyle)
-                .orElse(EMPTY_STYLE);
+                .orElse(defaultStyle.attributes());
     }
 
     private Map<String, String> innerOrNamedClusterStyle(Object style) {
