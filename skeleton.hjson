@@ -16,17 +16,28 @@
     {
       "packages": "com.something.*",
       "name": "Packagraph",
-      "style": {
+      "graphStyle": {
         "color": "gray",
       }
     }
     */
   ],
-  "globalStyle": {
+  "graphStyles": {
+    "default": {
+        //...
+    },
+    "MAIN_GRAPH": {
+      "label": "Package Diagram",
+      "dpi": 75
+    }
+  },
+  "edgeStyles": {
 
   },
-  "globalEdgeStyle": {
-
+  "nodeStyles": {
+    "default": {
+      //...
+    }
   },
   "constants": [
     {
@@ -37,7 +48,7 @@
   "output": {
     "path": "./packagraph.png",
     "overwrite": true,
-    "style": {
+    "graphStyle": {
       "label": "Package Diagram",
       "dpi": 75
     }
