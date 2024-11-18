@@ -11,7 +11,7 @@ Below is an example diagram of `packagraph` itself, created using the
 
 ![petclinic](./packagraph.png)
 
-## Why Use Packagraph?:
+## Why Use Packagraph?
 
 Packagraph provides a simple way to visualize Java package dependencies,
 filling the void left by tools like ObjectAid (discontinued -
@@ -42,7 +42,7 @@ java -jar packagraph.jar -o myOptions.hjson
 
 A typical HJSON configuration might look like:
 
-```json
+```hjson
 {
   directories: [
     "./module1/src/main/java",
