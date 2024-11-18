@@ -10,10 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PackagraphOptionsShould {
 
-    private static final File SAMPLE_JSON = new File(ResourcesFolder.asFile(), "sample_options.json");
-
     @Test
-    void parse_directories_from_json() throws IOException {
+    void parse_directories_from_json() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                         "directories": [
                            "src/main/java",
@@ -27,7 +25,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void parse_output_from_json() throws IOException {
+    void parse_output_from_json() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                         "directories": [
                            "src/main/java",
@@ -44,7 +42,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void rename_packages() throws IOException {
+    void rename_packages() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -81,7 +79,7 @@ class PackagraphOptionsShould {
     //      "as": "$1"
     //    }
     @Test
-    void rename_packages_with_regex_groups() throws Exception {
+    void rename_packages_with_regex_groups() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -109,7 +107,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_node_style_of_a_package() throws Exception {
+    void know_the_node_style_of_a_package() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -134,7 +132,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_node_inner_style_of_a_package() throws Exception {
+    void know_the_node_inner_style_of_a_package() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -156,7 +154,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void give_the_default_node_style_if_not_specified() throws Exception {
+    void give_the_default_node_style_if_not_specified() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -180,7 +178,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void inherit_default_node_style() throws Exception {
+    void inherit_default_node_style() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -210,7 +208,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void not_inherit_node_style_if_disabled() throws Exception {
+    void not_inherit_node_style_if_disabled() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -241,7 +239,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_edge_in_style_of_a_package() throws Exception {
+    void know_the_edge_in_style_of_a_package() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -266,7 +264,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_anonymous_inner_edge_in_style_of_a_package() throws Exception {
+    void know_the_anonymous_inner_edge_in_style_of_a_package() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -288,7 +286,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void give_default_edge_in_style_if_not_specified() throws Exception {
+    void give_default_edge_in_style_if_not_specified() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -312,7 +310,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void inherit_default_edge_in_style() throws Exception {
+    void inherit_default_edge_in_style() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -342,7 +340,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void not_inherit_default_edge_in_style() throws Exception {
+    void not_inherit_default_edge_in_style() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
@@ -373,7 +371,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_cluster_style() throws IOException {
+    void know_the_cluster_style() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {
                   "directories": [
@@ -408,7 +406,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_anonymous_inner_cluster_style() throws IOException {
+    void know_the_anonymous_inner_cluster_style() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {
                   "directories": [
@@ -474,7 +472,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void know_the_main_graph_style() throws IOException {
+    void know_the_main_graph_style() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {
                   "directories": [
@@ -524,7 +522,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void replace_constants() throws IOException {
+    void replace_constants() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {
                   "constants": [
@@ -547,7 +545,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void replace_constants_in_array() throws Exception {
+    void replace_constants_in_array() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {
                   "constants": [
@@ -577,7 +575,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void throws_human_message_when_constant_does_not_exist() throws Exception {
+    void throws_human_message_when_constant_does_not_exist() {
         var exception = assertThrows(RuntimeException.class, () -> PackagraphOptions.fromJson("""
                 {
                   "constants": [
@@ -596,7 +594,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void replace_multiple_constants_in_single_value() throws Exception {
+    void replace_multiple_constants_in_single_value() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                 {
                   "constants": [
@@ -624,7 +622,7 @@ class PackagraphOptionsShould {
     }
 
     @Test
-    void adds_tooltip_to_nodes_from_definitions() throws Exception {
+    void adds_tooltip_to_nodes_from_definitions() {
         PackagraphOptions options = PackagraphOptions.fromJson("""
                   "directories": [
                        "src/main/java"
