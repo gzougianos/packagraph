@@ -44,17 +44,14 @@ A typical HJSON configuration might look like:
 
 ```hjson
 {
-  directories: [
+  directories: [ // Source directories
     "./module1/src/main/java",
     "./module2/src/main/java"
   ],
-  // Source directories
   output: {
-    path: "./output/diagram.png",
-    // Output file path
-    overwrite: true,
-    // Overwrite existing file
-    "graphStyle": MAIN_GRAPH
+    path: "./output/diagram.png", // Output file path
+    overwrite: true, // Overwrite existing file
+    graphStyle: MAIN_GRAPH
   },
   definitions: [
     {
@@ -73,8 +70,7 @@ A typical HJSON configuration might look like:
     },
     {
       packages: "java.*",
-      as: ""
-      // Exclude standard Java packages
+      as: "" // Exclude standard Java packages completely
     }
   ],
   clusters: [
@@ -85,7 +81,6 @@ A typical HJSON configuration might look like:
       }
     }
   ],
-  //Styles
   nodeStyles: {
     default: {
       //Default node style inherited by all other node styles. 
