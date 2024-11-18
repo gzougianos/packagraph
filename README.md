@@ -9,7 +9,7 @@ file and outputs diagrams in formats supported by [GraphViz](https://graphviz.or
 Below is an example diagram of `packagraph` itself, created using the
 [for_manual_testing.hjson](./src/test/resources/for_manual_testing.hjson) configuration:
 
-![petclinic](./packagraph.png)
+![packagraph](./packagraph.png)
 
 ## Why Use Packagraph?
 
@@ -139,7 +139,6 @@ Below is all the properties that can be defined in the HJson file and supported 
     "path": "./packagraph.png", 
     "overwrite": true,
     "graphStyle": {
-    #Label of the main graph
       "label": "MyLabel",
       "fontsize": 24,
       "fontcolor": "purple",
@@ -283,7 +282,7 @@ See also <a href="https://graphviz.org/doc/info/attrs.html">graph attributes</a>
 If you want to prevent the inheritance, use <code>"inheritDefault": false</code></td>
         <td>
 <pre>
-"nodeStyles": [
+"nodeStyles": {
     "default": {
         "shape": "rectangle"
     },
@@ -294,7 +293,7 @@ If you want to prevent the inheritance, use <code>"inheritDefault": false</code>
         "inheritDefault": false
         "color": "blue"
     },
-]
+}
 "definitions": [
     {
         "packages": "org.spring.data.*",
@@ -326,7 +325,7 @@ If you want to prevent the inheritance, use <code>"inheritDefault": false</code>
         "color": "blue",
         "style": "solid"
     }
-}
+},
 "definitions": [
 {
     "packages": "org.spring.data.*",
@@ -374,7 +373,7 @@ Use the <code>${MY_CONSTANT}</code> syntax to refer to a constant.</td>
       "name": "EDGE_CUSTOM_BLUE",
       "value": "#258fc4"
     }
-]
+],
 "nodeStyles": {
     "default":{
         "color": "${EDGE_CUSTOM_BLUE}"
