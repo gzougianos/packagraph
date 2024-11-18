@@ -374,13 +374,68 @@ class PackagraphOptionsShould {
 
     @Test
     void know_the_cluster_style() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  "directories": [
+                    "src/test/java"
+                  ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java"
+                    }
+                  ],
+                  "clusters": [
+                    {
+                      "packages": "java.*",
+                      "name": "something",
+                      "graphStyle": "MY_STYLE" 
+                    }
+                  ],
+                  "graphStyles": {
+                     "MY_STYLE":{
+                        "label": "My Style",
+                        "color": "blue"
+                     }
+                  }
+                }""");
+        PackageName java = new PackageName("java.util");
+        assertEquals("something", options.clusterOf(java).orElseThrow());
+
+        var clusterStyle = options.clusterStyleOf("something");
+        assertEquals("My Style", clusterStyle.get("label"));
+        assertEquals("blue", clusterStyle.get("color"));
+    }
+
+    @Test
+    void know_the_anonymous_inner_cluster_style() throws IOException {
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  "directories": [
+                    "src/test/java"
+                  ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java"
+                    }
+                  ],
+                  "clusters": [
+                    {
+                      "packages": "java.util.*",
+                      "name": "something",
+                      "graphStyle": {
+                        "color": "red",
+                        "label": "Something",
+                      }
+                    }
+                  ]
+                }""");
         PackageName java = new PackageName("java.util");
         assertEquals("something", options.clusterOf(java).orElseThrow());
 
         var clusterStyle = options.clusterStyleOf("something");
         assertEquals("Something", clusterStyle.get("label"));
-        assertEquals("42", clusterStyle.get("fontsize"));
         assertEquals("red", clusterStyle.get("color"));
     }
 

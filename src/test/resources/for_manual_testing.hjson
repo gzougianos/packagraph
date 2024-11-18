@@ -64,7 +64,7 @@
     {
       "packages": "${PACKAGRAPH_PACKAGE_PATTERN}",
       "name": "Packagraph",
-      "style": {
+      "graphStyle": {
         "color": "gray",
         "label": "packgraph internals",
         "fontsize": 18,
@@ -74,14 +74,17 @@
     {
       "packages": ".*",
       "name": "Externals",
-      "style": {
-        "color": "gray",
-        "label": "External Dependencies",
-        "fontsize": 18,
-        "fontcolor": "gray"
-      }
+      "graphStyle": "EXTERNALS"
     }
   ],
+  "graphStyles": {
+    "EXTERNALS": {
+      "color": "gray",
+      "label": "External Dependencies",
+      "fontsize": 18,
+      "fontcolor": "gray"
+    }
+  },
   "constants": [
     {
       "name": "BLUE",
@@ -95,7 +98,7 @@
   "output": {
     "path": "./packagraph.png",
     "overwrite": true,
-    "style": {
+    "graphStyle": {
       "label": "ManualTestingSample",
       "fontsize": 18,
       "fontname": "Tahoma",

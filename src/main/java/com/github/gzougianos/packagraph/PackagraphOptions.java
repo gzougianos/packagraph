@@ -39,11 +39,51 @@ public class PackagraphOptions {
     private Output output;
     private List<Style> nodeStyles;
     private List<Style> edgeStyles;
+    private List<Style> graphStyles;
 
 
     public boolean allowsOverwriteOutput() {
         return output().overwrite();
     }
+
+
+    public Map<String, String> clusterStyleOf(String clusterName) {
+        return alwaysNonNull(clusters).stream()
+                .filter(cluster -> cluster.name().equals(clusterName))
+                .findFirst()
+                .map(Cluster::graphStyle)
+                .map(this::innerOrNamedClusterStyle)
+                .orElse(EMPTY_STYLE);
+    }
+
+    private Map<String, String> innerOrNamedClusterStyle(Object style) {
+        return innerOrNamedStyle(style, graphStyles);
+    }
+
+    private Map<String, String> innerOrNamedStyle(Object style, List<Style> styles) {
+        var defaultStyle = searchNamedStyle(DEFAULT_STYLE_NAME, styles).orElse(DEFAULT_STYLE);
+
+        if (style instanceof String styleName) {
+            var namedStyle = searchNamedStyle(styleName, styles).orElseGet(() -> {
+                log.warn("Style with name {} not found. Will use default style.", styleName);
+                return defaultStyle;
+            });
+            return unmodifiableMap(inheritProperties(namedStyle.attributes(), defaultStyle.attributes()));
+        }
+
+        if (style instanceof Map<?, ?> innerStyle) {
+            return unmodifiableMap(inheritProperties(stringifyMap(innerStyle), defaultStyle.attributes()));
+        }
+
+        return defaultStyle.attributes();
+    }
+
+    private Optional<Style> searchNamedStyle(String defaultStyleName, List<Style> styles) {
+        return alwaysNonNull(styles).stream()
+                .filter(style -> style.name().equals(defaultStyleName))
+                .findFirst();
+    }
+
 
     public Map<String, String> nodeStyleOf(PackageName packag) {
         final var defaultStyle = nodeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
@@ -57,9 +97,7 @@ public class PackagraphOptions {
         final var defaultStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
         return findDefinitionForRenamed(packag)
-                .map(def -> {
-                    return getEdgeInStyleForDefinition(def, defaultStyle);
-                })
+                .map(def -> getEdgeInStyleForDefinition(def, defaultStyle))
                 .orElse(defaultStyle.attributes());
     }
 
@@ -81,7 +119,7 @@ public class PackagraphOptions {
 
         if (def.nodeStyle() instanceof String styleName) {
             var nodeStyle = nodeStyleWithName(styleName).orElseGet(() -> {
-                log.warn("Node style with name {} not found. Will use default style.", styleName);
+                log.warn("Node graphStyle with name {} not found. Will use default graphStyle.", styleName);
                 return DEFAULT_STYLE;
             });
             style = inheritProperties(nodeStyle.attributes(), defaultStyle.attributes());
@@ -123,14 +161,6 @@ public class PackagraphOptions {
     }
 
 
-    public Map<String, String> clusterStyleOf(String clusterName) {
-        return alwaysNonNull(clusters).stream()
-                .filter(cluster -> cluster.name().equals(clusterName))
-                .findFirst()
-                .map(Cluster::style)
-                .orElse(EMPTY_STYLE);
-    }
-
     private static Map<String, String> inheritProperties(Map<String, String> style, Map<String, String> defaultStyle) {
         Objects.requireNonNull(style);
 
@@ -160,7 +190,10 @@ public class PackagraphOptions {
     }
 
     public Map<String, String> mainGraphStyle() {
-        return output().style() == null ? EMPTY_STYLE : output().style();
+        if (output.graphStyle() == null)
+            return EMPTY_STYLE;
+
+        return innerOrNamedStyle(output.graphStyle(), graphStyles);
     }
 
     private Output output() {
@@ -217,7 +250,7 @@ public class PackagraphOptions {
         return Optional.empty();
     }
 
-    private record Cluster(String packages, String name, Map<String, String> style) {
+    private record Cluster(String packages, String name, Object graphStyle) {
 
         public boolean refersTo(PackageName packag) {
             return Arrays.stream(packages.split(COMMA))
@@ -262,7 +295,7 @@ public class PackagraphOptions {
     }
 
 
-    private record Output(String path, Boolean overwrite, Map<String, String> style) {
+    private record Output(String path, Boolean overwrite, Object graphStyle) {
     }
 
     private record Style(String name, Map<String, String> attributes) {
