@@ -54,12 +54,24 @@ public class PackagraphOptions {
                 .filter(cluster -> cluster.name().equals(clusterName))
                 .findFirst()
                 .map(Cluster::graphStyle)
-                .map(this::innerOrNamedClusterStyle)
+                .map(graphStyle -> innerOrNamedStyle(graphStyle, graphStyles))
                 .orElse(defaultStyle.attributes());
     }
 
-    private Map<String, String> innerOrNamedClusterStyle(Object style) {
-        return innerOrNamedStyle(style, graphStyles);
+    public Map<String, String> edgeInStyleOf(PackageName packag) {
+        final var defaultStyle = searchNamedStyle(DEFAULT_STYLE_NAME, edgeStyles).orElse(DEFAULT_STYLE);
+
+        return findDefinitionForRenamed(packag)
+                .map(def -> innerOrNamedStyle(def.edgeInStyle(), edgeStyles))
+                .orElse(defaultStyle.attributes());
+    }
+
+    public Map<String, String> nodeStyleOf(PackageName packag) {
+        final var defaultStyle = searchNamedStyle(DEFAULT_STYLE_NAME, nodeStyles).orElse(DEFAULT_STYLE);
+
+        return findDefinitionForRenamed(packag)
+                .map(def -> withTooltip(innerOrNamedStyle(def.nodeStyle(), nodeStyles), def.packages()))
+                .orElse(defaultStyle.attributes());
     }
 
     private Map<String, String> innerOrNamedStyle(Object style, List<Style> styles) {
@@ -74,7 +86,7 @@ public class PackagraphOptions {
         }
 
         if (style instanceof Map<?, ?> innerStyle) {
-            return unmodifiableMap(inheritProperties(stringifyMap(innerStyle), defaultStyle.attributes()));
+            return unmodifiableMap(inheritProperties(stringifyValuesOf(innerStyle), defaultStyle.attributes()));
         }
 
         return defaultStyle.attributes();
@@ -86,63 +98,20 @@ public class PackagraphOptions {
                 .findFirst();
     }
 
-
-    public Map<String, String> edgeInStyleOf(PackageName packag) {
-        final var defaultStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
-
-        return findDefinitionForRenamed(packag)
-                .map(def -> getEdgeInStyleForDefinition(def, defaultStyle))
-                .orElse(defaultStyle.attributes());
-    }
-
-    private Map<String, String> getEdgeInStyleForDefinition(Definition def, Style defaultStyle) {
-        var defaultEdgeStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
-        if (def.edgeInStyle() instanceof String edgeStyleName) {
-            var edgeStyle = edgeStyleWithName(edgeStyleName).orElse(defaultEdgeStyle);
-            return unmodifiableMap(inheritProperties(edgeStyle.attributes(), defaultStyle.attributes()));
-        } else if (def.edgeInStyle() instanceof Map<?, ?> innerEdgeStyle) {
-            var edgeStyle = inheritProperties(stringifyMap(innerEdgeStyle), defaultEdgeStyle.attributes());
-            return unmodifiableMap(edgeStyle);
-        }
-        return defaultEdgeStyle.attributes();
-    }
-
-    public Map<String, String> nodeStyleOf(PackageName packag) {
-        final var defaultStyle = nodeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
-
-        return findDefinitionForRenamed(packag)
-                .map(def -> withTooltip(innerOrNamedStyle(def.nodeStyle(), nodeStyles), def.packages()))
-                .orElse(defaultStyle.attributes());
-    }
-
     private static Map<String, String> withTooltip(Map<String, String> style, String tooltip) {
         var copy = new HashMap<>(style);
         copy.putIfAbsent("tooltip", tooltip);
         return unmodifiableMap(copy);
     }
 
-    private static Map<String, String> stringifyMap(Map<?, ?> map) {
+    private static Map<String, String> stringifyValuesOf(Map<?, ?> map) {
         return map.entrySet().stream()
-                .map(entry -> new AbstractMap.SimpleEntry<>(String.valueOf(entry.getKey()), String.valueOf(entry.getValue())))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private Optional<Style> nodeStyleWithName(String name) {
-        return nodeStyles().stream().filter(style -> style.name().equals(name))
-                .findFirst();
-    }
-
-    private Optional<Style> edgeStyleWithName(String name) {
-        return edgeStyles().stream().filter(style -> style.name().equals(name))
-                .findFirst();
-    }
-
-    private List<Style> nodeStyles() {
-        return isEmpty(nodeStyles) ? List.of(DEFAULT_STYLE) : nodeStyles;
-    }
-
-    private List<Style> edgeStyles() {
-        return isEmpty(edgeStyles) ? List.of(DEFAULT_STYLE) : edgeStyles;
+                .map(entry -> {
+                    var keyAsString = String.valueOf(entry.getKey());
+                    var valueAsString = String.valueOf(entry.getValue());
+                    return new AbstractMap.SimpleEntry<>(keyAsString, valueAsString);
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)); // Collect into a Map<String, String>
     }
 
 
