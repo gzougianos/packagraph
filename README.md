@@ -2,38 +2,113 @@
 
 [![Build and Release JAR](https://github.com/gzougianos/packagraph/actions/workflows/packgraph.yml/badge.svg)](https://github.com/gzougianos/packagraph/actions/workflows/packgraph.yml)
 
-Is a small tool that generates package diagrams from Java source code
-directories and exports them to customizable graphs. Packagraph's input is only a
-[Human JSON](https://hjson.github.io/) file, which contains all the options
-and configurations of the exported graph.
+Packagraph is a lightweight tool designed to generate customizable package dependency
+diagrams for Java source code. It reads configurations from a [Human JSON](https://hjson.github.io/)
+file and outputs diagrams in formats supported by [GraphViz](https://graphviz.org/).
 
-Below is the package diagram of packgraph itself, demonstrating various features.
-Given [for_manual_testing.hjson](./src/test/resources/for_manual_testing.hjson), the output is:
+Below is an example diagram of `packagraph` itself, created using the
+[for_manual_testing.hjson](./src/test/resources/for_manual_testing.hjson) configuration:
 
 ![petclinic](./packagraph.png)
 
-## Motivation:
+## Why Use Packagraph?:
 
-A "simple & easy to use" tool to visualize Java packages and their dependencies. In a sense, packagraph
-aims to replace the no-longer maintained ObjectAid (see
-on [WebArchive](https://web.archive.org/web/20200418031122/http://www.objectaid.com/home)) on the package-level.
+Packagraph provides a simple way to visualize Java package dependencies,
+filling the void left by tools like ObjectAid (discontinued -
+see [WebArchive](https://web.archive.org/web/20200418031122/http://www.objectaid.com/home)).
+It focuses specifically on package-level diagrams, making it ideal for understanding high-level architecture.
 
-## How it works:
+## How Does It Work?
 
-packagraph scans the Java files within the directories given as input and then finds the packages and their
-dependencies.
-The detection of the dependencies is based on the `import` statements within the `.java` files of each package. Then,
-packagraph uses [GraphViz](https://graphviz.org/) library to generate and export the graph.
+### 1. Source Code Analysis
 
-## How to use:
+Packagraph scans Java files in the specified directories, extracting package-level dependencies based on `import`
+statements.
 
-As a regular Java command line tool.
+### 2. Graph Generation
 
-#### For example:
+Packagraph uses the GraphViz library to create and export the
+dependency diagrams, styled according to your configuration.
+
+# Quick Start:
+
+Packagraph can be used as a command-line tool:
 
 ```bash
 java -jar packagraph.jar -o myOptions.hjson
 ```
+
+### Example Configuration
+
+A typical HJSON configuration might look like:
+
+```json
+{
+  directories: [
+    "./module1/src/main/java",
+    "./module2/src/main/java"
+  ],
+  // Source directories
+  output: {
+    path: "./output/diagram.png",
+    // Output file path
+    overwrite: true,
+    // Overwrite existing file
+    "graphStyle": MAIN_GRAPH
+  },
+  definitions: [
+    {
+      packages: "com.example.service.*",
+      as: "Service Layer",
+      nodeStyle: {
+        fillcolor: "lightblue"
+      }
+    },
+    {
+      packages: "com.example.repository.*",
+      as: "Repository Layer",
+      nodeStyle: {
+        fillcolor: "lightgray"
+      }
+    },
+    {
+      packages: "java.*",
+      as: ""
+      // Exclude standard Java packages
+    }
+  ],
+  clusters: [
+    {
+      packages: "Service Layer,com.example.dao.*",
+      graphStyle: {
+        label: "Application Core"
+      }
+    }
+  ],
+  //Styles
+  nodeStyles: {
+    default: {
+      //Default node style inherited by all other node styles. 
+      shape: "rectangle"
+    }
+  },
+  graphStyles: {
+    default: {
+      fontsize: 18,
+      fontcolor: "gray"
+    },
+    MAIN_GRAPH: {
+      label: "My Project",
+      fontsize: 24,
+      fontcolor: "blue"
+    }
+  }
+}
+```
+
+### Configuration Properties
+
+#### Core Properties
 
 Below is all the properties that can be defined in the HJson file and supported by packagraph (<b>*</b> required):
 <table>
@@ -59,7 +134,7 @@ Below is all the properties that can be defined in the HJson file and supported 
       </td>
     </tr>
     <tr>
-      <td>output.path<b>*</b></td>
+      <td>output.path</td>
       <td>String</td>
       <td>Defines the output file path and file type. Please see the <a href="https://graphviz.org/docs/outputs/">GraphViz output formats</a>.</td>
       <td rowspan="3">
@@ -68,7 +143,7 @@ Below is all the properties that can be defined in the HJson file and supported 
     //PNG output
     "path": "./packagraph.png", 
     "overwrite": true,
-    "style": {
+    "graphStyle": {
     #Label of the main graph
       "label": "MyLabel",
       "fontsize": 24,
@@ -85,9 +160,9 @@ Below is all the properties that can be defined in the HJson file and supported 
       <td>Whether to overwrite the output file if it already exists.</td>
     </tr>
     <tr>
-      <td>output.style</td>
+      <td>output.graphStyle</td>
       <td>Object</td>
-      <td>A set of key-value pairs of GraphViz attributes to be applied to the main graph.  Please see the <a href="https://graphviz.org/doc/info/attrs.html">GraphViz attributes</a> that can be applied to a graph.</td>
+      <td>The style of the main graph (read below).  See also <a href="https://graphviz.org/doc/info/attrs.html">graph attributes</a>.</td>
     </tr>
     <tr>
       <td>includeOnlyFromDirectories</td>
@@ -105,7 +180,7 @@ Below is all the properties that can be defined in the HJson file and supported 
     {
       "packages": "org.spring.data.*",
       "as": "Spring Data",
-      "style": {
+      "nodeStyle": {
         // Database has 'green' node
         "fillcolor": "green"
       },
@@ -124,7 +199,7 @@ Below is all the properties that can be defined in the HJson file and supported 
       //will become just 'pack1' and 'pack2'
       "packages": "com.smth\\.(.*)",
       "as": "$1",
-      "style": {
+      "nodeStyle": {
           "shape": "rectangle"
       }
     }
@@ -143,49 +218,17 @@ Below is all the properties that can be defined in the HJson file and supported 
       <td>The name of the re-defined package. In other words, how the package will be shown in the output graph. If this value is empty, the package is completely excluded from the graph.</td>
     </tr>
     <tr>
-      <td>definition(s).style</td>
+      <td>definition(s).nodeStyle</td>
       <td>Object</td>
-      <td>Each package is exported to the graph as an individual node. <code>style</code> 
-property can be used to customize the node of a single package. Please see the <a href="https://graphviz.org/doc/info/attrs.html">GraphViz attributes</a> that can be applied to a node.</td>
+      <td>Each package is exported to the graph as an individual node. <code>nodeStyle</code> 
+defines the style of this node. It can be either a named style (defined in <code>nodeStyles</code>) or an inner object. See also <a href="https://graphviz.org/doc/info/attrs.html">node attributes</a>.</td>
     </tr>
     <tr>
       <td>definition(s).edgeInStyle</td>
       <td>Object</td>
-      <td>Customize the edges (that point to) of a single package. Please see the <a href="https://graphviz.org/doc/info/attrs.html">GraphViz attributes</a> that can be applied to an edge.</td>
-    </tr>
-    <tr>
-      <td>globalStyle</td>
-      <td>Object</td>
-      <td>The default style of the nodes in the graph. Please see the <a href="https://graphviz.org/doc/info/attrs.html">GraphViz attributes</a> that 
-can be applied to a node. All nodes will inherit the attributes of this style by default. 
-Use <code>"inheritGlobal" : false</code> property in the specific package definition
-(<code>style</code>)</code>to disable the inheritance.</td>
-    <td><pre>
-//Style applied to all package nodes
-//use definitions.style to override 
-//them for specific package nodes
-"globalStyle": {
-    "fontsize": 20,
-    "shape": "box"
-},
-</pre></td>
-    </tr>
-    <tr>
-      <td>globalEdgeStyle</td>
-      <td>Object</td>
-      <td>The default style of the edges in the graph. Please see the <a href="https://graphviz.org/doc/info/attrs.html">GraphViz attributes</a> that 
-can be applied to an edge. All edges will inherit the attributes of this style by default. 
-Use <code>"inheritGlobal" : false</code> property in the specific package definition 
-(<code>edgeInStyle</code>)</code> to disable the inheritance.</td>
-    <td><pre>
-//Style applied to all edges
-//use definitions.edgeInStyle to override 
-//them for specific package nodes
-"globalEdgeStyle": {
-    "color": "black",
-    "arrowhead": "diamond"
-},
-</pre></td>
+      <td>Customize the edges (that point to) of a single package.
+It can be either a named style (defined in <code>edgeStyles</code>) or an inner object.
+Please see the <a href="https://graphviz.org/doc/info/attrs.html">GraphViz attributes</a> that can be applied to an edge.</td>
     </tr>
     <tr>
       <td>clusters</td>
@@ -208,7 +251,7 @@ More information on <a href="https://graphviz.org/Gallery/directed/cluster.html"
     {
       "packages": "JPA,Hibernate,
     org.springframework.data.*",
-      "style": {
+      "graphStyle": {
         "label": "Database Access Layer",
         "fontsize": 18,
         "fontcolor": "gray"
@@ -231,13 +274,99 @@ names specified in<code>definitions</code>.</td>
       <td>The name of the cluster, to be used as an identifier. Does not have any impact on the output.</td>
     </tr>
     <tr>
-      <td>cluster(s).style</td>
+      <td>cluster(s).graphStyle</td>
       <td>Object</td>
-      <td>The style of the cluster graph. By default, all cluster graphs have the same <code>style</code>
-as the main graph (<code>output.style</code>). Please see the 
-<a href="https://graphviz.org/doc/info/attrs.html">GraphViz attributes</a> that can be 
-applied to a graph.</td>
+      <td>The style of the cluster graph. By default, all cluster graphs have the same <code>graphStyle</code>
+as the main graph (<code>output.graphStyle</code>). It can be either a named style (defined in <code>graphStyles</code>) or an inner object.
+See also <a href="https://graphviz.org/doc/info/attrs.html">graph attributes</a>.</td>
     </tr>
+    <tr>
+      <td>nodeStyles</td>
+      <td>Object[]</td>
+      <td>A list of named styles to be used in <code>definitions</code>. All nodes have the 
+ <code>default</code> style by default. All other styles inherit the properties of the <code>default</code> style.
+If you want to prevent the inheritance, use <code>"inheritDefault": false</code></td>
+        <td>
+<pre>
+"nodeStyles": [
+    "default": {
+        "shape": "rectangle"
+    },
+    "BLUE_RECTANGLE": {
+        "color": "blue"
+    },
+    "BLUE_CIRCLE": {
+        "inheritDefault": false
+        "color": "blue"
+    },
+]
+"definitions": [
+    {
+        "packages": "org.spring.data.*",
+        "as": "Spring Data",
+        "nodeStyle": "BLUE_RECTANGLE"
+    }
+]
+</pre>
+</td>
+    </tr>
+<tr>
+  <td>edgeInStyles</td>
+  <td>Object[]</td>
+  <td>A list of named styles to be used in <code>definitions</code>. All edges have the 
+<code>default</code> style by default. All other styles inherit the properties of the <code>default</code> style.
+If you want to prevent the inheritance, use <code>"inheritDefault": false</code>.</td>
+  <td>
+<pre>
+"edgeInStyles": {
+    "default": {
+        "style": "solid"
+    },
+    "DASHED_RED": {
+        "color": "red",
+        "style": "dashed"
+    },
+    "SOLID_BLUE": {
+        "inheritDefault": false,
+        "color": "blue",
+        "style": "solid"
+    }
+}
+"definitions": [
+{
+    "packages": "org.spring.data.*",
+    "as": "Spring Data",
+    "edgeInStyle": "SOLID_BLUE"
+}
+]
+</pre>
+</td>
+</tr>
+<tr>
+  <td>graphStyles</td>
+  <td>Object[]</td>
+  <td>A list of named styles to be used by clusters or the main graph. All clusters have the 
+<code>default</code> style by default. All other styles inherit the properties of the <code>default</code> style.
+If you want to prevent the inheritance, use <code>"inheritDefault": false</code>.</td>
+  <td>
+<pre>
+"graphStyles": {
+    "default": {
+        "dpi": "96"
+    },
+    "BASIC_CLUSTER": {
+        "color": "red"
+    }
+}
+"clusters": [
+{
+    "packages": "org.spring.data.*",
+    "graphStyle": "BASIC_CLUSTER"
+}
+]
+</pre>
+</td>
+</tr>
     <tr>
       <td>constants</td>
       <td>Object[]</td>
@@ -251,8 +380,10 @@ Use the <code>${MY_CONSTANT}</code> syntax to refer to a constant.</td>
       "value": "#258fc4"
     }
 ]
-"globalEdgeStyle": {
-    "color": "${EDGE_CUSTOM_BLUE}"
+"nodeStyles": {
+    "default":{
+        "color": "${EDGE_CUSTOM_BLUE}"
+    }
 },
 </pre></td>
     </tr>
@@ -270,3 +401,4 @@ Use the <code>${MY_CONSTANT}</code> syntax to refer to a constant.</td>
 </table>
 
 More examples of packagraph's usage can be found within the [examples](examples/) folder.
+You can use [skeleton.hjson](skeleton.hjson) as a starting point for your own Human JSON files.
