@@ -85,14 +85,6 @@ public class PackagraphOptions {
     }
 
 
-    public Map<String, String> nodeStyleOf(PackageName packag) {
-        final var defaultStyle = nodeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
-
-        return findDefinitionForRenamed(packag)
-                .map(def -> getNodeStyleForDefinition(def, defaultStyle))
-                .orElse(defaultStyle.attributes());
-    }
-
     public Map<String, String> edgeInStyleOf(PackageName packag) {
         final var defaultStyle = edgeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
@@ -113,21 +105,12 @@ public class PackagraphOptions {
         return defaultEdgeStyle.attributes();
     }
 
-    private Map<String, String> getNodeStyleForDefinition(Definition def, final Style defaultStyle) {
-        final var toolTip = def.packages();
-        var style = defaultStyle.attributes();
+    public Map<String, String> nodeStyleOf(PackageName packag) {
+        final var defaultStyle = nodeStyleWithName(DEFAULT_STYLE_NAME).orElse(DEFAULT_STYLE);
 
-        if (def.nodeStyle() instanceof String styleName) {
-            var nodeStyle = nodeStyleWithName(styleName).orElseGet(() -> {
-                log.warn("Node graphStyle with name {} not found. Will use default graphStyle.", styleName);
-                return DEFAULT_STYLE;
-            });
-            style = inheritProperties(nodeStyle.attributes(), defaultStyle.attributes());
-        } else if (def.nodeStyle() instanceof Map<?, ?> innerNodeStyle) {
-            style = inheritProperties(stringifyMap(innerNodeStyle), defaultStyle.attributes());
-        }
-
-        return withTooltip(style, toolTip);
+        return findDefinitionForRenamed(packag)
+                .map(def -> withTooltip(innerOrNamedStyle(def.nodeStyle(), nodeStyles), def.packages()))
+                .orElse(defaultStyle.attributes());
     }
 
     private static Map<String, String> withTooltip(Map<String, String> style, String tooltip) {
@@ -201,6 +184,9 @@ public class PackagraphOptions {
     }
 
     public File outputFile() {
+        if (output().path() == null)
+            return new File(DEFAULT_OUTPUT.path());
+
         return new File(output().path());
     }
 

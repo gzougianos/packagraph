@@ -441,7 +441,25 @@ class PackagraphOptionsShould {
 
     @Test
     void know_the_main_graph_style() throws IOException {
-        PackagraphOptions options = PackagraphOptions.fromJson(SAMPLE_JSON);
+        PackagraphOptions options = PackagraphOptions.fromJson("""
+                {
+                  "directories": [
+                    "src/test/java"
+                  ],
+                  "definitions": [
+                    {
+                      "packages": "java.util.*",
+                      "as": "java"
+                    }
+                  ],
+                  "output":{
+                    "graphStyle":{
+                      "label": "a_label",
+                      "fontsize": "24",
+                      "fontname": "Tahoma"
+                    }
+                  }
+                }""");
         var style = options.mainGraphStyle();
 
         assertEquals("a_label", style.get("label"));
