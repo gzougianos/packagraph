@@ -6,7 +6,7 @@
 
     <groupId>com.github.gzougianos</groupId>
     <artifactId>packagraph</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
