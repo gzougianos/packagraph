@@ -5,6 +5,7 @@ import lombok.extern.slf4j.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 @Slf4j
 public record Packagraph(Options options, Set<Node> nodes, Set<Edge> edges) {
@@ -12,18 +13,23 @@ public record Packagraph(Options options, Set<Node> nodes, Set<Edge> edges) {
 
     public static Packagraph create(Options options) {
         List<File> javaFiles = JavaFilesFinder.findWithin(sourceDirectories(options));
-        final var analyzed = javaFiles.stream()
+        final List<JavaClass> analyzed = javaFiles.stream()
                 .map(Packagraph::asClass)
                 .filter(Objects::nonNull)
                 .toList();
 
+        final var internalPackages = analyzed.stream()
+                .map(JavaClass::packag)
+                .collect(Collectors.toSet());
+
         Set<Node> nodes = new HashSet<>();
         Set<Edge> edges = new HashSet<>();
         for (var javaClass : analyzed) {
-            Node node = new Node(javaClass.packag());
+            Node node = new Node(javaClass.packag(), internalPackages.contains(javaClass.packag()));
             nodes.add(node);
 
-            List<Node> dependencies = javaClass.imports().stream().map(Node::new).toList();
+            List<Node> dependencies = javaClass.imports().stream()
+                    .map(importt -> new Node(importt, internalPackages.contains(importt))).toList();
 
             nodes.addAll(dependencies);
             edges.addAll(dependencies.stream().map(dependency -> new Edge(node, dependency)).toList());

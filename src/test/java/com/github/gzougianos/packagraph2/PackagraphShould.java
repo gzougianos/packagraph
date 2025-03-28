@@ -26,6 +26,7 @@ class PackagraphShould {
 
         Node node = graph.nodes().iterator().next();
         assertEquals("assumeP1", node.packag().name());
+        assertTrue(node.isInternal());
     }
 
     @Test
@@ -80,6 +81,27 @@ class PackagraphShould {
     }
 
     @Test
+    void know_if_a_node_is_internal_or_not() throws Exception {
+        TempDir dir = new TempDir();
+        Options options = includeSourceDir(dir);
+
+        //A-->java.util
+        dir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                
+                public class A{ }
+                """);
+
+        var graph = Packagraph.create(options);
+        var internalnode = findNode(graph.nodes(), "packageA");
+        assertTrue(internalnode.isInternal());
+
+        var externalnode = findNode(graph.nodes(), "java.util");
+        assertFalse(externalnode.isInternal());
+    }
+
+    @Test
     void understand_all_kinds_of_imports() throws Exception {
         TempDir dir = new TempDir();
         Options options = includeSourceDir(dir);
@@ -109,5 +131,12 @@ class PackagraphShould {
 
     private static boolean assertContainsNode(Set<Node> nodes, String packageName) {
         return nodes.stream().anyMatch(node -> node.packag().name().equals(packageName));
+    }
+
+    private static Node findNode(Set<Node> nodes, String packageName) {
+        return nodes.stream()
+                .filter(node -> node.packag().name().equals(packageName))
+                .findFirst()
+                .orElseThrow();
     }
 }
