@@ -1,0 +1,13 @@
+include source directory 'src/main/java';
+exclude externals;
+
+show nodes 'com.github.something.*' as 'Something' with style 'default';
+show nodes 'com.github.somethingelse';
+
+show edges from 'com.github.something' to 'com.github.somethingelse' with style 'default_edge_style' with dependant style 'depends_on_guice';
+
+
+define style 'default' as 'color=blue;style=fixed';
+define style 'depends_on_guice' as 'label=label+diamond';
+
+define constant 'const' as 'blue';
