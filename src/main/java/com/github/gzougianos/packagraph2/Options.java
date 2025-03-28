@@ -9,6 +9,37 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
                       List<ShowNodes> showNodes, List<ShowEdges> showEdges, List<DefineStyle> defineStyles,
                       List<DefineConstant> defineConstant, String mainGraphStyle) {
 
+    @Override
+    public List<String> sourceDirectories() {
+        return nonEmpty(sourceDirectories);
+    }
+
+    @Override
+    public List<ShowEdges> showEdges() {
+        return nonEmpty(showEdges);
+    }
+
+    @Override
+    public List<ShowNodes> showNodes() {
+        return nonEmpty(showNodes);
+    }
+
+    @Override
+    public List<DefineStyle> defineStyles() {
+        return nonEmpty(defineStyles);
+    }
+
+    @Override
+    public List<DefineConstant> defineConstant() {
+        return nonEmpty(defineConstant);
+    }
+
+    private static <T> List<T> nonEmpty(List<T> list) {
+        if (list == null)
+            return List.of();
+        return list;
+    }
+
     public record ShowNodes(String packag, String as, String style) {
 
     }
