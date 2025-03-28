@@ -3,8 +3,6 @@ package com.github.gzougianos.packagraph2;
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
 
-import java.io.*;
-import java.nio.file.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +21,7 @@ class PackagraphShould {
                 }
                 """);
 
-        Graph graph = Packagraph.create(options).graph();
+        var graph = Packagraph.create(options);
         assertEquals(1, graph.nodes().size());
 
         Node node = graph.nodes().iterator().next();
@@ -49,7 +47,7 @@ class PackagraphShould {
                 public class B{}
                 """);
 
-        Graph graph = Packagraph.create(options).graph();
+        var graph = Packagraph.create(options);
         assertEquals(2, graph.nodes().size());
 
         assertEquals(1, graph.edges().size());
@@ -71,7 +69,7 @@ class PackagraphShould {
                 public class A{ }
                 """);
 
-        Graph graph = Packagraph.create(options).graph();
+        var graph = Packagraph.create(options);
         assertEquals(2, graph.nodes().size());
         assertContainsNode(graph.nodes(), "java.util");
 
@@ -79,6 +77,30 @@ class PackagraphShould {
         Edge edge = graph.edges().iterator().next();
         assertEquals("packageA", edge.from().packag().name());
         assertEquals("java.util", edge.to().packag().name());
+    }
+
+    @Test
+    void understand_all_kinds_of_imports() throws Exception {
+        TempDir dir = new TempDir();
+        Options options = includeSourceDir(dir);
+
+        dir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*; //asterisk import
+                import java.lang.Thread; //"standard" import
+                import static java.lang.annotation.RetentionPolicy.RUNTIME; //"Static" import
+                import static java.time.temporal.ChronoUnit.*;//"Static asterisk" import
+                
+                public class A{ }
+                """);
+        var graph = Packagraph.create(options);
+        assertEquals(5, graph.nodes().size());
+
+        assertContainsNode(graph.nodes(), "packageA");
+        assertContainsNode(graph.nodes(), "java.util");
+        assertContainsNode(graph.nodes(), "java.lang.Thread");
+        assertContainsNode(graph.nodes(), "java.lang.annotation");
+        assertContainsNode(graph.nodes(), "java.time.temporal");
     }
 
     private static Options includeSourceDir(TempDir dir) throws Exception {
