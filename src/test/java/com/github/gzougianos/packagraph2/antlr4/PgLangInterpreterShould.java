@@ -114,6 +114,19 @@ class PgLangInterpreterShould {
     }
 
     @Test
+    void ignore_comments() throws Exception {
+        String script = """
+                //this is a comment
+                /* this is another */
+                include source directory 'src/main/java';
+                """;
+        Options options = PgLangInterpreter.interprete(script);
+
+        assertEquals(1, options.sourceDirectories().size());
+        assertEquals("src/main/java", options.sourceDirectories().getFirst());
+    }
+
+    @Test
     void throw_syntax_error_as_exception() throws Exception {
         String script = "blabla;";
         assertThrows(Exception.class, () -> PgLangInterpreter.interprete(script));

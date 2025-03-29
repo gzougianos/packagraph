@@ -37,3 +37,9 @@ byOverwiting: 'by' 'overwriting';
 
 VALUE: '\'' ( ~[\r\n'] | '\\' . )* '\'';
 WS: [ \t\r\n]+ -> skip;
+
+// Single-line comment (// ...)
+LINE_COMMENT: '//' ~[\r\n]* -> skip;
+
+// Multi-line comment (/* ... */)
+BLOCK_COMMENT: '/*' .*? '*/' -> skip;
