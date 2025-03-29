@@ -18,11 +18,25 @@ public record GraphvizRenderer(Packagraph graph) {
     public File render() {
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
 
+        Map<Node, guru.nidi.graphviz.model.Node> graphvizNodes = new HashMap<>();
         for (var node : graph.nodes()) {
             if (node.isExternal() && options().excludeExternals())
                 continue;
 
-            mainGraph.add(createNode(node));
+            guru.nidi.graphviz.model.Node graphvizNode = createNode(node);
+            mainGraph.add(graphvizNode);
+            graphvizNodes.put(node, graphvizNode);
+        }
+
+        for (var edge : graph.edges()) {
+            var from = graphvizNodes.get(edge.from());
+            var to = graphvizNodes.get(edge.to());
+            if (from == null || to == null) {
+                continue;
+            }
+            
+            var graphvizEdge = from.link(Link.to(to));
+            mainGraph.add(graphvizEdge);
         }
 
         applyMainGraphStyle(mainGraph);
@@ -66,7 +80,7 @@ public record GraphvizRenderer(Packagraph graph) {
                 }, () -> log.warn("Main graph style {} is not defined.", mainGraphStyleName));
     }
 
-    private LinkSource createNode(Node node) {
+    private guru.nidi.graphviz.model.Node createNode(Node node) {
         var gNode = Factory.node(node.packag().name());
 
         return gNode;
