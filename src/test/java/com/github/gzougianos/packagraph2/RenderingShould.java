@@ -15,7 +15,7 @@ class RenderingShould {
 
     @Test
     void apply_maingraph_style() throws Exception {
-        File tempExportFile = Files.createTempFile("test", ".png").toFile();
+        File tempExportFile = createTempImage();
         var script = """
                 include source directory '%s';
                 show maingraph with style 'main_graph_style';
@@ -23,18 +23,42 @@ class RenderingShould {
                 export as 'png' into '%s' by overwriting;
                 """.formatted(tempDir.path().toString(), tempExportFile.toString());
 
-        Options options = run(script);
-
-        //A-->java.util
         tempDir.addJavaFile("A.java", """
                 package packageA;
                 
                 public class A{ }
                 """);
 
-        var graph = Packagraph.create(options);
+        var graph = Packagraph.create(run(script));
         File output = new GraphvizRenderer(graph).render();
         assertFilesEquals(preRenderedFile("simple_main_graph_style.png"), output);
+    }
+
+    @Test
+    void exclude_external_nodes() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                exclude externals;
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                
+                public class A{ }
+                """);
+
+        var graph = Packagraph.create(run(script));
+        File output = new GraphvizRenderer(graph).render();
+        assertFilesEquals(preRenderedFile("exclude_externals.png"), output);
+    }
+
+    private static File createTempImage() throws IOException {
+        File file = Files.createTempFile("test", ".png").toFile();
+        file.deleteOnExit();
+        return file;
     }
 
     private Options run(String script) throws Exception {
@@ -42,6 +66,6 @@ class RenderingShould {
     }
 
     private static File preRenderedFile(String file) {
-        return new File(ResourcesFolder.asFile(), "2/" + file);
+        return new File(ResourcesFolder.asFile(), "pre_rendered/" + file);
     }
 }

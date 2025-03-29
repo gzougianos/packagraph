@@ -19,6 +19,9 @@ public record GraphvizRenderer(Packagraph graph) {
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
 
         for (var node : graph.nodes()) {
+            if (node.isExternal() && options().excludeExternals())
+                continue;
+
             mainGraph.add(createNode(node));
         }
 
@@ -64,8 +67,13 @@ public record GraphvizRenderer(Packagraph graph) {
     }
 
     private LinkSource createNode(Node node) {
-        return Factory.node(node.packag().name());
+        var gNode = Factory.node(node.packag().name());
+
+        return gNode;
     }
 
+    private Options options() {
+        return graph().options();
+    }
 
 }

@@ -6,4 +6,7 @@ import lombok.experimental.*;
 
 public record Node(PackageName packag, boolean isInternal) {
 
+    public boolean isExternal() {
+        return !isInternal;
+    }
 }
