@@ -13,6 +13,10 @@ class RenderingShould {
 
     TempDir tempDir = new TempDir();
 
+    //      +------------+
+    //      | packageA   |
+    //      | (Testing)  |
+    //      +------------+
     @Test
     void apply_maingraph_style() throws Exception {
         File tempExportFile = createTempImage();
@@ -34,6 +38,9 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("simple_main_graph_style.png"), output);
     }
 
+    //      +-----------+
+    //      | packageA  |
+    //      +-----------+
     @Test
     void exclude_external_nodes() throws Exception {
         File tempExportFile = createTempImage();
@@ -55,6 +62,14 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("exclude_externals.png"), output);
     }
 
+    //      +-----------+
+    //      | packageA  |
+    //      +-----------+
+    //         /     \
+    //        /       \
+    //+------------+  +-----------+
+    //| packageB   |  | java.util |
+    //+------------+  +-----------+
     @Test
     void render_edges_with_external_dependencies() throws Exception {
         File tempExportFile = createTempImage();
@@ -80,6 +95,14 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("edges_with_external_dependencies.png"), output);
     }
 
+    //  +-----------+
+    //  | packageA  |
+    //  +-----------+
+    //       |
+    //       v
+    //  +-----------+
+    //  | packageB  |
+    //  +-----------+
     @Test
     void render_edges_without_external_dependencies() throws Exception {
         File tempExportFile = createTempImage();
@@ -106,6 +129,14 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("edges_without_external_dependencies.png"), output);
     }
 
+    //      +-----------+
+    //      | packageA  |
+    //      +-----------+
+    //         /     \
+    //        /       \
+    //+------------+  +------+
+    //| packageB   |  | util |
+    //+------------+  +------+
     @Test
     void render_renamed_node() throws Exception {
         File tempExportFile = createTempImage();
@@ -132,6 +163,14 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("renamed_node.png"), output);
     }
 
+    //  +-----------+
+    //  | my_group  |
+    //  +-----------+
+    //       |
+    //       v
+    //  +------------+
+    //  | java.util  |
+    //  +------------+
     @Test
     void group_and_rename_nodes() throws Exception {
         File tempExportFile = createTempImage();
