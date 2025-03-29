@@ -199,6 +199,30 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("renamed_node_as_group.png"), output);
     }
 
+    //  +-----------+
+    //  | packageA  |
+    //  +-----------+
+    // Yellow, filled node
+    @Test
+    void apply_node_style() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                show nodes 'packageA' with style 'some_style';
+                define style 'some_style' as 'style=filled;fillcolor=yellow';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                
+                public class A{ }
+                """);
+
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("node_style.png"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();

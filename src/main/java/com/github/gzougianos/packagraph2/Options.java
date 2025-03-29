@@ -1,6 +1,7 @@
 package com.github.gzougianos.packagraph2;
 
 import lombok.*;
+import lombok.extern.slf4j.*;
 
 import java.util.*;
 import java.util.regex.*;
@@ -8,6 +9,7 @@ import java.util.regex.*;
 import static java.util.Collections.unmodifiableMap;
 
 @Builder
+@Slf4j
 public record Options(List<String> sourceDirectories, boolean excludeExternals,
                       List<ShowNodes> showNodes, List<ShowEdges> showEdges, List<DefineStyle> defineStyles,
                       List<DefineConstant> defineConstant, String mainGraphStyle, ExportInto exportInto) {
@@ -61,8 +63,10 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     private Map<String, String> resolveStyle(String styleName) {
         var styleVal = findStyleValue(styleName);
-        if (styleVal == null)
+        if (styleVal == null) {
+            log.warn("Style with name {} not found.", styleName);
             return Collections.emptyMap();
+        }
 
         Map<String, String> result = new HashMap<>();
         String[] pairs = styleVal.split(";");
@@ -121,11 +125,20 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public String nameOf(Node node) {
         for (var showNode : reverse(showNodes)) {
-            if (showNode.covers(node)) {
+            if (showNode.covers(node) && showNode.as() != null) {
                 return showNode.as();
             }
         }
         return node.packag().name();
+    }
+
+    public Map<String, String> styleOf(Node node) {
+        for (var showNode : reverse(showNodes)) {
+            if (showNode.covers(node) && showNode.style() != null) {
+                return resolveStyle(showNode.style());
+            }
+        }
+        return Collections.emptyMap();
     }
 
     public record ShowNodes(String packag, String as, String style) {

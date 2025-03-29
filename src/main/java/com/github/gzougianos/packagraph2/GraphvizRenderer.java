@@ -77,6 +77,10 @@ public record GraphvizRenderer(Packagraph graph) {
     private guru.nidi.graphviz.model.Node createNode(Node node) {
         var gNode = Factory.node(options().nameOf(node));
 
+        var style = options().styleOf(node);
+        for (var entry : style.entrySet()) {
+            gNode = gNode.with(entry.getKey(), entry.getValue());
+        }
         return gNode;
     }
 
