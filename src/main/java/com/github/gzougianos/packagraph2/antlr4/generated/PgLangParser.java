@@ -43,7 +43,7 @@ public class PgLangParser extends Parser {
 			null, "'include'", "'source'", "'directory'", "';'", "'exclude'", "'externals'", 
 			"'show'", "'maingraph'", "'nodes'", "'as'", "'with'", "'style'", "'edges'", 
 			"'from'", "'to'", "'from-node'", "'to-node'", "'define'", "'constant'", 
-			"'export'", "'into'", "'by'", "'overwiting'"
+			"'export'", "'into'", "'by'", "'overwriting'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();

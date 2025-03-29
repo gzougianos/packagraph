@@ -33,7 +33,7 @@ defineConstantStmt: 'define' 'constant' VALUE 'as' VALUE ';';
 exportStmt: 'export' 'as' VALUE exportInto? byOverwiting? ';';
 
 exportInto: 'into' VALUE;
-byOverwiting: 'by' 'overwiting';
+byOverwiting: 'by' 'overwriting';
 
 VALUE: '\'' ( ~[\r\n'] | '\\' . )* '\'';
 WS: [ \t\r\n]+ -> skip;

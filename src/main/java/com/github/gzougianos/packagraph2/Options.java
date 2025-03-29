@@ -7,7 +7,7 @@ import java.util.*;
 @Builder
 public record Options(List<String> sourceDirectories, boolean excludeExternals,
                       List<ShowNodes> showNodes, List<ShowEdges> showEdges, List<DefineStyle> defineStyles,
-                      List<DefineConstant> defineConstant, String mainGraphStyle) {
+                      List<DefineConstant> defineConstant, String mainGraphStyle, ExportInto exportInto) {
 
     @Override
     public List<String> sourceDirectories() {
@@ -62,6 +62,10 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
     }
 
     public record DefineConstant(String name, String value) {
+
+    }
+
+    public record ExportInto(String filePath, String fileType, boolean overwrite) {
 
     }
 

@@ -86,6 +86,19 @@ public class PgLangInterpreter extends PgLangBaseListener {
                 new Options.ShowEdges(removeQuotes(fromPackage), removeQuotes(toPackage), removeQuotes(style), removeQuotes(fromNodeStyle), removeQuotes(toNodeStyle)));
     }
 
+    @Override
+    public void enterExportStmt(PgLangParser.ExportStmtContext ctx) {
+        String fileType = ctx.VALUE().getText();
+        String filePath = null;
+        if (ctx.exportInto() != null) {
+            filePath = ctx.exportInto().VALUE().getText();
+        }
+
+        boolean overwrite = ctx.byOverwiting() != null;
+
+        options.exportInto = new Options.ExportInto(removeQuotes(filePath), removeQuotes(fileType), overwrite);
+    }
+
     private static String removeQuotes(String str) {
         if (str == null)
             return null;
@@ -130,6 +143,7 @@ public class PgLangInterpreter extends PgLangBaseListener {
         private final List<Options.ShowEdges> showEdges = new LinkedList<>();
         private final List<Options.DefineStyle> defineStyles = new LinkedList<>();
         private final List<Options.DefineConstant> defineConstants = new LinkedList<>();
+        private Options.ExportInto exportInto;
         private boolean excludeExternals = false;
         private String mainGraphStyle = null;
 
@@ -142,6 +156,7 @@ public class PgLangInterpreter extends PgLangBaseListener {
                     .defineStyles(unmodifiableList(defineStyles))
                     .defineConstant(unmodifiableList(defineConstants))
                     .mainGraphStyle(mainGraphStyle)
+                    .exportInto(exportInto)
                     .build();
         }
     }

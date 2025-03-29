@@ -1,6 +1,7 @@
 package com.github.gzougianos.packagraph2.antlr4;
 
 import com.github.gzougianos.packagraph2.*;
+import com.oracle.truffle.js.nodes.access.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,6 +101,16 @@ class PgLangInterpreterShould {
         Options options = PgLangInterpreter.interprete(script);
 
         assertEquals("main_graph_style", options.mainGraphStyle());
+    }
+
+    @Test
+    void interprete_export_into() throws Exception {
+        String script = "export as 'png' into 'myfile.png' by overwriting;";
+        Options options = PgLangInterpreter.interprete(script);
+
+        assertEquals("png", options.exportInto().fileType());
+        assertEquals("myfile.png", options.exportInto().filePath());
+        assertTrue(options.exportInto().overwrite());
     }
 
     @Test
