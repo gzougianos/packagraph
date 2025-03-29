@@ -34,7 +34,7 @@ public record GraphvizRenderer(Packagraph graph) {
             if (from == null || to == null) {
                 continue;
             }
-            
+
             var graphvizEdge = from.link(Link.to(to));
             mainGraph.add(graphvizEdge);
         }
@@ -67,20 +67,13 @@ public record GraphvizRenderer(Packagraph graph) {
 
 
     private void applyMainGraphStyle(MutableGraph mainGraph) {
-        String mainGraphStyleName = graph.options().mainGraphStyle();
-        if (mainGraphStyleName == null)
-            return;
-
-        graph.options().findStyle(mainGraphStyleName)
-                .map(style -> new Style(style, graph.options().defineConstant()))
-                .ifPresentOrElse(style -> {
-                    for (Map.Entry<String, String> entry : style.values().entrySet()) {
-                        mainGraph.graphAttrs().add(entry.getKey(), entry.getValue());
-                    }
-                }, () -> log.warn("Main graph style {} is not defined.", mainGraphStyleName));
+        for (Map.Entry<String, String> entry : options().mainGraphStyleAttributes().entrySet()) {
+            mainGraph.graphAttrs().add(entry.getKey(), entry.getValue());
+        }
     }
 
     private guru.nidi.graphviz.model.Node createNode(Node node) {
+        var name = options().nameOf(node);
         var gNode = Factory.node(node.packag().name());
 
         return gNode;

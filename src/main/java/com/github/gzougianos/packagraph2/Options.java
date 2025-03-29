@@ -3,6 +3,9 @@ package com.github.gzougianos.packagraph2;
 import lombok.*;
 
 import java.util.*;
+import java.util.regex.*;
+
+import static java.util.Collections.unmodifiableMap;
 
 @Builder
 public record Options(List<String> sourceDirectories, boolean excludeExternals,
@@ -44,16 +47,80 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     private static <T> List<T> nonEmpty(List<T> list) {
         if (list == null)
-            return List.of();
+            return java.util.List.of();
         return list;
     }
 
-    public Optional<String> findStyle(String styleName) {
-        for (var style : defineStyles) {
-            if (style.name.equals(styleName))
-                return Optional.of(style.value);
+    public Map<String, String> mainGraphStyleAttributes() {
+        if (mainGraphStyle() == null || mainGraphStyle().isBlank())
+            return Collections.emptyMap();
+
+
+        return resolveStyle(mainGraphStyle());
+    }
+
+    private Map<String, String> resolveStyle(String styleName) {
+        var styleVal = findStyleValue(styleName);
+        if (styleVal == null)
+            return Collections.emptyMap();
+
+        Map<String, String> result = new HashMap<>();
+        String[] pairs = styleVal.split(";");
+        for (String pair : pairs) {
+            pair = pair.trim();
+            if (pair.isEmpty())
+                continue;
+
+            String[] keyValue = pair.split("=", 2);
+            if (keyValue.length == 2) {
+                String key = keyValue[0].trim();
+                String value = resolveConstants(keyValue[1].trim());
+                result.put(key, value);
+            }
         }
-        return Optional.empty();
+        return unmodifiableMap(result);
+    }
+
+    private String resolveConstants(String value) {
+        Pattern pattern = Pattern.compile("\\$\\{(\\w+)}");
+        Matcher matcher = pattern.matcher(value);
+        StringBuilder resolved = new StringBuilder();
+
+        while (matcher.find()) {
+            String constantName = matcher.group(1);
+            String resolvedValue = findConstantValue(constantName);
+            matcher.appendReplacement(resolved, Matcher.quoteReplacement(resolvedValue));
+        }
+        matcher.appendTail(resolved);
+        return resolved.toString();
+    }
+
+    private String findConstantValue(String constantName) {
+        for (Options.DefineConstant constant : reverse(defineConstant)) {
+            if (constant.name().equals(constantName)) {
+                return constant.value();
+            }
+        }
+        return constantName;
+    }
+
+    private <T> List<T> reverse(List<T> list) {
+        var copy = new ArrayList<>(list);
+        Collections.reverse(copy);
+        return copy;
+    }
+
+    private String findStyleValue(String styleName) {
+        for (var style : reverse(defineStyles)) {
+            if (style.name.equals(styleName)) {
+                return style.value;
+            }
+        }
+        return null;
+    }
+
+    public String nameOf(Node node) {
+        return null;
     }
 
     public record ShowNodes(String packag, String as, String style) {
