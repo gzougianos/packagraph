@@ -117,8 +117,7 @@ class PgLangInterpreterShould {
     void ignore_comments() throws Exception {
         String script = """
                 //this is a comment
-                /* this is another */
-                include source directory 'src/main/java';
+                include source directory /* this is another */ 'src/main/java';
                 """;
         Options options = PgLangInterpreter.interprete(script);
 
