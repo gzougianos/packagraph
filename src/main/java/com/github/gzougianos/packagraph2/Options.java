@@ -40,6 +40,14 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return list;
     }
 
+    public Optional<String> findStyle(String styleName) {
+        for (var style : defineStyles) {
+            if (style.name.equals(styleName))
+                return Optional.of(style.value);
+        }
+        return Optional.empty();
+    }
+
     public record ShowNodes(String packag, String as, String style) {
 
     }

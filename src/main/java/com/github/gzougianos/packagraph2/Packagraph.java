@@ -10,7 +10,6 @@ import java.util.stream.*;
 @Slf4j
 public record Packagraph(Options options, Set<Node> nodes, Set<Edge> edges) {
 
-
     public static Packagraph create(Options options) {
         List<File> javaFiles = JavaFilesFinder.findWithin(sourceDirectories(options));
         final List<JavaClass> analyzed = javaFiles.stream()
