@@ -106,6 +106,58 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("edges_without_external_dependencies.png"), output);
     }
 
+    @Test
+    void render_renamed_node() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                show nodes 'java.util.*' as 'util';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.Set;
+                import packageB.B;
+                
+                public class A{ }
+                """);
+
+        tempDir.addJavaFile("B.java", """
+                package packageB;
+                
+                public class B{ }
+                """);
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("renamed_node.png"), output);
+    }
+
+    @Test
+    void group_and_rename_nodes() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                show nodes 'package.*' as 'my_group';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.Set;
+                import packageB.B;
+                
+                public class A{ }
+                """);
+
+        tempDir.addJavaFile("B.java", """
+                package packageB;
+                
+                public class B{ }
+                """);
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("renamed_node_as_group.png"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();

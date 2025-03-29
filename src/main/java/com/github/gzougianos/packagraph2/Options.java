@@ -120,11 +120,19 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
     }
 
     public String nameOf(Node node) {
-        return null;
+        for (var showNode : reverse(showNodes)) {
+            if (showNode.covers(node)) {
+                return showNode.as();
+            }
+        }
+        return node.packag().name();
     }
 
     public record ShowNodes(String packag, String as, String style) {
 
+        public boolean covers(Node node) {
+            return coversByPattern(packag, node.packag().name());
+        }
     }
 
     public record ShowEdges(String packageFrom, String packageTo, String style, String fromNodeStyle,
@@ -144,4 +152,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     }
 
+    private static boolean coversByPattern(String val, String valueToCover) {
+        return val.trim().equals(valueToCover) || valueToCover.matches(val.trim());
+    }
 }

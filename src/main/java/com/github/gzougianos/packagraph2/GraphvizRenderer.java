@@ -24,14 +24,16 @@ public record GraphvizRenderer(Packagraph graph) {
                 continue;
 
             guru.nidi.graphviz.model.Node graphvizNode = createNode(node);
-            mainGraph.add(graphvizNode);
+            if (!mainGraph.nodes().contains(graphvizNode))
+                mainGraph.add(graphvizNode);
+
             graphvizNodes.put(node, graphvizNode);
         }
 
         for (var edge : graph.edges()) {
             var from = graphvizNodes.get(edge.from());
             var to = graphvizNodes.get(edge.to());
-            if (from == null || to == null) {
+            if (from == null || to == null || Objects.equals(from, to)) {
                 continue;
             }
 
@@ -73,8 +75,7 @@ public record GraphvizRenderer(Packagraph graph) {
     }
 
     private guru.nidi.graphviz.model.Node createNode(Node node) {
-        var name = options().nameOf(node);
-        var gNode = Factory.node(node.packag().name());
+        var gNode = Factory.node(options().nameOf(node));
 
         return gNode;
     }
