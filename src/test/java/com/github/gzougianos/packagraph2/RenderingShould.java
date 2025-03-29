@@ -9,21 +9,24 @@ import java.nio.file.*;
 
 import static com.github.gzougianos.packagraph2.FileComparator.assertFilesEquals;
 
-public class RenderingShould {
+class RenderingShould {
+
+    TempDir tempDir = new TempDir();
 
     @Test
     void apply_maingraph_style() throws Exception {
-        TempDir dir = new TempDir();
         File tempExportFile = Files.createTempFile("test", ".png").toFile();
-        var includeSourceDirectory = includeSourceDirectory(dir);
-        var script = includeSourceDirectory + """
+        var script = """
+                include source directory '%s';
                 show maingraph with style 'main_graph_style';
                 define style 'main_graph_style' as 'label=Testing;dpi=100;fontcolor=red';
-                """;
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
         Options options = run(script);
 
         //A-->java.util
-        dir.addJavaFile("A.java", """
+        tempDir.addJavaFile("A.java", """
                 package packageA;
                 
                 public class A{ }
@@ -31,18 +34,14 @@ public class RenderingShould {
 
         var graph = Packagraph.create(options);
         File output = new GraphvizRenderer(graph).render();
-        assertFilesEquals(renderingFile("simple_main_graph_style.png"), output);
+        assertFilesEquals(preRenderedFile("simple_main_graph_style.png"), output);
     }
 
     private Options run(String script) throws Exception {
         return PgLangInterpreter.interprete(script);
     }
 
-    private static String includeSourceDirectory(TempDir dir) {
-        return "include source directory '" + dir.path().toString() + "';";
-    }
-
-    private static File renderingFile(String file) {
+    private static File preRenderedFile(String file) {
         return new File(ResourcesFolder.asFile(), "2/" + file);
     }
 }

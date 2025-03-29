@@ -34,6 +34,14 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return nonEmpty(defineConstant);
     }
 
+    @Override
+    public ExportInto exportInto() {
+        if (exportInto == null) {
+            return new ExportInto("packagraph.png", "png", false);
+        }
+        return exportInto;
+    }
+
     private static <T> List<T> nonEmpty(List<T> list) {
         if (list == null)
             return List.of();

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 @Slf4j
 public record GraphvizRenderer(Packagraph graph) {
@@ -24,12 +25,29 @@ public record GraphvizRenderer(Packagraph graph) {
         applyMainGraphStyle(mainGraph);
         try {
             return Graphviz.fromGraph(mainGraph)
-                    .render(Format.PNG)
-                    .toFile(new File("simple_main_graph_style.png"));
+                    .render(graphvizFormat())
+                    .toFile(new File(graph().options().exportInto().filePath()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private Format graphvizFormat() {
+        var fileSuffix = graph().options().exportInto().fileType();
+        fileSuffix = fileSuffix.replace(".", ""); //In case of .png
+
+        for (Format format : Format.values()) {
+            if (format.name().equalsIgnoreCase(fileSuffix)) {
+                return format;
+            }
+        }
+
+        var supportedFormats = Arrays.stream(Format.values())
+                .map(Format::name)
+                .collect(Collectors.joining(", "));
+        throw new IllegalArgumentException("Unknown output file type: " + fileSuffix + ". Supported formats: " + supportedFormats);
+    }
+
 
     private void applyMainGraphStyle(MutableGraph mainGraph) {
         String mainGraphStyleName = graph.options().mainGraphStyle();

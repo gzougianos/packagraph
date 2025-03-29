@@ -6,8 +6,12 @@ import java.nio.file.*;
 public class TempDir {
     private final File dir;
 
-    TempDir() throws IOException {
-        dir = Files.createTempDirectory("test").toFile();
+    TempDir() {
+        try {
+            dir = Files.createTempDirectory("test").toFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     void addJavaFile(String fileName, String contents) throws IOException {
