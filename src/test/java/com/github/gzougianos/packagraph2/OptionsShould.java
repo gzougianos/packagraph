@@ -3,6 +3,7 @@ package com.github.gzougianos.packagraph2;
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
 
+import java.io.*;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -139,6 +140,52 @@ class OptionsShould {
 
         assertEquals(Map.of("style", "filled", "fillcolor", "yellow"),
                 options.styleOf(graph.findNode("packageA")));
+    }
+
+    @Test
+    void change_relative_source_directory_references_on_base_dir() throws Exception {
+        var script = """
+                include source directory '%s';//absolute path
+                include source directory '%s';//relative path
+                """.formatted(tempDir.pathAsString(), "myfolder");
+
+        var anotherTempDir = new TempDir();
+        var options = run(script);
+        options = options.withBaseDir(anotherTempDir.path().toFile());
+
+        var expectedSource1 = tempDir.file();
+        var expectedSource2 = new File(anotherTempDir.file(), "myfolder");
+
+        assertTrue(options.sourceDirectories().contains(expectedSource1.toString()));
+        assertTrue(options.sourceDirectories().contains(expectedSource2.toString()));
+    }
+
+    @Test
+    void change_relative_export_file_on_base_dir() throws Exception {
+        var script = """
+                export as 'png' into 'myfile.png' by overwriting;
+                """;
+
+        var anotherTempDir = new TempDir();
+        var options = run(script);
+        options = options.withBaseDir(anotherTempDir.path().toFile());
+
+        var expectedOutputFile = new File(anotherTempDir.file(), "myfile.png");
+        assertEquals(expectedOutputFile.toString(), options.exportInto().filePath());
+    }
+
+    @Test
+    void not_change_export_file_path_on_base_dir_if_export_file_path_is_absolute() throws Exception {
+        File absolutePathFile = new File("myfile.png");
+        var script = """
+                export as 'png' into '%s' by overwriting;
+                """.formatted(absolutePathFile.getAbsolutePath());
+
+        var anotherTempDir = new TempDir();
+        var options = run(script);
+        options = options.withBaseDir(anotherTempDir.path().toFile());
+
+        assertEquals(absolutePathFile.getAbsolutePath(), options.exportInto().filePath());
     }
 
     private Options run(String script) throws Exception {

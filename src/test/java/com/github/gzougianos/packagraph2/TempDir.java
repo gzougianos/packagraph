@@ -18,6 +18,10 @@ public class TempDir {
         return dir.getAbsolutePath();
     }
 
+    File file() {
+        return dir;
+    }
+
     void addJavaFile(String fileName, String contents) throws IOException {
         File file = new File(dir, fileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {

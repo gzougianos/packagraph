@@ -3,9 +3,11 @@ package com.github.gzougianos.packagraph2;
 import lombok.*;
 import lombok.extern.slf4j.*;
 
+import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
 @Builder
@@ -141,6 +143,29 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return Collections.emptyMap();
     }
 
+    public Options withBaseDir(File dir) {
+        if (!dir.isDirectory())
+            throw new IllegalArgumentException(dir + " is not a directory.");
+
+        List<String> relocatedSources = relocateSourceDirectories(dir);
+        var relocatedExport = exportInto().withBaseDir(dir);
+
+        return new Options(relocatedSources, excludeExternals(),
+                showNodes(), showEdges(), defineStyles(),
+                defineConstant, mainGraphStyle(), relocatedExport);
+    }
+
+    private List<String> relocateSourceDirectories(File dir) {
+        List<String> sourceDirectories = new ArrayList<>();
+        for (String sourceDir : this.sourceDirectories()) {
+            if (new File(sourceDir).isAbsolute())
+                sourceDirectories.add(sourceDir);
+            else
+                sourceDirectories.add(dir.toPath().resolve(sourceDir).toString());
+        }
+        return unmodifiableList(sourceDirectories);
+    }
+
     public record ShowNodes(String packag, String as, String style) {
 
         public boolean covers(Node node) {
@@ -163,6 +188,15 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public record ExportInto(String filePath, String fileType, boolean overwrite) {
 
+        public ExportInto withBaseDir(File baseDir) {
+            if (new File(filePath).isAbsolute())
+                return this;
+
+            if (!baseDir.isDirectory())
+                throw new IllegalArgumentException(baseDir + " is not a directory.");
+
+            return new ExportInto(baseDir.toPath().resolve(filePath).toString(), fileType, overwrite);
+        }
     }
 
     private static boolean coversByPattern(String val, String valueToCover) {
