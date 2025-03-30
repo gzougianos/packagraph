@@ -248,6 +248,15 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("unrendered_node.png"), output);
     }
 
+    //  +-----------+
+    //  | packageA  |
+    //  +-----------+
+    //       |  ^
+    //       |  |
+    //       v  |
+    //  +-----------+
+    //  | packageB  |
+    //  +-----------+
     @Test
     void render_circular_dependencies() throws Exception {
         File tempExportFile = createTempImage();
