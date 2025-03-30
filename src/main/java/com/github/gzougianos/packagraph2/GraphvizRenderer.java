@@ -24,6 +24,10 @@ public record GraphvizRenderer(Packagraph graph) {
                 continue;
 
             guru.nidi.graphviz.model.Node graphvizNode = createNode(node);
+            if (graphvizNode == null) {
+                continue;
+            }
+
             if (!containsNode(mainGraph, graphvizNode))
                 mainGraph.add(graphvizNode);
 
@@ -80,13 +84,21 @@ public record GraphvizRenderer(Packagraph graph) {
     }
 
     private guru.nidi.graphviz.model.Node createNode(Node node) {
-        var gNode = Factory.node(options().nameOf(node));
+        String name = options().nameOf(node);
+        if (isBlankOrNull(name))
+            return null;
+
+        var gNode = Factory.node(name);
 
         var style = options().styleOf(node);
         for (var entry : style.entrySet()) {
             gNode = gNode.with(entry.getKey(), entry.getValue());
         }
         return gNode;
+    }
+
+    private boolean isBlankOrNull(String name) {
+        return name == null || name.trim().isEmpty();
     }
 
     private Options options() {

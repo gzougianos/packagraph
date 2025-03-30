@@ -16,4 +16,8 @@ public class ResourcesFolder {
 
         throw new RuntimeException("Test resources folder could not be found");
     }
+
+    public static File get(String fileName) {
+        return new File(asFile(), fileName);
+    }
 }

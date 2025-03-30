@@ -1,0 +1,19 @@
+//We are at ./target/test-classes
+include source directory '../../src/main/java';
+
+show maingraph with style 'maingraph';
+define style 'maingraph' as 'dpi=100;label=PackagraphInternals;fontsize=18;fontname=Tahoma';
+
+show nodes 'java.*' as '';
+show nodes 'lombok.*' as '';
+show nodes '.*' with style 'default_node';
+show nodes 'com.github.gzougianos\.(.*)' as '$1';
+show nodes 'org.antlr.*' as 'ANTLR' with style 'infrastructure';
+show nodes 'guru.nidi.*' as 'Graphviz' with style 'infrastructure';
+show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure';
+
+define style 'infrastructure' as 'style=filled;fillcolor=lightblue';
+define style 'default_node' as 'shape=box';
+
+
+export as '.png' into '../../target/manual_testing.png' by overwriting;
