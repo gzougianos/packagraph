@@ -66,4 +66,14 @@ public record Packagraph(Options options, Set<Node> nodes, Set<Edge> edges) {
                 .findFirst()
                 .orElseThrow();
     }
+
+    public boolean containsNode(String packageName) {
+        return nodes().stream()
+                .anyMatch(node -> node.packag().name().equals(packageName));
+    }
+
+    public boolean containsEdge(String fromPackage, String toPackage) {
+        return edges().stream()
+                .anyMatch(edge -> edge.isFrom(fromPackage) && edge.isTo(toPackage));
+    }
 }

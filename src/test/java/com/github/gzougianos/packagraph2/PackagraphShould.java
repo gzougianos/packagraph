@@ -23,10 +23,7 @@ class PackagraphShould {
 
         var graph = Packagraph.create(options);
         assertEquals(1, graph.nodes().size());
-
-        Node node = graph.nodes().iterator().next();
-        assertEquals("assumeP1", node.packag().name());
-        assertTrue(node.isInternal());
+        assertTrue(graph.containsNode("assumeP1"));
     }
 
     @Test
@@ -52,9 +49,7 @@ class PackagraphShould {
         assertEquals(2, graph.nodes().size());
 
         assertEquals(1, graph.edges().size());
-        Edge edge = graph.edges().iterator().next();
-        assertEquals("packageA", edge.from().packag().name());
-        assertEquals("packageB", edge.to().packag().name());
+        assertTrue(graph.containsEdge("packageA", "packageB"));
     }
 
     @Test
@@ -72,12 +67,10 @@ class PackagraphShould {
 
         var graph = Packagraph.create(options);
         assertEquals(2, graph.nodes().size());
-        assertContainsNode(graph.nodes(), "java.util");
+        assertTrue(graph.containsNode("java.util"));
 
         assertEquals(1, graph.edges().size());
-        Edge edge = graph.edges().iterator().next();
-        assertEquals("packageA", edge.from().packag().name());
-        assertEquals("java.util", edge.to().packag().name());
+        assertTrue(graph.containsEdge("packageA", "java.util"));
     }
 
     @Test
@@ -94,10 +87,10 @@ class PackagraphShould {
                 """);
 
         var graph = Packagraph.create(options);
-        var internalnode = findNode(graph.nodes(), "packageA");
+        var internalnode = graph.findNode("packageA");
         assertTrue(internalnode.isInternal());
 
-        var externalnode = findNode(graph.nodes(), "java.util");
+        var externalnode = graph.findNode("java.util");
         assertFalse(externalnode.isInternal());
     }
 
@@ -117,26 +110,14 @@ class PackagraphShould {
                 """);
         var graph = Packagraph.create(options);
         assertEquals(5, graph.nodes().size());
-
-        assertContainsNode(graph.nodes(), "packageA");
-        assertContainsNode(graph.nodes(), "java.util");
-        assertContainsNode(graph.nodes(), "java.lang.Thread");
-        assertContainsNode(graph.nodes(), "java.lang.annotation");
-        assertContainsNode(graph.nodes(), "java.time.temporal");
+        assertTrue(graph.containsNode("packageA"));
+        assertTrue(graph.containsNode("java.util"));
+        assertTrue(graph.containsNode("java.lang"));
+        assertTrue(graph.containsNode("java.lang.annotation"));
+        assertTrue(graph.containsNode("java.time.temporal"));
     }
 
     private static Options includeSourceDir(TempDir dir) throws Exception {
         return PgLangInterpreter.interprete("include source directory '" + dir.path().toString() + "';");
-    }
-
-    private static boolean assertContainsNode(Set<Node> nodes, String packageName) {
-        return nodes.stream().anyMatch(node -> node.packag().name().equals(packageName));
-    }
-
-    private static Node findNode(Set<Node> nodes, String packageName) {
-        return nodes.stream()
-                .filter(node -> node.packag().name().equals(packageName))
-                .findFirst()
-                .orElseThrow();
     }
 }
