@@ -100,6 +100,47 @@ class OptionsShould {
         assertEquals("apackage", options.nameOf(graph.findNode("com.testing.apackage")));
     }
 
+    @Test
+    void know_the_style_of_a_node() throws Exception {
+        var script = """
+                include source directory '%s';
+                show nodes 'packageA' with style 'some_style';
+                define style 'some_style' as 'style=filled;fillcolor=yellow';
+                """.formatted(tempDir.pathAsString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+
+        assertEquals(Map.of("style", "filled", "fillcolor", "yellow"),
+                options.styleOf(graph.findNode("packageA")));
+    }
+
+    @Test
+    void know_the_style_of_a_node_when_using_constants() throws Exception {
+        var script = """
+                include source directory '%s';
+                show nodes 'packageA' with style 'some_style';
+                define style 'some_style' as 'style=filled;fillcolor=${YELLOW_CLR}';
+                define constant 'YELLOW_CLR' as 'yellow';
+                """.formatted(tempDir.pathAsString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+
+        assertEquals(Map.of("style", "filled", "fillcolor", "yellow"),
+                options.styleOf(graph.findNode("packageA")));
+    }
+
     private Options run(String script) throws Exception {
         return PgLangInterpreter.interprete(script);
     }
