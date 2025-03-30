@@ -248,6 +248,31 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("unrendered_node.png"), output);
     }
 
+    @Test
+    void render_circular_dependencies() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.pathAsString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import packageB;
+                
+                public class A{ }
+                """);
+
+        tempDir.addJavaFile("B.java", """
+                package packageB;
+                import packageA;
+                
+                public class B{ }
+                """);
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("circular_dependency.png"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();
