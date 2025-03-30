@@ -24,7 +24,7 @@ public record GraphvizRenderer(Packagraph graph) {
                 continue;
 
             guru.nidi.graphviz.model.Node graphvizNode = createNode(node);
-            if (!mainGraph.nodes().contains(graphvizNode))
+            if (!containsNode(mainGraph, graphvizNode))
                 mainGraph.add(graphvizNode);
 
             graphvizNodes.put(node, graphvizNode);
@@ -49,6 +49,11 @@ public record GraphvizRenderer(Packagraph graph) {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean containsNode(MutableGraph mainGraph, guru.nidi.graphviz.model.Node node) {
+        return mainGraph.nodes().stream()
+                .anyMatch(n -> n.name().equals(node.name()));
     }
 
     private Format graphvizFormat() {
