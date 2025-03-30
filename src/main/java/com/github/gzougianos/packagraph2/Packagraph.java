@@ -59,4 +59,11 @@ public record Packagraph(Options options, Set<Node> nodes, Set<Edge> edges) {
         }
         return null;
     }
+
+    public Node findNode(String packageName) {
+        return nodes().stream()
+                .filter(node -> node.packag().name().equals(packageName))
+                .findFirst()
+                .orElseThrow();
+    }
 }

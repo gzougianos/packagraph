@@ -126,7 +126,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
     public String nameOf(Node node) {
         for (var showNode : reverse(showNodes)) {
             if (showNode.covers(node) && showNode.as() != null) {
-                return showNode.as();
+                return node.packag().name().replaceAll(showNode.packag(), showNode.as()).trim();
             }
         }
         return node.packag().name();
