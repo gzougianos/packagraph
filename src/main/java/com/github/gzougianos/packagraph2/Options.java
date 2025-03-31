@@ -143,6 +143,15 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return Collections.emptyMap();
     }
 
+    public Map<String, String> styleOf(Edge edge) {
+        for (var showEdge : reverse(showEdges)) {
+            if (showEdge.covers(edge) && showEdge.style() != null) {
+                return resolveStyle(showEdge.style());
+            }
+        }
+        return Collections.emptyMap();
+    }
+
     public Options withBaseDir(File dir) {
         if (!dir.isDirectory())
             throw new IllegalArgumentException(dir + " is not a directory.");
@@ -166,6 +175,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return unmodifiableList(sourceDirectories);
     }
 
+
     public record ShowNodes(String packag, String as, String style) {
 
         public boolean covers(Node node) {
@@ -176,6 +186,10 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
     public record ShowEdges(String packageFrom, String packageTo, String style, String fromNodeStyle,
                             String toNodeStyle) {
 
+        public boolean covers(Edge edge) {
+            return coversByPattern(packageFrom, edge.from().packag().name()) &&
+                    coversByPattern(packageTo, edge.to().packag().name());
+        }
     }
 
     public record DefineStyle(String name, String value) {

@@ -188,6 +188,30 @@ class OptionsShould {
         assertEquals(absolutePathFile.getAbsolutePath(), options.exportInto().filePath());
     }
 
+    @Test
+    void know_the_style_of_an_edge() throws Exception {
+        var script = """
+                include source directory '%s';
+                show edges from 'packageA' to 'java.util.*' with style 'some_style';
+                define style 'some_style' as 'style=filled;fillcolor=yellow;shape=${SHAPE}';
+                define constant 'SHAPE' as 'box';
+                """.formatted(tempDir.pathAsString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+        var edge = graph.findEdge("packageA", "java.util");
+        var edgeStyle = options.styleOf(edge);
+
+        assertEquals(Map.of("style", "filled", "fillcolor", "yellow", "shape", "box"),
+                edgeStyle);
+    }
+
     private Options run(String script) throws Exception {
         return PgLangInterpreter.interprete(script);
     }
