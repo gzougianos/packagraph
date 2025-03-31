@@ -369,6 +369,19 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("to_node_edge_style.png"), output);
     }
 
+    @Test
+    void create_legend_graph_with_node_style() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                define style 'some_style' as 'style=filled;fillcolor=yellow' with node legend;
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("node_style_legend.png"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();

@@ -1,5 +1,6 @@
 package com.github.gzougianos.packagraph2.core;
 
+import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.*;
 import guru.nidi.graphviz.model.*;
 import lombok.extern.slf4j.*;
@@ -47,6 +48,7 @@ public record GraphvizRenderer(Packagraph graph) {
         }
 
         applyMainGraphStyle(mainGraph);
+        createLegends(mainGraph);
         try {
             File destinationFile = new File(graph().options().exportInto().filePath());
             if (destinationFile.exists() && !options().exportInto().overwrite()) {
@@ -58,6 +60,30 @@ public record GraphvizRenderer(Packagraph graph) {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void createLegends(MutableGraph mainGraph) {
+        var legends = options().nodeLegends();
+        if (legends.isEmpty())
+            return;
+
+        MutableGraph cluster = Factory.graph("cluster_1-legends") // The prefix "cluster_" makes it a cluster
+                .graphAttr().with(Label.of(""), Color.LIGHTGREY)
+                .toMutable();
+
+        for (var legend : legends.values()) {
+            var legendNode = createLegendNode(legend);
+            cluster.add(legendNode);
+        }
+        mainGraph.add(cluster);
+    }
+
+    private guru.nidi.graphviz.model.Node createLegendNode(Legend legend) {
+        var gNode = Factory.node(legend.name());
+        for (var entry : legend.style().entrySet()) {
+            gNode = gNode.with(entry.getKey(), entry.getValue());
+        }
+        return gNode;
     }
 
     private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node fromNode, guru.nidi.graphviz.model.Node toNode) {

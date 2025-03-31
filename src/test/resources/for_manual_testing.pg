@@ -1,8 +1,7 @@
 //We are at ./target/test-classes
 include source directory '../../src/main/java';
 
-show maingraph with style 'maingraph';
-define style 'maingraph' as 'dpi=100;label=PackagraphInternals;fontsize=18;fontname=Tahoma';
+show maingraph with style 'dpi=100;label=PackagraphInternals;fontsize=18;fontname=Tahoma';
 
 define constant 'ANTLR_NAMESPACE' as 'org.antlr.*';
 
@@ -16,7 +15,7 @@ show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure'
 
 show edges to '${ANTLR_NAMESPACE}' with style 'green_edge';
 
-define style 'infrastructure' as 'style=filled;fillcolor=lightblue';
+define style 'infrastructure' as 'style=filled;fillcolor=lightblue' with node legend;
 define style 'green_edge' as 'color=green;style=solid';
 
 
