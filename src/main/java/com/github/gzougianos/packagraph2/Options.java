@@ -64,13 +64,21 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
     }
 
     private Map<String, String> resolveStyle(String styleName) {
-        var styleVal = findStyleValue(styleName);
+        if (isNullOrBlank(styleName)) {
+            return Collections.emptyMap();
+        }
+        
+        var styleVal = findDefinedStyle(styleName);
         if (styleVal == null) {
             log.warn("Style with name {} not found.", styleName);
             return Collections.emptyMap();
         }
 
         return resolveProperties(styleVal);
+    }
+
+    private boolean isNullOrBlank(String styleName) {
+        return styleName == null || styleName.isBlank() || "null".equalsIgnoreCase(styleName);
     }
 
     private Map<String, String> resolveProperties(String styleVal) {
@@ -121,7 +129,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return copy;
     }
 
-    private String findStyleValue(String styleName) {
+    private String findDefinedStyle(String styleName) {
         for (var style : reverse(defineStyles)) {
             if (style.name.equals(styleName)) {
                 return style.value;

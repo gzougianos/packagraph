@@ -143,6 +143,25 @@ class OptionsShould {
                 options.styleOf(graph.findNode("packageA")));
     }
 
+    @ParameterizedTest
+    @ValueSource(strings = {"null", ""})
+    void return_empty_style_attributes_when_style_defined_null_or_empty(String style) throws Exception {
+        var script = """
+                include source directory '%s';
+                show nodes 'packageA' with style '%s';
+                """.formatted(tempDir.pathAsString(), style);
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+
+        assertEquals(Map.of(), options.styleOf(graph.findNode("packageA")));
+    }
+
     @Test
     void know_the_style_of_a_node_when_using_constants() throws Exception {
         var script = """
