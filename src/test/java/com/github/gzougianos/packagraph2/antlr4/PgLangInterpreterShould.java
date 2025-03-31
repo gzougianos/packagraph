@@ -81,7 +81,8 @@ class PgLangInterpreterShould {
 
         assertEquals("default", style.name());
         assertEquals("fillcolor=green;shape=oval", style.value());
-        assertFalse(style.hasLegend());
+        assertFalse(style.isEdgeLegend());
+        assertFalse(style.isNodeLegend());
     }
 
     @Test
@@ -91,8 +92,6 @@ class PgLangInterpreterShould {
 
         var style = options.defineStyles().getFirst();
 
-        assertTrue(style.hasLegend());
-        assertEquals("my legend", style.legend());
         assertTrue(style.isNodeLegend());
     }
 

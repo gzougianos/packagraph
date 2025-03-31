@@ -2,7 +2,6 @@ package com.github.gzougianos.packagraph2.antlr4;
 
 import com.github.gzougianos.packagraph2.antlr4.generated.*;
 import com.github.gzougianos.packagraph2.core.*;
-import javassist.compiler.*;
 import lombok.extern.slf4j.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
@@ -52,14 +51,15 @@ public class PgLangInterpreter extends PgLangBaseListener {
         var name = ctx.VALUE(0).getText();
         var value = ctx.VALUE(1).getText();
 
-        String legend = null;
-        boolean isNodeLegend = true;
+        Options.LegendType legendType = Options.LegendType.NONE;
         if (ctx.withLegend() != null) {
-            legend = ctx.withLegend().VALUE().getText();
-            isNodeLegend = "node".equalsIgnoreCase(ctx.withLegend().nodeOrEdge().getText());
+            if ("node".equalsIgnoreCase(ctx.withLegend().nodeOrEdge().getText()))
+                legendType = Options.LegendType.NODE;
+            else
+                legendType = Options.LegendType.EDGE;
         }
         options.defineStyles.add(
-                new Options.DefineStyle(removeQuotes(name), removeQuotes(value), removeQuotes(legend), isNodeLegend));
+                new Options.DefineStyle(removeQuotes(name), removeQuotes(value), legendType));
     }
 
     @Override

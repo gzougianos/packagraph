@@ -211,6 +211,17 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return unmodifiableList(sourceDirectories);
     }
 
+    public Map<String, Legend> nodeLegends() {
+        Map<String, Legend> result = new LinkedHashMap<>();
+        for (var styleDef : defineStyles) {
+            if (!styleDef.isNodeLegend())
+                continue;
+
+            result.put(styleDef.name(), new Legend(styleDef.name(), resolveStyle(styleDef.value())));
+        }
+        return unmodifiableMap(result);
+    }
+
 
     public record ShowNodes(String packag, String as, String style) {
 
@@ -240,18 +251,18 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         }
     }
 
-    public record DefineStyle(String name, String value, String legend, boolean isNodeLegend) {
+    public enum LegendType {
+        EDGE, NODE, NONE
+    }
 
-        public boolean hasLegend() {
-            return legend != null;
+    public record DefineStyle(String name, String value, LegendType legendType) {
+
+        public boolean isNodeLegend() {
+            return legendType == LegendType.NODE;
         }
 
-        @Override
-        public boolean isNodeLegend() {
-            if (!hasLegend())
-                throw new IllegalStateException("style has no legend");
-
-            return isNodeLegend;
+        public boolean isEdgeLegend() {
+            return legendType == LegendType.EDGE;
         }
     }
 

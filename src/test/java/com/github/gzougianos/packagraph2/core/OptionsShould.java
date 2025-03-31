@@ -374,6 +374,40 @@ class OptionsShould {
                 nodeStyle);
     }
 
+    @Test
+    void know_node_legends() throws Exception {
+        var script = """
+                include source directory '%s';
+                define style 'some_style' as 'style=filled;fillcolor=blue;' with node legend;
+                define style 'some_style1' as 'style=filled;fillcolor=yellow;' with node legend;
+                """.formatted(tempDir.pathAsString());
+
+        var options = run(script);
+        var legends = options.nodeLegends();
+
+        var expectedLegend1 = new Legend("some_style", Map.of("style", "filled", "fillcolor", "blue"));
+        var expectedLegend2 = new Legend("some_style1", Map.of("style", "filled", "fillcolor", "yellow"));
+
+        assertEquals(2, legends.size());
+        assertEquals(expectedLegend1, legends.get("some_style"));
+        assertEquals(expectedLegend2, legends.get("some_style1"));
+    }
+
+    @Test
+    void return_last_legend_defined() throws Exception {
+        var script = """
+                include source directory '%s';
+                define style 'some_style' as 'fillcolor=blue;' with node legend;
+                define style 'some_style' as 'fillcolor=yellow;' with node legend;
+                """.formatted(tempDir.pathAsString());
+
+        var options = run(script);
+        var legends = options.nodeLegends();
+
+        assertEquals(1, legends.size());
+        assertEquals(new Legend("some_style", Map.of("fillcolor", "yellow")), legends.get("some_style"));
+    }
+
     private Options run(String script) throws Exception {
         return PgLangInterpreter.interprete(script);
     }

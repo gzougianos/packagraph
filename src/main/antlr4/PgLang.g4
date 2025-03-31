@@ -28,7 +28,7 @@ fromNodeStyleDef: 'with' 'from-node' 'style' VALUE;
 toNodeStyleDef: 'with' 'to-node''style' VALUE;
 
 defineStyleStmt: 'define' 'style' VALUE 'as' VALUE withLegend?';';
-withLegend: 'with' nodeOrEdge 'legend' VALUE;
+withLegend: 'with' nodeOrEdge 'legend';
 nodeOrEdge: 'node' | 'edge';
 defineConstantStmt: 'define' 'constant' VALUE 'as' VALUE ';';
 
