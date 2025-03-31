@@ -48,9 +48,13 @@ public record GraphvizRenderer(Packagraph graph) {
 
         applyMainGraphStyle(mainGraph);
         try {
+            File destinationFile = new File(graph().options().exportInto().filePath());
+            if (destinationFile.exists() && !options().exportInto().overwrite()) {
+                throw new IllegalStateException("File already exists: " + destinationFile.getAbsolutePath());
+            }
             return Graphviz.fromGraph(mainGraph)
                     .render(graphvizFormat())
-                    .toFile(new File(graph().options().exportInto().filePath()));
+                    .toFile(destinationFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
