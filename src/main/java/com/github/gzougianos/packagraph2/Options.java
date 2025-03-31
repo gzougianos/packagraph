@@ -70,6 +70,10 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
             return Collections.emptyMap();
         }
 
+        return resolveProperties(styleVal);
+    }
+
+    private Map<String, String> resolveProperties(String styleVal) {
         Map<String, String> result = new HashMap<>();
         String[] pairs = styleVal.split(";");
         for (String pair : pairs) {
