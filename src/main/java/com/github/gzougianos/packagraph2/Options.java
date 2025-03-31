@@ -107,6 +107,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
                 return constant.value();
             }
         }
+        log.warn("Constant with name {} not found.", constantName);
         return constantName;
     }
 
@@ -127,8 +128,8 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public String nameOf(Node node) {
         for (var showNode : reverse(showNodes)) {
-            if (showNode.covers(node) && showNode.as() != null) {
-                return node.packag().name().replaceAll(showNode.packag(), showNode.as()).trim();
+            if (showNode.covers(node, this) && showNode.as() != null) {
+                return node.packag().name().replaceAll(resolveConstants(showNode.packag()), resolveConstants(showNode.as())).trim();
             }
         }
         return node.packag().name();
@@ -136,7 +137,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public Map<String, String> styleOf(Node node) {
         for (var showNode : reverse(showNodes)) {
-            if (showNode.covers(node) && showNode.style() != null) {
+            if (showNode.covers(node, this) && showNode.style() != null) {
                 return resolveStyle(showNode.style());
             }
         }
@@ -196,8 +197,10 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public record ShowNodes(String packag, String as, String style) {
 
-        public boolean covers(Node node) {
-            return coversByPattern(packag, node.packag().name());
+        private boolean covers(Node node, Options options) {
+            String val = options.resolveConstants(packag);
+            System.out.println(val);
+            return coversByPattern(val, node.packag().name());
         }
     }
 

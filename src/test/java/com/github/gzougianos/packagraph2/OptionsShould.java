@@ -67,6 +67,26 @@ class OptionsShould {
     }
 
     @Test
+    void resolve_constant_in_show_nodes() throws Exception {
+        var script = """
+                include source directory '%s';
+                show nodes '${PACKAGE}' as '${MY_NAME}';
+                define constant 'PACKAGE' as 'packageA';
+                define constant 'MY_NAME' as 'custom_name';
+                """.formatted(tempDir.pathAsString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+
+        assertEquals("custom_name", options.nameOf(graph.findNode("packageA")));
+    }
+
+    @Test
     void name_a_node_with_custom_name_based_on_last_definition() throws Exception {
         var script = """
                 include source directory '%s';

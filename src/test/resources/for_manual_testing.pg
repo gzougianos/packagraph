@@ -4,11 +4,13 @@ include source directory '../../src/main/java';
 show maingraph with style 'maingraph';
 define style 'maingraph' as 'dpi=100;label=PackagraphInternals;fontsize=18;fontname=Tahoma';
 
+define constant 'ANTLR_NAMESPACE' as 'org.antlr.*';
+
 show nodes 'java.*' as '';
 show nodes 'lombok.*' as '';
 show nodes '.*' with style 'default_node';
 show nodes 'com.github.gzougianos\.(.*)' as '$1';
-show nodes 'org.antlr.*' as 'ANTLR' with style 'infrastructure';
+show nodes '${ANTLR_NAMESPACE}' as 'ANTLR' with style 'infrastructure';
 show nodes 'guru.nidi.*' as 'Graphviz' with style 'infrastructure';
 show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure';
 
