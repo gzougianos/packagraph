@@ -76,4 +76,11 @@ public record Packagraph(Options options, Set<Node> nodes, Set<Edge> edges) {
         return edges().stream()
                 .anyMatch(edge -> edge.isFrom(fromPackage) && edge.isTo(toPackage));
     }
+
+    public Edge findEdge(String from, String to) {
+        return edges().stream()
+                .filter(edge -> edge.isFrom(from) && edge.isTo(to))
+                .findFirst()
+                .orElseThrow();
+    }
 }
