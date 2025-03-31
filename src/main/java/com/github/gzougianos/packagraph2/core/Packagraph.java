@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph2;
+package com.github.gzougianos.packagraph2.core;
 
 import com.github.gzougianos.packagraph2.analysis.*;
 import lombok.extern.slf4j.*;

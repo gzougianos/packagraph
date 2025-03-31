@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph2;
+package com.github.gzougianos.packagraph2.core;
 
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;

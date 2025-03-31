@@ -1,7 +1,7 @@
 package com.github.gzougianos.packagraph2.antlr4;
 
-import com.github.gzougianos.packagraph2.*;
 import com.github.gzougianos.packagraph2.antlr4.generated.*;
+import com.github.gzougianos.packagraph2.core.*;
 import lombok.extern.slf4j.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;

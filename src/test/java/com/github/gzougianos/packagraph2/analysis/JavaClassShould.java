@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph2.analysis;
 
-import com.github.gzougianos.packagraph2.*;
+import com.github.gzougianos.packagraph2.core.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;

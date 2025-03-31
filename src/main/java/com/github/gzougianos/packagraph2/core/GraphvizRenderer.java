@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph2;
+package com.github.gzougianos.packagraph2.core;
 
 import guru.nidi.graphviz.engine.*;
 import guru.nidi.graphviz.model.*;

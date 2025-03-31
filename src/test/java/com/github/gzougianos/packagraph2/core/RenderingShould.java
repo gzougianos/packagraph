@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph2;
+package com.github.gzougianos.packagraph2.core;
 
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 import java.io.*;
 import java.nio.file.*;
 
-import static com.github.gzougianos.packagraph2.FileComparator.*;
+import static com.github.gzougianos.packagraph2.core.FileComparator.*;
 
 class RenderingShould {
 

@@ -1,7 +1,7 @@
 package com.github.gzougianos.packagraph2.main;
 
-import com.github.gzougianos.packagraph2.*;
 import com.github.gzougianos.packagraph2.antlr4.*;
+import com.github.gzougianos.packagraph2.core.*;
 
 import java.io.*;
 import java.nio.file.*;
