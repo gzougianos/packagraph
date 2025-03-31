@@ -8,7 +8,7 @@ define constant 'ANTLR_NAMESPACE' as 'org.antlr.*';
 
 show nodes 'java.*' as '';
 show nodes 'lombok.*' as '';
-show nodes '.*' with style 'default_node';
+show nodes '.*' with style 'shape=box';
 show nodes 'com.github.gzougianos\.(.*)' as '$1';
 show nodes '${ANTLR_NAMESPACE}' as 'ANTLR' with style 'infrastructure';
 show nodes 'guru.nidi.*' as 'Graphviz' with style 'infrastructure';
@@ -17,7 +17,6 @@ show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure'
 show edges to '${ANTLR_NAMESPACE}' with style 'green_edge';
 
 define style 'infrastructure' as 'style=filled;fillcolor=lightblue';
-define style 'default_node' as 'shape=box';
 define style 'green_edge' as 'color=green;style=solid';
 
 
