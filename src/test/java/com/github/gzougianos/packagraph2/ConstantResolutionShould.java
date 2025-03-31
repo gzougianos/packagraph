@@ -3,11 +3,9 @@ package com.github.gzougianos.packagraph2;
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
 
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class MainGraphStyleAttributesShould {
+class ConstantResolutionShould {
 
     private Options run(String script) throws Exception {
         return PgLangInterpreter.interprete(script);
