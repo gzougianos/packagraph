@@ -1,13 +1,12 @@
 package com.github.gzougianos.packagraph2;
 
-import com.github.gzougianos.packagraph.*;
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
 import java.nio.file.*;
 
-import static com.github.gzougianos.packagraph2.FileComparator.assertFilesEquals;
+import static com.github.gzougianos.packagraph2.FileComparator.*;
 
 class RenderingShould {
 

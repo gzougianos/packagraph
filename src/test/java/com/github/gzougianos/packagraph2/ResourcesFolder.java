@@ -1,7 +1,7 @@
-package com.github.gzougianos.packagraph;
+package com.github.gzougianos.packagraph2;
 
-import java.io.File;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 
 public class ResourcesFolder {
 

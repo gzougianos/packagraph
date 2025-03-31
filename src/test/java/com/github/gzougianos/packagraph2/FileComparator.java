@@ -4,7 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.security.*;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileComparator {
 

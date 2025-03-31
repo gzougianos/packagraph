@@ -1,7 +1,6 @@
 package com.github.gzougianos.packagraph2.antlr4;
 
 import com.github.gzougianos.packagraph2.*;
-import com.oracle.truffle.js.nodes.access.*;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;

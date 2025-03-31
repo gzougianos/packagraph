@@ -1,10 +1,7 @@
 package com.github.gzougianos.packagraph2;
 
-import com.github.gzougianos.packagraph.*;
 import com.github.gzougianos.packagraph2.main.*;
 import org.junit.jupiter.api.*;
-
-import java.io.*;
 
 public class ManualPlayground {
     @Test
