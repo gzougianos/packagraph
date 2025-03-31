@@ -43,7 +43,7 @@ public record GraphvizRenderer(Packagraph graph) {
 
             mainGraph.add(applyNodeStyle(from, options().styleOfFromNode(edge)));
             mainGraph.add(applyNodeStyle(to, options().styleOfToNode(edge)));
-            mainGraph.add(from.link(createEdge(edge, to)));
+            mainGraph.add(from.link(createEdge(edge, from, to)));
         }
 
         applyMainGraphStyle(mainGraph);
@@ -60,12 +60,15 @@ public record GraphvizRenderer(Packagraph graph) {
         }
     }
 
-    private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node toNode) {
+    private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node fromNode, guru.nidi.graphviz.model.Node toNode) {
         var graphvizEdge = Link.to(toNode);
 
         var style = options().styleOf(edge);
         for (var entry : style.entrySet()) {
             graphvizEdge = graphvizEdge.with(entry.getKey(), entry.getValue());
+        }
+        if (!style.containsKey("tooltip")) {
+            graphvizEdge = graphvizEdge.with("tooltip", fromNode.name() + " -> " + toNode.name());
         }
         return graphvizEdge;
     }

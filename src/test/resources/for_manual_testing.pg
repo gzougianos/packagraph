@@ -19,4 +19,4 @@ define style 'default_node' as 'shape=box';
 define style 'green_edge' as 'color=green;style=solid';
 
 
-export as '.png' into '../../target/manual_testing.png' by overwriting;
+export as '.svg' into '../../target/manual_testing.svg' by overwriting;
