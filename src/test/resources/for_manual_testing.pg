@@ -12,8 +12,11 @@ show nodes 'org.antlr.*' as 'ANTLR' with style 'infrastructure';
 show nodes 'guru.nidi.*' as 'Graphviz' with style 'infrastructure';
 show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure';
 
+show edges to 'guru.nidi.*' with style 'green_edge';
+
 define style 'infrastructure' as 'style=filled;fillcolor=lightblue';
 define style 'default_node' as 'shape=box';
+define style 'green_edge' as 'color=green;style=solid';
 
 
 export as '.png' into '../../target/manual_testing.png' by overwriting;
