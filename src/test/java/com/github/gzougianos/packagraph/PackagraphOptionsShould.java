@@ -1,10 +1,9 @@
 package com.github.gzougianos.packagraph;
 
-import com.github.gzougianos.packagraph.analysis.PackageName;
+import com.github.gzougianos.packagraph2.analysis.PackageName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 

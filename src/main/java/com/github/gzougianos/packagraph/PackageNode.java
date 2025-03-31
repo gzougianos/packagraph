@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph;
 
-import com.github.gzougianos.packagraph.analysis.PackageName;
+import com.github.gzougianos.packagraph2.analysis.PackageName;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

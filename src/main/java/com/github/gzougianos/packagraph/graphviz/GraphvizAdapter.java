@@ -3,7 +3,7 @@ package com.github.gzougianos.packagraph.graphviz;
 import com.github.gzougianos.packagraph.GraphLibrary;
 import com.github.gzougianos.packagraph.PackageNode;
 import com.github.gzougianos.packagraph.PackagraphOptions;
-import com.github.gzougianos.packagraph.analysis.PackageName;
+import com.github.gzougianos.packagraph2.analysis.PackageName;
 import guru.nidi.graphviz.engine.Format;
 import guru.nidi.graphviz.engine.Graphviz;
 import guru.nidi.graphviz.engine.GraphvizV8Engine;

@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph2;
 
-import com.github.gzougianos.packagraph.analysis.*;
+import com.github.gzougianos.packagraph2.analysis.*;
 import lombok.extern.slf4j.*;
 
 import java.io.*;

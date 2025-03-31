@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph;
 
-import com.github.gzougianos.packagraph.analysis.PackageName;
+import com.github.gzougianos.packagraph2.analysis.PackageName;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.github.gzougianos.packagraph;
 
-import com.github.gzougianos.packagraph.analysis.ClassAnalysisFailedException;
-import com.github.gzougianos.packagraph.analysis.JavaClass;
-import com.github.gzougianos.packagraph.analysis.PackageName;
+import com.github.gzougianos.packagraph2.analysis.ClassAnalysisFailedException;
+import com.github.gzougianos.packagraph2.analysis.JavaClass;
+import com.github.gzougianos.packagraph2.analysis.PackageName;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

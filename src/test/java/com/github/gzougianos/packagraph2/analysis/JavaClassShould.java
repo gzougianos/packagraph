@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph.analysis;
+package com.github.gzougianos.packagraph2.analysis;
 
 import com.github.gzougianos.packagraph.ResourcesFolder;
 import org.junit.jupiter.api.Test;

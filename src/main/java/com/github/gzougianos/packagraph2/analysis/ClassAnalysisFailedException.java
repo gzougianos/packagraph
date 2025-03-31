@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph.analysis;
+package com.github.gzougianos.packagraph2.analysis;
 
 public class ClassAnalysisFailedException extends RuntimeException {
     ClassAnalysisFailedException(String message) {
