@@ -95,6 +95,18 @@ public interface PgLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDefineStyleStmt(PgLangParser.DefineStyleStmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PgLangParser#withLegend}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWithLegend(PgLangParser.WithLegendContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PgLangParser#nodeOrEdge}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNodeOrEdge(PgLangParser.NodeOrEdgeContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PgLangParser#defineConstantStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

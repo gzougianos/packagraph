@@ -185,6 +185,30 @@ public class PgLangBaseListener implements PgLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWithLegend(PgLangParser.WithLegendContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWithLegend(PgLangParser.WithLegendContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNodeOrEdge(PgLangParser.NodeOrEdgeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNodeOrEdge(PgLangParser.NodeOrEdgeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterDefineConstantStmt(PgLangParser.DefineConstantStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}

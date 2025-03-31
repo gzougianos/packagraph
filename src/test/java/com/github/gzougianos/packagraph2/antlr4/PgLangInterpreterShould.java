@@ -81,6 +81,19 @@ class PgLangInterpreterShould {
 
         assertEquals("default", style.name());
         assertEquals("fillcolor=green;shape=oval", style.value());
+        assertFalse(style.hasLegend());
+    }
+
+    @Test
+    void interprete_define_style_with_legend() throws Exception {
+        String script = "define style 'default' as 'fillcolor=green;shape=oval' with node legend 'my legend';";
+        Options options = PgLangInterpreter.interprete(script);
+
+        var style = options.defineStyles().getFirst();
+
+        assertTrue(style.hasLegend());
+        assertEquals("my legend", style.legend());
+        assertTrue(style.isNodeLegend());
     }
 
     @Test

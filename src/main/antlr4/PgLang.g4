@@ -27,7 +27,9 @@ edgeToDef: 'to' VALUE;
 fromNodeStyleDef: 'with' 'from-node' 'style' VALUE;
 toNodeStyleDef: 'with' 'to-node''style' VALUE;
 
-defineStyleStmt: 'define' 'style' VALUE 'as' VALUE ';';
+defineStyleStmt: 'define' 'style' VALUE 'as' VALUE withLegend?';';
+withLegend: 'with' nodeOrEdge 'legend' VALUE;
+nodeOrEdge: 'node' | 'edge';
 defineConstantStmt: 'define' 'constant' VALUE 'as' VALUE ';';
 
 exportStmt: 'export' 'as' VALUE exportInto? byOverwiting? ';';

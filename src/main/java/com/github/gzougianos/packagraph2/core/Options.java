@@ -240,8 +240,19 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         }
     }
 
-    public record DefineStyle(String name, String value) {
+    public record DefineStyle(String name, String value, String legend, boolean isNodeLegend) {
 
+        public boolean hasLegend() {
+            return legend != null;
+        }
+
+        @Override
+        public boolean isNodeLegend() {
+            if (!hasLegend())
+                throw new IllegalStateException("style has no legend");
+
+            return isNodeLegend;
+        }
     }
 
     public record DefineConstant(String name, String value) {

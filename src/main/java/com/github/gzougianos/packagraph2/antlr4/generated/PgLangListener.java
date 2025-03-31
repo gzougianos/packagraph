@@ -148,6 +148,26 @@ public interface PgLangListener extends ParseTreeListener {
 	 */
 	void exitDefineStyleStmt(PgLangParser.DefineStyleStmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PgLangParser#withLegend}.
+	 * @param ctx the parse tree
+	 */
+	void enterWithLegend(PgLangParser.WithLegendContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PgLangParser#withLegend}.
+	 * @param ctx the parse tree
+	 */
+	void exitWithLegend(PgLangParser.WithLegendContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PgLangParser#nodeOrEdge}.
+	 * @param ctx the parse tree
+	 */
+	void enterNodeOrEdge(PgLangParser.NodeOrEdgeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PgLangParser#nodeOrEdge}.
+	 * @param ctx the parse tree
+	 */
+	void exitNodeOrEdge(PgLangParser.NodeOrEdgeContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PgLangParser#defineConstantStmt}.
 	 * @param ctx the parse tree
 	 */
