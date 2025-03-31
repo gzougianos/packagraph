@@ -1,5 +1,6 @@
 package com.github.gzougianos.packagraph2.core;
 
+import com.github.gzougianos.packagraph2.*;
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
@@ -11,7 +12,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class OptionsShould {
-    TempDir tempDir = new TempDir();
+    TempSourceDirectory tempDir = new TempSourceDirectory();
 
     @Test
     void name_a_node_with_its_package_if_no_show_nodes_defined() throws Exception {
@@ -209,7 +210,7 @@ class OptionsShould {
                 include source directory '%s';//relative path
                 """.formatted(tempDir.pathAsString(), "myfolder");
 
-        var anotherTempDir = new TempDir();
+        var anotherTempDir = new TempSourceDirectory();
         var options = run(script);
         options = options.withBaseDir(anotherTempDir.path().toFile());
 
@@ -226,7 +227,7 @@ class OptionsShould {
                 export as 'png' into 'myfile.png' by overwriting;
                 """;
 
-        var anotherTempDir = new TempDir();
+        var anotherTempDir = new TempSourceDirectory();
         var options = run(script);
         options = options.withBaseDir(anotherTempDir.path().toFile());
 
@@ -241,7 +242,7 @@ class OptionsShould {
                 export as 'png' into '%s' by overwriting;
                 """.formatted(absolutePathFile.getAbsolutePath());
 
-        var anotherTempDir = new TempDir();
+        var anotherTempDir = new TempSourceDirectory();
         var options = run(script);
         options = options.withBaseDir(anotherTempDir.path().toFile());
 

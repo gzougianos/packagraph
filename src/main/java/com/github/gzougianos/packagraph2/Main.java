@@ -1,4 +1,4 @@
-package com.github.gzougianos.packagraph2.main;
+package com.github.gzougianos.packagraph2;
 
 import com.github.gzougianos.packagraph2.antlr4.*;
 import com.github.gzougianos.packagraph2.core.*;

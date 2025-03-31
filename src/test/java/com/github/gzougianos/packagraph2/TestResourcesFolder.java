@@ -1,12 +1,12 @@
-package com.github.gzougianos.packagraph2.core;
+package com.github.gzougianos.packagraph2;
 
 import java.io.*;
 import java.net.*;
 
-public class ResourcesFolder {
+public class TestResourcesFolder {
 
     public static File asFile() {
-        URL resource = ResourcesFolder.class.getClassLoader().getResource("");
+        URL resource = TestResourcesFolder.class.getClassLoader().getResource("");
 
         if (resource != null) {
             var file = new File(resource.getFile());

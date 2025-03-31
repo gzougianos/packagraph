@@ -1,5 +1,6 @@
 package com.github.gzougianos.packagraph2.core;
 
+import com.github.gzougianos.packagraph2.*;
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
 
@@ -9,7 +10,7 @@ class PackagraphShould {
 
     @Test
     void create_node_from_internal_source() throws Exception {
-        TempDir dir = new TempDir();
+        TempSourceDirectory dir = new TempSourceDirectory();
         Options options = includeSourceDir(dir);
 
         dir.addJavaFile("A.java", """
@@ -26,7 +27,7 @@ class PackagraphShould {
 
     @Test
     void create_node_with_internal_dependency() throws Exception {
-        TempDir dir = new TempDir();
+        TempSourceDirectory dir = new TempSourceDirectory();
         Options options = includeSourceDir(dir);
 
         //A-->B
@@ -52,7 +53,7 @@ class PackagraphShould {
 
     @Test
     void create_node_with_external_dependency() throws Exception {
-        TempDir dir = new TempDir();
+        TempSourceDirectory dir = new TempSourceDirectory();
         Options options = includeSourceDir(dir);
 
         //A-->java.util
@@ -73,7 +74,7 @@ class PackagraphShould {
 
     @Test
     void know_if_a_node_is_internal_or_not() throws Exception {
-        TempDir dir = new TempDir();
+        TempSourceDirectory dir = new TempSourceDirectory();
         Options options = includeSourceDir(dir);
 
         //A-->java.util
@@ -94,7 +95,7 @@ class PackagraphShould {
 
     @Test
     void understand_all_kinds_of_imports() throws Exception {
-        TempDir dir = new TempDir();
+        TempSourceDirectory dir = new TempSourceDirectory();
         Options options = includeSourceDir(dir);
 
         dir.addJavaFile("A.java", """
@@ -115,7 +116,7 @@ class PackagraphShould {
         assertTrue(graph.containsNode("java.time.temporal"));
     }
 
-    private static Options includeSourceDir(TempDir dir) throws Exception {
+    private static Options includeSourceDir(TempSourceDirectory dir) throws Exception {
         return PgLangInterpreter.interprete("include source directory '" + dir.path().toString() + "';");
     }
 }

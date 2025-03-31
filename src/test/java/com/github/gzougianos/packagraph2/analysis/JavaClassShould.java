@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph2.analysis;
 
-import com.github.gzougianos.packagraph2.core.*;
+import com.github.gzougianos.packagraph2.*;
 import org.junit.jupiter.api.*;
 
 import java.io.*;
@@ -12,7 +12,7 @@ class JavaClassShould {
 
     @Test
     void know_package() throws Exception {
-        TempDir tempDir = new TempDir();
+        TempSourceDirectory tempDir = new TempSourceDirectory();
         File sourceFile = tempDir.addJavaFile("ClassToBeAnalyzed.java", """
                 package testing;
                 
@@ -30,7 +30,7 @@ class JavaClassShould {
 
     @Test
     void know_imports() throws Exception {
-        TempDir tempDir = new TempDir();
+        TempSourceDirectory tempDir = new TempSourceDirectory();
         File sourceFile = tempDir.addJavaFile("ClassToBeAnalyzed.java", """
                 package testing;
                 
@@ -55,7 +55,7 @@ class JavaClassShould {
 
     @Test
     void throw_exception_if_class_is_not_compilable() throws Exception {
-        TempDir tempDir = new TempDir();
+        TempSourceDirectory tempDir = new TempSourceDirectory();
         File sourceFile = tempDir.addJavaFile("ClassToBeAnalyzed.java", """
                 package testing;
                 

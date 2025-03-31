@@ -1,5 +1,6 @@
 package com.github.gzougianos.packagraph2.core;
 
+import com.github.gzougianos.packagraph2.*;
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
 
@@ -10,7 +11,7 @@ import static com.github.gzougianos.packagraph2.core.FileComparator.*;
 
 class RenderingShould {
 
-    TempDir tempDir = new TempDir();
+    TempSourceDirectory tempDir = new TempSourceDirectory();
 
     //      +------------+
     //      | packageA   |
@@ -384,6 +385,6 @@ class RenderingShould {
     }
 
     private static File preRenderedFile(String file) {
-        return new File(ResourcesFolder.asFile(), "pre_rendered/" + file);
+        return TestResourcesFolder.get("pre_rendered/" + file);
     }
 }

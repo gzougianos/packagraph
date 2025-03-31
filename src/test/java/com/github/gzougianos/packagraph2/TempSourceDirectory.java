@@ -1,12 +1,12 @@
-package com.github.gzougianos.packagraph2.core;
+package com.github.gzougianos.packagraph2;
 
 import java.io.*;
 import java.nio.file.*;
 
-public class TempDir {
+public class TempSourceDirectory {
     private final File dir;
 
-    public TempDir() {
+    public TempSourceDirectory() {
         try {
             dir = Files.createTempDirectory("test").toFile();
         } catch (IOException e) {
@@ -14,11 +14,11 @@ public class TempDir {
         }
     }
 
-    String pathAsString() {
+    public String pathAsString() {
         return dir.getAbsolutePath();
     }
 
-    File file() {
+    public File file() {
         return dir;
     }
 
@@ -31,7 +31,7 @@ public class TempDir {
         return file;
     }
 
-    Path path() {
+    public Path path() {
         return dir.toPath();
     }
 }
