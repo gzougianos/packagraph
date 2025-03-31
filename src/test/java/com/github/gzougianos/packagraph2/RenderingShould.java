@@ -311,6 +311,64 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("edge_style.png"), output);
     }
 
+    //  +-----------+
+    //  | packageA  | (yellow node)
+    //  +-----------+
+    //       |
+    //       v
+    //  +------------+
+    //  | java.util  |
+    //  +------------+
+    @Test
+    void apply_from_node_edge_style() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                show edges to 'java.util' with from-node style 'some_style';
+                define style 'some_style' as 'style=filled;fillcolor=yellow';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                
+                public class A{ }
+                """);
+
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("from_node_edge_style.png"), output);
+    }
+
+    //  +-----------+
+    //  | packageA  |
+    //  +-----------+
+    //       |
+    //       v
+    //  +------------+
+    //  | java.util  | (yellow node)
+    //  +------------+
+    @Test
+    void apply_to_node_edge_style() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                show edges to 'java.util' with to-node style 'some_style';
+                define style 'some_style' as 'style=filled;fillcolor=yellow';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                
+                public class A{ }
+                """);
+
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("to_node_edge_style.png"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();
