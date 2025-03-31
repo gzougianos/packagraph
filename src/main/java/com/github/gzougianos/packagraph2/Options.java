@@ -67,7 +67,12 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         if (isNullOrBlank(styleName)) {
             return Collections.emptyMap();
         }
-        
+
+        //Inlined style
+        if (styleName.contains("=")) {
+            return resolveProperties(styleName);
+        }
+
         var styleVal = findDefinedStyle(styleName);
         if (styleVal == null) {
             log.warn("Style with name {} not found.", styleName);

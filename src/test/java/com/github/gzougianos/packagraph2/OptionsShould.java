@@ -163,6 +163,25 @@ class OptionsShould {
     }
 
     @Test
+    void know_inlined_node_style() throws Exception {
+        var script = """
+                include source directory '%s';
+                show nodes 'packageA' with style 'fillcolor=yellow';
+                """.formatted(tempDir.pathAsString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+
+        assertEquals(Map.of("fillcolor", "yellow"),
+                options.styleOf(graph.findNode("packageA")));
+    }
+
+    @Test
     void know_the_style_of_a_node_when_using_constants() throws Exception {
         var script = """
                 include source directory '%s';
@@ -242,6 +261,29 @@ class OptionsShould {
                 define style 'some_style' as 'style=filled;fillcolor=yellow;shape=${SHAPE}';
                 define constant 'SHAPE' as 'box';
                 """.formatted(tempDir.pathAsString(), showEdgeStatement);
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+        var edge = graph.findEdge("packageA", "java.util");
+        var edgeStyle = options.styleOf(edge);
+
+        assertEquals(Map.of("style", "filled", "fillcolor", "yellow", "shape", "box"),
+                edgeStyle);
+    }
+
+    @Test
+    void know_inlined_style_of_an_edge() throws Exception {
+        var script = """
+                include source directory '%s';
+                show edges from 'packageA' with style 'style=filled;fillcolor=yellow;shape=${SHAPE}';
+                define constant 'SHAPE' as 'box';
+                """.formatted(tempDir.pathAsString());
 
         tempDir.addJavaFile("A.java", """
                 package packageA;
