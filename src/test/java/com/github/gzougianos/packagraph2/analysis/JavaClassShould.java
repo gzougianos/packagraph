@@ -9,20 +9,39 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JavaClassShould {
-    private static final File RESOURCES_FOLDER = new File(ResourcesFolder.asFile(), "forClassAnalysis");
-    private static final File CLASS_FILE_TO_ANALYZE = new File(RESOURCES_FOLDER, "ClassToBeAnalyzed.java");
-    private static final File NON_COMPILABLE_CLASS = new File(RESOURCES_FOLDER, "NonCompilable.java");
 
     @Test
-    void know_package() {
-        JavaClass javaClass = JavaClass.of(CLASS_FILE_TO_ANALYZE);
+    void know_package() throws Exception {
+        TempDir tempDir = new TempDir();
+        File sourceFile = tempDir.addJavaFile("ClassToBeAnalyzed.java", """
+                package testing;
+                
+                import java.util.HashMap;
+                import java.io.*;
+                import static java.lang.System.setErr;
+                import static javax.swing.SwingUtilities.*;
+                
+                public class ClassToBeAnalyzed {}
+                """);
+        JavaClass javaClass = JavaClass.of(sourceFile);
 
         assertEquals("testing", javaClass.packag().name());
     }
 
     @Test
-    void know_imports() {
-        JavaClass javaClass = JavaClass.of(CLASS_FILE_TO_ANALYZE);
+    void know_imports() throws Exception {
+        TempDir tempDir = new TempDir();
+        File sourceFile = tempDir.addJavaFile("ClassToBeAnalyzed.java", """
+                package testing;
+                
+                import java.util.HashMap;
+                import java.io.*;
+                import static java.lang.System.setErr;
+                import static javax.swing.SwingUtilities.*;
+                
+                public class ClassToBeAnalyzed {}
+                """);
+        JavaClass javaClass = JavaClass.of(sourceFile);
 
         Collection<PackageName> imports = javaClass.imports();
 
@@ -35,8 +54,15 @@ class JavaClassShould {
     }
 
     @Test
-    void throw_exception_if_class_is_not_compilable() {
-        assertThrows(ClassAnalysisFailedException.class, () -> JavaClass.of(NON_COMPILABLE_CLASS));
+    void throw_exception_if_class_is_not_compilable() throws Exception {
+        TempDir tempDir = new TempDir();
+        File sourceFile = tempDir.addJavaFile("ClassToBeAnalyzed.java", """
+                package testing;
+                
+                blabla-not-compilable ClassToBeAnalyzed {}
+                """);
+
+        assertThrows(ClassAnalysisFailedException.class, () -> JavaClass.of(sourceFile));
     }
 
     private static void assertImport(String name, Collection<PackageName> imports) {

@@ -6,7 +6,7 @@ import java.nio.file.*;
 public class TempDir {
     private final File dir;
 
-    TempDir() {
+    public TempDir() {
         try {
             dir = Files.createTempDirectory("test").toFile();
         } catch (IOException e) {
@@ -22,12 +22,13 @@ public class TempDir {
         return dir;
     }
 
-    void addJavaFile(String fileName, String contents) throws IOException {
+    public File addJavaFile(String fileName, String contents) throws IOException {
         File file = new File(dir, fileName);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(contents);
         }
         file.deleteOnExit();
+        return file;
     }
 
     Path path() {
