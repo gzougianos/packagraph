@@ -282,6 +282,35 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("circular_dependency.png"), output);
     }
 
+    //  +-----------+
+    //  | packageA  |
+    //  +-----------+
+    //       | (red color edge)
+    //       v
+    //  +------------+
+    //  | java.util  |
+    //  +------------+
+    @Test
+    void render_edge_styles() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                show edges to 'java.util' with style 'some_style';
+                define style 'some_style' as 'color=red';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                
+                public class A{ }
+                """);
+
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("edge_style.png"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();

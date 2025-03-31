@@ -41,8 +41,9 @@ public record GraphvizRenderer(Packagraph graph) {
                 continue;
             }
 
-            var graphvizEdge = from.link(Link.to(to));
-            mainGraph.add(graphvizEdge);
+            Link graphvizEdge = createEdge(edge, from, to);
+
+            mainGraph.add(from.link(graphvizEdge));
         }
 
         applyMainGraphStyle(mainGraph);
@@ -53,6 +54,16 @@ public record GraphvizRenderer(Packagraph graph) {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node fromNode, guru.nidi.graphviz.model.Node toNode) {
+        var graphvizEdge = Link.to(toNode);
+        
+        var style = options().styleOf(edge);
+        for (var entry : style.entrySet()) {
+            graphvizEdge = graphvizEdge.with(entry.getKey(), entry.getValue());
+        }
+        return graphvizEdge;
     }
 
     private boolean containsNode(MutableGraph mainGraph, guru.nidi.graphviz.model.Node node) {
