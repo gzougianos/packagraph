@@ -152,6 +152,24 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return Collections.emptyMap();
     }
 
+    public Map<String, String> styleOfFromNode(Edge edge) {
+        for (var showEdge : reverse(showEdges)) {
+            if (showEdge.covers(edge) && showEdge.fromNodeStyle() != null) {
+                return resolveStyle(showEdge.fromNodeStyle());
+            }
+        }
+        return Collections.emptyMap();
+    }
+
+    public Map<String, String> styleOfToNode(Edge edge) {
+        for (var showEdge : reverse(showEdges)) {
+            if (showEdge.covers(edge) && showEdge.toNodeStyle() != null) {
+                return resolveStyle(showEdge.toNodeStyle());
+            }
+        }
+        return Collections.emptyMap();
+    }
+
     public Options withBaseDir(File dir) {
         if (!dir.isDirectory())
             throw new IllegalArgumentException(dir + " is not a directory.");
@@ -194,12 +212,24 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
             if (packageFrom != null && packageTo == null) {
                 return coversByPattern(packageFrom, edge.from().packag().name());
             }
-            
+
             if (packageFrom == null) {
                 return coversByPattern(packageTo, edge.to().packag().name());
             }
             return coversByPattern(packageFrom, edge.from().packag().name()) &&
                     coversByPattern(packageTo, edge.to().packag().name());
+        }
+
+        public boolean coversFrom(Node node) {
+            if (packageFrom == null)
+                return true;
+            return coversByPattern(packageFrom, node.packag().name());
+        }
+
+        public boolean coversTo(Node node) {
+            if (packageTo == null)
+                return true;
+            return coversByPattern(packageTo, node.packag().name());
         }
     }
 

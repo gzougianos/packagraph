@@ -41,9 +41,9 @@ public record GraphvizRenderer(Packagraph graph) {
                 continue;
             }
 
-            Link graphvizEdge = createEdge(edge, from, to);
-
-            mainGraph.add(from.link(graphvizEdge));
+            mainGraph.add(applyNodeStyle(from, options().styleOfFromNode(edge)));
+            mainGraph.add(applyNodeStyle(to, options().styleOfToNode(edge)));
+            mainGraph.add(from.link(createEdge(edge, to)));
         }
 
         applyMainGraphStyle(mainGraph);
@@ -56,9 +56,9 @@ public record GraphvizRenderer(Packagraph graph) {
         }
     }
 
-    private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node fromNode, guru.nidi.graphviz.model.Node toNode) {
+    private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node toNode) {
         var graphvizEdge = Link.to(toNode);
-        
+
         var style = options().styleOf(edge);
         for (var entry : style.entrySet()) {
             graphvizEdge = graphvizEdge.with(entry.getKey(), entry.getValue());
@@ -102,10 +102,20 @@ public record GraphvizRenderer(Packagraph graph) {
         var gNode = Factory.node(name);
 
         var style = options().styleOf(node);
+        return applyNodeStyle(gNode, style);
+    }
+
+    private guru.nidi.graphviz.model.Node applyNodeStyle(guru.nidi.graphviz.model.Node node, Map<String, String> style) {
         for (var entry : style.entrySet()) {
-            gNode = gNode.with(entry.getKey(), entry.getValue());
+            var value = entry.getValue();
+            if (isBlankOrNull(value)) {
+                value = null;
+            } else if ("label".equalsIgnoreCase(entry.getKey())) {
+                value = node.name().value() + " " + value;
+            }
+            node = node.with(entry.getKey(), value);
         }
-        return gNode;
+        return node;
     }
 
     private boolean isBlankOrNull(String name) {
