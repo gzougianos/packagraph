@@ -146,7 +146,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public Map<String, String> styleOf(Edge edge) {
         for (var showEdge : reverse(showEdges)) {
-            if (showEdge.covers(edge) && showEdge.style() != null) {
+            if (showEdge.covers(edge, this) && showEdge.style() != null) {
                 return resolveStyle(showEdge.style());
             }
         }
@@ -155,7 +155,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public Map<String, String> styleOfFromNode(Edge edge) {
         for (var showEdge : reverse(showEdges)) {
-            if (showEdge.covers(edge) && showEdge.fromNodeStyle() != null) {
+            if (showEdge.covers(edge, this) && showEdge.fromNodeStyle() != null) {
                 return resolveStyle(showEdge.fromNodeStyle());
             }
         }
@@ -164,7 +164,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
     public Map<String, String> styleOfToNode(Edge edge) {
         for (var showEdge : reverse(showEdges)) {
-            if (showEdge.covers(edge) && showEdge.toNodeStyle() != null) {
+            if (showEdge.covers(edge, this) && showEdge.toNodeStyle() != null) {
                 return resolveStyle(showEdge.toNodeStyle());
             }
         }
@@ -199,7 +199,6 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
         private boolean covers(Node node, Options options) {
             String val = options.resolveConstants(packag);
-            System.out.println(val);
             return coversByPattern(val, node.packag().name());
         }
     }
@@ -207,32 +206,20 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
     public record ShowEdges(String packageFrom, String packageTo, String style, String fromNodeStyle,
                             String toNodeStyle) {
 
-        public boolean covers(Edge edge) {
+        private boolean covers(Edge edge, Options options) {
             if (packageFrom == null && packageTo == null) {
                 return false;
             }
 
             if (packageFrom != null && packageTo == null) {
-                return coversByPattern(packageFrom, edge.from().packag().name());
+                return coversByPattern(options.resolveConstants(packageFrom), edge.from().packag().name());
             }
 
             if (packageFrom == null) {
-                return coversByPattern(packageTo, edge.to().packag().name());
+                return coversByPattern(options.resolveConstants(packageTo), edge.to().packag().name());
             }
-            return coversByPattern(packageFrom, edge.from().packag().name()) &&
-                    coversByPattern(packageTo, edge.to().packag().name());
-        }
-
-        public boolean coversFrom(Node node) {
-            if (packageFrom == null)
-                return true;
-            return coversByPattern(packageFrom, node.packag().name());
-        }
-
-        public boolean coversTo(Node node) {
-            if (packageTo == null)
-                return true;
-            return coversByPattern(packageTo, node.packag().name());
+            return coversByPattern(options.resolveConstants(packageFrom), edge.from().packag().name()) &&
+                    coversByPattern(options.resolveConstants(packageTo), edge.to().packag().name());
         }
     }
 

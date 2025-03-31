@@ -240,6 +240,31 @@ class OptionsShould {
     }
 
     @Test
+    void resolve_constants_in_show_edges() throws Exception {
+        var script = """
+                include source directory '%s';
+                show edges from '${my_p}' to '${java_basics}' with style 'some_style';
+                define style 'some_style' as 'style=filled;fillcolor=yellow';
+                define constant 'java_basics' as 'java.util';
+                define constant 'my_p' as 'packageA';
+                """.formatted(tempDir.pathAsString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                public class A{ }
+                """);
+
+        var options = run(script);
+        var graph = Packagraph.create(options);
+        var edge = graph.findEdge("packageA", "java.util");
+        var nodeStyle = options.styleOf(edge);
+
+        assertEquals(Map.of("style", "filled", "fillcolor", "yellow"),
+                nodeStyle);
+    }
+
+    @Test
     void know_the_style_of_a_from_node_edge() throws Exception {
         var script = """
                 include source directory '%s';
