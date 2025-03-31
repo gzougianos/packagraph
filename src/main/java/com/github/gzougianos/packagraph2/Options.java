@@ -187,6 +187,17 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
                             String toNodeStyle) {
 
         public boolean covers(Edge edge) {
+            if (packageFrom == null && packageTo == null) {
+                return false;
+            }
+
+            if (packageFrom != null && packageTo == null) {
+                return coversByPattern(packageFrom, edge.from().packag().name());
+            }
+            
+            if (packageFrom == null) {
+                return coversByPattern(packageTo, edge.to().packag().name());
+            }
             return coversByPattern(packageFrom, edge.from().packag().name()) &&
                     coversByPattern(packageTo, edge.to().packag().name());
         }

@@ -2,6 +2,8 @@ package com.github.gzougianos.packagraph2;
 
 import com.github.gzougianos.packagraph2.antlr4.*;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
 import java.io.*;
 import java.util.*;
@@ -188,14 +190,19 @@ class OptionsShould {
         assertEquals(absolutePathFile.getAbsolutePath(), options.exportInto().filePath());
     }
 
-    @Test
-    void know_the_style_of_an_edge() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "show edges from 'packageA' to 'java.util.*' with style 'some_style';",
+            "show edges from 'packageA' with style 'some_style';",
+            "show edges to 'java.util.*' with style 'some_style';",
+    })
+    void know_the_style_of_an_edge(String showEdgeStatement) throws Exception {
         var script = """
                 include source directory '%s';
-                show edges from 'packageA' to 'java.util.*' with style 'some_style';
+                %s
                 define style 'some_style' as 'style=filled;fillcolor=yellow;shape=${SHAPE}';
                 define constant 'SHAPE' as 'box';
-                """.formatted(tempDir.pathAsString());
+                """.formatted(tempDir.pathAsString(), showEdgeStatement);
 
         tempDir.addJavaFile("A.java", """
                 package packageA;
