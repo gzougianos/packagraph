@@ -408,6 +408,25 @@ class OptionsShould {
         assertEquals(new Legend("some_style", Map.of("fillcolor", "yellow")), legends.get("some_style"));
     }
 
+    @Test
+    void know_edge_legends() throws Exception {
+        var script = """
+                include source directory '%s';
+                define style 'some_style' as 'style=filled;fillcolor=blue;' with edge legend;
+                define style 'some_style1' as 'style=filled;fillcolor=yellow;' with edge legend;
+                """.formatted(tempDir.pathAsString());
+
+        var options = run(script);
+        var legends = options.edgeLegends();
+
+        var expectedLegend1 = new Legend("some_style", Map.of("style", "filled", "fillcolor", "blue"));
+        var expectedLegend2 = new Legend("some_style1", Map.of("style", "filled", "fillcolor", "yellow"));
+
+        assertEquals(2, legends.size());
+        assertEquals(expectedLegend1, legends.get("some_style"));
+        assertEquals(expectedLegend2, legends.get("some_style1"));
+    }
+
     private Options run(String script) throws Exception {
         return PgLangInterpreter.interprete(script);
     }

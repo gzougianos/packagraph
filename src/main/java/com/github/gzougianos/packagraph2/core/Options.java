@@ -222,6 +222,17 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return unmodifiableMap(result);
     }
 
+    public Map<String, Legend> edgeLegends() {
+        Map<String, Legend> result = new LinkedHashMap<>();
+        for (var styleDef : defineStyles) {
+            if (!styleDef.isEdgeLegend())
+                continue;
+
+            result.put(styleDef.name(), new Legend(styleDef.name(), resolveStyle(styleDef.value())));
+        }
+        return unmodifiableMap(result);
+    }
+
 
     public record ShowNodes(String packag, String as, String style) {
 
