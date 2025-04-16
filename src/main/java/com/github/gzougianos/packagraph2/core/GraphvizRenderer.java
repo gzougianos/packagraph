@@ -6,8 +6,11 @@ import guru.nidi.graphviz.model.*;
 import lombok.extern.slf4j.*;
 
 import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.*;
+
+import static guru.nidi.graphviz.model.Factory.node;
 
 @Slf4j
 public record GraphvizRenderer(Packagraph graph) {
@@ -17,6 +20,11 @@ public record GraphvizRenderer(Packagraph graph) {
     }
 
     public File render() {
+        final File destinationFile = new File(graph().options().exportInto().filePath());
+        if (destinationFile.exists() && !options().exportInto().overwrite()) {
+            throw new IllegalStateException("File already exists: " + destinationFile.getAbsolutePath());
+        }
+
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
 
         Map<Node, guru.nidi.graphviz.model.Node> graphvizNodes = new HashMap<>();
@@ -48,42 +56,71 @@ public record GraphvizRenderer(Packagraph graph) {
         }
 
         applyMainGraphStyle(mainGraph);
-        createLegends(mainGraph);
+
+        writeGraphToFile(mainGraph, destinationFile);
+
+        if (!options().hasAtLeastOneLegend()) {
+            return destinationFile;
+        }
+
+        if (!isSvgFormat()) {
+            log.warn("Legends are not supported for SVG format.");
+            return destinationFile;
+        }
+
         try {
-            File destinationFile = new File(graph().options().exportInto().filePath());
-            if (destinationFile.exists() && !options().exportInto().overwrite()) {
-                throw new IllegalStateException("File already exists: " + destinationFile.getAbsolutePath());
-            }
-            return Graphviz.fromGraph(mainGraph)
+            return new LegendRenderer(graph).embedLegendsInto(mainGraph, destinationFile);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not embed legend graph into main graph.", e);
+        }
+    }
+
+    private boolean isSvgFormat() {
+        return graphvizFormat() == Format.SVG;
+    }
+
+    private File writeGraphToFile(MutableGraph graph, File destinationFile) {
+        try {
+            return Graphviz.fromGraph(graph)
                     .render(graphvizFormat())
                     .toFile(destinationFile);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
-    private void createLegends(MutableGraph mainGraph) {
-        var legends = options().nodeLegends();
-        if (legends.isEmpty())
-            return;
+    private static Link invisibleEdgeTo(guru.nidi.graphviz.model.Node node) {
+        return Link.to(node).with("style", "invisible");
+    }
 
-        MutableGraph cluster = Factory.graph("cluster_1-legends") // The prefix "cluster_" makes it a cluster
-                .graphAttr().with(Label.of(""), Color.LIGHTGREY)
+    private static LinkSource createEdgeLegend(Legend legend) {
+        MutableGraph cluster = Factory.graph("cluster_1-legends-" + legend.name())
+                .graphAttr()
+                .with(Rank.dir(Rank.RankDir.LEFT_TO_RIGHT))
+                .directed()
                 .toMutable();
 
-        for (var legend : legends.values()) {
-            var legendNode = createLegendNode(legend);
-            cluster.add(legendNode);
+        var graphvizEdge = Link.to(Factory.node(legend.name() + "_to").with("label", "A"));
+
+        for (var entry : legend.style().entrySet()) {
+            graphvizEdge = graphvizEdge.with(entry.getKey(), entry.getValue());
         }
-        mainGraph.add(cluster);
+        graphvizEdge = graphvizEdge.with("label", "bla");
+
+        var edge = Factory.node(legend.name() + "_from")
+                .with("label", "B")
+                .link(graphvizEdge);
+
+        return edge;
     }
+
 
     private guru.nidi.graphviz.model.Node createLegendNode(Legend legend) {
         var gNode = Factory.node(legend.name());
         for (var entry : legend.style().entrySet()) {
             gNode = gNode.with(entry.getKey(), entry.getValue());
         }
-        return gNode;
+        return gNode.with("constraint", "false");
     }
 
     private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node fromNode, guru.nidi.graphviz.model.Node toNode) {

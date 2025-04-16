@@ -16,7 +16,8 @@ show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure'
 show edges to '${ANTLR_NAMESPACE}' with style 'green_edge';
 
 define style 'infrastructure' as 'style=filled;fillcolor=lightblue' with node legend;
-define style 'green_edge' as 'color=green;style=solid';
+define style 'infrastructure2' as 'style=filled;fillcolor=lightblue' with node legend;
+define style 'green_edge' as 'color=green;style=solid' with edge legend;
 
 
 export as '.svg' into '../../target/manual_testing.svg' by overwriting;

@@ -371,15 +371,15 @@ class RenderingShould {
 
     @Test
     void create_legend_graph_with_node_style() throws Exception {
-        File tempExportFile = createTempImage();
+        File tempExportFile = createTempSvg();
         var script = """
                 include source directory '%s';
                 define style 'some_style' as 'style=filled;fillcolor=yellow' with node legend;
-                export as 'png' into '%s' by overwriting;
+                export as 'svg' into '%s' by overwriting;
                 """.formatted(tempDir.path().toString(), tempExportFile.toString());
 
         File output = outputOf(script);
-        assertFilesEquals(preRenderedFile("node_style_legend.png"), output);
+        assertFilesEquals(preRenderedFile("simple_node_legend.svg"), output);
     }
 
     private File outputOf(String script) throws Exception {
@@ -389,6 +389,12 @@ class RenderingShould {
 
     private static File createTempImage() throws IOException {
         File file = Files.createTempFile("test", ".png").toFile();
+        file.deleteOnExit();
+        return file;
+    }
+
+    private static File createTempSvg() throws IOException {
+        File file = Files.createTempFile("test", ".svg").toFile();
         file.deleteOnExit();
         return file;
     }

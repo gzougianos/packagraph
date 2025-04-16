@@ -233,6 +233,10 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
         return unmodifiableMap(result);
     }
 
+    public boolean hasAtLeastOneLegend() {
+        return !nodeLegends().isEmpty() || !edgeLegends().isEmpty();
+    }
+
 
     public record ShowNodes(String packag, String as, String style) {
 

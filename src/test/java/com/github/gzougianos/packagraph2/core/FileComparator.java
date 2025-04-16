@@ -8,8 +8,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileComparator {
 
-    public static void assertFilesEquals(File f1, File f2) throws Exception {
-        assertTrue(areFilesEqual(f1, f2));
+    public static void assertFilesEquals(File expected, File actual) throws Exception {
+        if (!areFilesEqual(expected, actual)) {
+            File copiedExpected = copyFileToTargetDir(expected);
+            File copiedActual = copyFileToTargetDir(actual);
+            throw new AssertionError("Files are different.\n" +
+                    "Expected: " + copiedExpected.getAbsolutePath() + "\n" +
+                    "Actual: " + copiedActual.getAbsolutePath());
+        }
+        assertTrue(areFilesEqual(expected, actual));
+    }
+
+    private static File copyFileToTargetDir(File f) throws IOException {
+        File targetDir = new File("./target");
+        File targetFile = new File(targetDir.getCanonicalFile(), f.getName());
+        Files.deleteIfExists(targetFile.toPath());
+        Files.copy(f.toPath(), targetFile.toPath());
+        return targetFile;
     }
 
     public static boolean areFilesEqual(File file1, File file2) throws IOException, NoSuchAlgorithmException {
