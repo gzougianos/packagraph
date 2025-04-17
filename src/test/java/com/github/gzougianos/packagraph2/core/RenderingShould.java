@@ -382,6 +382,33 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("simple_node_legend.svg"), output);
     }
 
+    //Instead of:
+    //  +---------+  +---------+ +---------+  +---------+
+    //  | style1  |  | style2  | | style3  |  | style4  |
+    //  +---------+  +---------+ +---------+  +---------+
+    // Legend graph has this layout:
+    //  +---------+  +---------+
+    //  | style1  |  | style2  |
+    //  +---------+  +---------+
+    //  +---------+  +---------+
+    //  | style3  |  | style4  |
+    //  +---------+  +---------+
+    @Test
+    void create_legend_graph_within_a_grid_in_order_to_consume_less_space() throws Exception {
+        File tempExportFile = createTempSvg();
+        var script = """
+                include source directory '%s';
+                define style 'some_style' as 'style=filled;fillcolor=yellow' with node legend;
+                define style 'some_style1' as 'style=filled;fillcolor=yellow' with node legend;
+                define style 'some_style2' as 'style=filled;fillcolor=yellow' with node legend;
+                define style 'some_style3' as 'style=filled;fillcolor=yellow' with node legend;
+                export as 'svg' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("legend_graph_as_grid.svg"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();

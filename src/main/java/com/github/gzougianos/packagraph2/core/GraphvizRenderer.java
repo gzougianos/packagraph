@@ -89,40 +89,6 @@ public record GraphvizRenderer(Packagraph graph) {
         }
     }
 
-    private static Link invisibleEdgeTo(guru.nidi.graphviz.model.Node node) {
-        return Link.to(node).with("style", "invisible");
-    }
-
-    private static LinkSource createEdgeLegend(Legend legend) {
-        MutableGraph cluster = Factory.graph("cluster_1-legends-" + legend.name())
-                .graphAttr()
-                .with(Rank.dir(Rank.RankDir.LEFT_TO_RIGHT))
-                .directed()
-                .toMutable();
-
-        var graphvizEdge = Link.to(Factory.node(legend.name() + "_to").with("label", "A"));
-
-        for (var entry : legend.style().entrySet()) {
-            graphvizEdge = graphvizEdge.with(entry.getKey(), entry.getValue());
-        }
-        graphvizEdge = graphvizEdge.with("label", "bla");
-
-        var edge = Factory.node(legend.name() + "_from")
-                .with("label", "B")
-                .link(graphvizEdge);
-
-        return edge;
-    }
-
-
-    private guru.nidi.graphviz.model.Node createLegendNode(Legend legend) {
-        var gNode = Factory.node(legend.name());
-        for (var entry : legend.style().entrySet()) {
-            gNode = gNode.with(entry.getKey(), entry.getValue());
-        }
-        return gNode.with("constraint", "false");
-    }
-
     private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node fromNode, guru.nidi.graphviz.model.Node toNode) {
         var graphvizEdge = Link.to(toNode);
 

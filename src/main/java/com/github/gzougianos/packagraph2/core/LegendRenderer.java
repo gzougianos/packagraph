@@ -3,10 +3,16 @@ package com.github.gzougianos.packagraph2.core;
 import guru.nidi.graphviz.attribute.*;
 import guru.nidi.graphviz.engine.*;
 import guru.nidi.graphviz.model.*;
+import guru.nidi.graphviz.model.Node;
 
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+
+import static guru.nidi.graphviz.model.Factory.*;
+
+import guru.nidi.graphviz.attribute.*;
+import guru.nidi.graphviz.model.*;
 
 import static guru.nidi.graphviz.model.Factory.node;
 
@@ -36,23 +42,51 @@ record LegendRenderer(Packagraph graph) {
 
     private File createLegendGraphToTempPng() throws IOException {
         var nodeLegends = options().nodeLegends();
-        var edgeLegends = options().edgeLegends();
+        var edgeLegends = options().edgeLegends(); //not supported for now, its super tricky
 
-        MutableGraph cluster = Factory.graph("legends").toMutable();
+        MutableGraph graph = Factory.graph("legends").toMutable();
 
-        for (var legend : nodeLegends.values()) {
-            var legendNode = createLegendNode(legend);
-            cluster.add(legendNode);
+        Grid grid = calculateGrid(nodeLegends.size());
+        int rank = Math.min(grid.height, grid.width);
+        Node previousNode = null;
+        ArrayList<Legend> legends = new ArrayList<>(nodeLegends.values());
+        for (int i = 0; i < legends.size(); i++) {
+            var legendNode = createLegendNode(legends.get(i));
+            if (previousNode == null) {
+                graph.add(legendNode);
+                previousNode = legendNode;
+            } else {
+                var edge = previousNode.link(invisibleEdgeTo(legendNode));
+                previousNode = legendNode;
+                graph.add(edge);
+            }
+            if ((i + 1) % rank == 0) {
+                previousNode = null;
+            }
         }
 
         File destinationFile = Files.createTempFile("legend_graph", ".png").toFile();
         destinationFile.deleteOnExit();
-        Graphviz.fromGraph(cluster)
+        Graphviz.fromGraph(graph)
                 .render(Format.PNG)
                 .toFile(destinationFile);
 
         return destinationFile;
     }
+
+    private static Link invisibleEdgeTo(Node legendNode) {
+        return to(legendNode).with("style", "invisible");
+    }
+
+    public record Grid(int width, int height) {
+    }
+
+    public static Grid calculateGrid(int nodeCount) {
+        int width = (int) Math.ceil(Math.sqrt(nodeCount));
+        int height = (int) Math.ceil((double) nodeCount / width);
+        return new Grid(width, height);
+    }
+
 
     private guru.nidi.graphviz.model.Node createLegendNode(Legend legend) {
         var gNode = Factory.node(legend.name());

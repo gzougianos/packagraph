@@ -17,6 +17,8 @@ show edges to '${ANTLR_NAMESPACE}' with style 'green_edge';
 
 define style 'infrastructure' as 'style=filled;fillcolor=lightblue' with node legend;
 define style 'infrastructure2' as 'style=filled;fillcolor=lightblue' with node legend;
+define style 'infrastructure3' as 'style=filled;fillcolor=lightblue' with node legend;
+define style 'infrastructure5' as 'label=♦;style=filled;fillcolor=lightblue' with node legend;
 define style 'green_edge' as 'color=green;style=solid' with edge legend;
 
 
