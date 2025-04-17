@@ -57,7 +57,11 @@ record LegendRenderer(Packagraph graph) {
     private guru.nidi.graphviz.model.Node createLegendNode(Legend legend) {
         var gNode = Factory.node(legend.name());
         for (var entry : legend.style().entrySet()) {
-            gNode = gNode.with(entry.getKey(), entry.getValue());
+            var value = entry.getValue();
+            if ("label".equals(entry.getKey())) {
+                value = legend.name() + " " + value;
+            }
+            gNode = gNode.with(entry.getKey(), value);
         }
         return gNode.with("constraint", "false");
     }
