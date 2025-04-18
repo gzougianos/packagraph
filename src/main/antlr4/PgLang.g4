@@ -6,6 +6,7 @@ statement
     : includeStmt
     | excludeStmt
     | showMainGraphStmt
+    | showLegendGraphStmt
     | showNodesStmt
     | showEdgesStmt
     | defineStyleStmt
@@ -17,6 +18,7 @@ includeStmt: 'include' 'source' 'directory' VALUE ';';
 excludeStmt: 'exclude' 'externals' ';';
 
 showMainGraphStmt: 'show' 'main' 'graph' styleDef? ';';
+showLegendGraphStmt: 'show' 'legend' 'graph' styleDef? ';';
 showNodesStmt: 'show' 'nodes' VALUE nodesAs? styleDef? ';';
 nodesAs:  'as' VALUE;
 styleDef: 'with' 'style' VALUE;

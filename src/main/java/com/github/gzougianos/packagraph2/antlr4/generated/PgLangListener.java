@@ -58,6 +58,16 @@ public interface PgLangListener extends ParseTreeListener {
 	 */
 	void exitShowMainGraphStmt(PgLangParser.ShowMainGraphStmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link PgLangParser#showLegendGraphStmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterShowLegendGraphStmt(PgLangParser.ShowLegendGraphStmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PgLangParser#showLegendGraphStmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitShowLegendGraphStmt(PgLangParser.ShowLegendGraphStmtContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link PgLangParser#showNodesStmt}.
 	 * @param ctx the parse tree
 	 */

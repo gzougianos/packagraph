@@ -53,6 +53,13 @@ public class PgLangBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitShowLegendGraphStmt(PgLangParser.ShowLegendGraphStmtContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitShowNodesStmt(PgLangParser.ShowNodesStmtContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

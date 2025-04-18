@@ -41,6 +41,12 @@ public interface PgLangVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitShowMainGraphStmt(PgLangParser.ShowMainGraphStmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link PgLangParser#showLegendGraphStmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitShowLegendGraphStmt(PgLangParser.ShowLegendGraphStmtContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link PgLangParser#showNodesStmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

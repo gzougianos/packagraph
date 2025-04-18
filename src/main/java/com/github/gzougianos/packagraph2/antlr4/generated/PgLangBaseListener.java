@@ -77,6 +77,18 @@ public class PgLangBaseListener implements PgLangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterShowLegendGraphStmt(PgLangParser.ShowLegendGraphStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitShowLegendGraphStmt(PgLangParser.ShowLegendGraphStmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterShowNodesStmt(PgLangParser.ShowNodesStmtContext ctx) { }
 	/**
 	 * {@inheritDoc}

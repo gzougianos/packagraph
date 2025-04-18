@@ -32,6 +32,12 @@ public class PgLangInterpreter extends PgLangBaseListener {
     }
 
     @Override
+    public void enterShowLegendGraphStmt(PgLangParser.ShowLegendGraphStmtContext ctx) {
+        if (ctx.styleDef() != null)
+            options.legendGraphStyle = removeQuotes(ctx.styleDef().VALUE().getText());
+    }
+
+    @Override
     public void enterShowNodesStmt(PgLangParser.ShowNodesStmtContext ctx) {
         var packag = ctx.VALUE().getText();
         String as = null;
@@ -155,6 +161,7 @@ public class PgLangInterpreter extends PgLangBaseListener {
         private Options.ExportInto exportInto;
         private boolean excludeExternals = false;
         private String mainGraphStyle = null;
+        private String legendGraphStyle = null;
 
         Options build() {
             return Options.builder()
@@ -165,6 +172,7 @@ public class PgLangInterpreter extends PgLangBaseListener {
                     .defineStyles(unmodifiableList(defineStyles))
                     .defineConstant(unmodifiableList(defineConstants))
                     .mainGraphStyle(mainGraphStyle)
+                    .legendGraphStyle(legendGraphStyle)
                     .exportInto(exportInto)
                     .build();
         }

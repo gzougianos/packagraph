@@ -37,7 +37,7 @@ record LegendRenderer(Packagraph graph) {
 
     private LinkSource imageNode(File tempImageWithLegendGraph) {
         return node("")
-                .with(Shape.NONE, Image.of(tempImageWithLegendGraph.toPath().toAbsolutePath().toString()));
+                .with(Shape.RECTANGLE, Color.LIGHTGRAY, Image.of(tempImageWithLegendGraph.toPath().toAbsolutePath().toString()));
     }
 
     private File createLegendGraphToTempPng() throws IOException {
@@ -65,6 +65,8 @@ record LegendRenderer(Packagraph graph) {
             }
         }
 
+        applyGraphStyle(options().legendGraphStyleAttributes(), graph);
+
         File destinationFile = Files.createTempFile("legend_graph", ".png").toFile();
         destinationFile.deleteOnExit();
         Graphviz.fromGraph(graph)
@@ -72,6 +74,12 @@ record LegendRenderer(Packagraph graph) {
                 .toFile(destinationFile);
 
         return destinationFile;
+    }
+
+    private void applyGraphStyle(Map<String, String> legendGraphStyleAttributes, MutableGraph graph) {
+        for (Map.Entry<String, String> entry : legendGraphStyleAttributes.entrySet()) {
+            graph.graphAttrs().add(entry.getKey(), entry.getValue());
+        }
     }
 
     private static Link invisibleEdgeTo(Node legendNode) {
@@ -102,12 +110,6 @@ record LegendRenderer(Packagraph graph) {
 
     private Options options() {
         return graph.options();
-    }
-
-    private void applyMainGraphStyle(MutableGraph mainGraph) {
-        for (Map.Entry<String, String> entry : options().mainGraphStyleAttributes().entrySet()) {
-            mainGraph.graphAttrs().add(entry.getKey(), entry.getValue());
-        }
     }
 
     private void replaceImagePathWithBase64(File mainGraphFile, File legendGraphImageFile) throws IOException {

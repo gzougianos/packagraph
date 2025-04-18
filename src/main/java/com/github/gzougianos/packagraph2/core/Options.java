@@ -14,7 +14,8 @@ import static java.util.Collections.unmodifiableMap;
 @Slf4j
 public record Options(List<String> sourceDirectories, boolean excludeExternals,
                       List<ShowNodes> showNodes, List<ShowEdges> showEdges, List<DefineStyle> defineStyles,
-                      List<DefineConstant> defineConstant, String mainGraphStyle, ExportInto exportInto) {
+                      List<DefineConstant> defineConstant, String mainGraphStyle, String legendGraphStyle,
+                      ExportInto exportInto) {
 
     @Override
     public List<String> sourceDirectories() {
@@ -61,6 +62,14 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
 
         return resolveStyle(mainGraphStyle());
+    }
+
+    public Map<String, String> legendGraphStyleAttributes() {
+        if (legendGraphStyle() == null || legendGraphStyle().isBlank())
+            return Collections.emptyMap();
+
+
+        return resolveStyle(legendGraphStyle());
     }
 
     private Map<String, String> resolveStyle(String styleName) {
@@ -197,7 +206,7 @@ public record Options(List<String> sourceDirectories, boolean excludeExternals,
 
         return new Options(relocatedSources, excludeExternals(),
                 showNodes(), showEdges(), defineStyles(),
-                defineConstant, mainGraphStyle(), relocatedExport);
+                defineConstant, mainGraphStyle(), legendGraphStyle(), relocatedExport);
     }
 
     private List<String> relocateSourceDirectories(File dir) {

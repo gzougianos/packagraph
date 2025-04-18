@@ -115,6 +115,14 @@ class PgLangInterpreterShould {
     }
 
     @Test
+    void interprete_show_legend_graph() throws Exception {
+        String script = "show legend graph with style 'color=red';";
+        Options options = PgLangInterpreter.interprete(script);
+
+        assertEquals("red", options.legendGraphStyleAttributes().get("color"));
+    }
+
+    @Test
     void interprete_export_into() throws Exception {
         String script = "export as 'png' into 'myfile.png' by overwriting;";
         Options options = PgLangInterpreter.interprete(script);
