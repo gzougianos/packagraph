@@ -105,7 +105,7 @@ record LegendRenderer(Packagraph graph) {
             }
             gNode = gNode.with(entry.getKey(), value);
         }
-        return gNode.with("constraint", "false");
+        return gNode;
     }
 
     private Options options() {

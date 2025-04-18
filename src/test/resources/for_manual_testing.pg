@@ -3,7 +3,7 @@ include source directory '../../src/main/java';
 
 show main graph with style 'dpi=100;label=PackagraphInternals;fontsize=18;fontname=Tahoma';
 
-show legend graph with style 'dpi=85;label=Legend;fontsize=14;fontname=Tahoma;color=red;style=rounded';
+show legend graph with style 'dpi=85;label=Legend;fontsize=14;fontname=Tahoma';
 
 define constant 'ANTLR_NAMESPACE' as 'org.antlr.*';
 
@@ -15,11 +15,10 @@ show nodes '${ANTLR_NAMESPACE}' as 'ANTLR' with style 'infrastructure';
 show nodes 'guru.nidi.*' as 'Graphviz' with style 'infrastructure';
 show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure';
 
-show edges to '${ANTLR_NAMESPACE}' with style 'green_edge' with from-node style 'Depends On Antlr';
+show edges to '${ANTLR_NAMESPACE}' with style 'color=green;style=solid' with from-node style 'Depends On Antlr';
 
-define style 'infrastructure' as 'style=filled;fillcolor=lightblue' with node legend;
-define style 'Depends On Antlr' as 'label=Ā' with node legend;
-define style 'green_edge' as 'color=green;style=solid' with edge legend;
+define style 'infrastructure' as 'style=filled;fillcolor=lightblue;shape=box' with node legend;
+define style 'Depends On Antlr' as 'label=Ā;shape=box' with node legend;
 
 
 export as '.svg' into '../../target/manual_testing.svg' by overwriting;

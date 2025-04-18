@@ -46,13 +46,18 @@ public record GraphvizRenderer(Packagraph graph) {
         for (var edge : graph.edges()) {
             var from = graphvizNodes.get(edge.from());
             var to = graphvizNodes.get(edge.to());
-            if (from == null || to == null || Objects.equals(from, to)) {
-                continue;
+
+            if (from != null) {
+                mainGraph.add(applyNodeStyle(from, options().styleOfFromNode(edge)));
             }
 
-            mainGraph.add(applyNodeStyle(from, options().styleOfFromNode(edge)));
-            mainGraph.add(applyNodeStyle(to, options().styleOfToNode(edge)));
-            mainGraph.add(from.link(createEdge(edge, from, to)));
+            if (to != null) {
+                mainGraph.add(applyNodeStyle(to, options().styleOfToNode(edge)));
+            }
+
+            if (from != null && to != null && !Objects.equals(from, to)) {
+                mainGraph.add(from.link(createEdge(edge, from, to)));
+            }
         }
 
         applyMainGraphStyle(mainGraph);
