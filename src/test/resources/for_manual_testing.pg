@@ -2,23 +2,18 @@
 include source directory '../../src/main/java';
 
 show main graph with style 'dpi=100;label=PackagraphInternals;fontsize=18;fontname=Tahoma';
+show legend graph with style 'dpi=90;label=Legend;fontsize=14;fontname=Tahoma';
 
-show legend graph with style 'dpi=85;label=Legend;fontsize=14;fontname=Tahoma';
-
-define constant 'ANTLR_NAMESPACE' as 'org.antlr.*';
 
 show nodes 'java.*' as '';
 show nodes 'lombok.*' as '';
 show nodes '.*' with style 'shape=box';
 show nodes 'com.github.gzougianos\.(.*)' as '$1';
-show nodes '${ANTLR_NAMESPACE}' as 'ANTLR' with style 'infrastructure';
-show nodes 'guru.nidi.*' as 'Graphviz' with style 'infrastructure';
 show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure';
-
-show edges to '${ANTLR_NAMESPACE}' with style 'color=green;style=solid' with from-node style 'Depends On Antlr';
-
-define style 'infrastructure' as 'style=filled;fillcolor=lightblue;shape=box' with node legend;
-define style 'Depends On Antlr' as 'label=Ā;shape=box' with node legend;
+show nodes 'guru.nidi.graphviz.*' as 'GraphViz' with style 'infrastructure';
+show nodes 'org.antlr.*' as 'ANTLR' with style 'infrastructure';
 
 
-export as '.svg' into '../../target/manual_testing.svg' by overwriting;
+
+define style 'infrastructure' as 'shape=box;style=filled;fillcolor=lightblue' with node legend;
+export as '.dot' into '../../target/manual_testing.dot' by overwriting;
