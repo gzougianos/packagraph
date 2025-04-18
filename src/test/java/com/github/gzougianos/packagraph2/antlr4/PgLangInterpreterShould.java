@@ -108,7 +108,7 @@ class PgLangInterpreterShould {
 
     @Test
     void interprete_show_main_graph() throws Exception {
-        String script = "show maingraph with style 'main_graph_style';";
+        String script = "show main graph with style 'main_graph_style';";
         Options options = PgLangInterpreter.interprete(script);
 
         assertEquals("main_graph_style", options.mainGraphStyle());

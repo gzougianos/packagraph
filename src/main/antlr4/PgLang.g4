@@ -16,7 +16,7 @@ statement
 includeStmt: 'include' 'source' 'directory' VALUE ';';
 excludeStmt: 'exclude' 'externals' ';';
 
-showMainGraphStmt: 'show' 'maingraph' styleDef? ';';
+showMainGraphStmt: 'show' 'main' 'graph' styleDef? ';';
 showNodesStmt: 'show' 'nodes' VALUE nodesAs? styleDef? ';';
 nodesAs:  'as' VALUE;
 styleDef: 'with' 'style' VALUE;
