@@ -1,19 +1,13 @@
 package com.github.gzougianos.packagraph.analysis;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParserConfiguration;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.PackageDeclaration;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
+import com.github.javaparser.*;
+import com.github.javaparser.ast.*;
+import lombok.*;
+import lombok.experimental.*;
+import lombok.extern.slf4j.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Collection;
+import java.io.*;
+import java.util.*;
 
 @Accessors(fluent = true)
 @ToString

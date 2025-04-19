@@ -1,9 +1,8 @@
 // Generated from C:/Users/gzoug/Java/workspace/packagraph/src/main/antlr4/PgLang.g4 by ANTLR 4.13.2
 package com.github.gzougianos.packagraph.antlr4.generated;
 
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
 /**
  * This class provides an empty implementation of {@link PgLangListener},

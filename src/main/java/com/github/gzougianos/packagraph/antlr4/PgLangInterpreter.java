@@ -8,11 +8,11 @@ import org.antlr.v4.runtime.tree.*;
 
 import java.util.*;
 
-import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.*;
 
 @Slf4j
 public class PgLangInterpreter extends PgLangBaseListener {
-    private MutableOptions options = new MutableOptions();
+    private final MutableOptions options = new MutableOptions();
 
     @Override
     public void enterIncludeStmt(PgLangParser.IncludeStmtContext ctx) {

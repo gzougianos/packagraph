@@ -8,8 +8,6 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.*;
 
-import static guru.nidi.graphviz.model.Factory.node;
-
 @Slf4j
 public record GraphvizRenderer(Packagraph graph) {
     static {

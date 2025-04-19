@@ -11,8 +11,6 @@ import java.util.*;
 
 import static guru.nidi.graphviz.model.Factory.*;
 
-import static guru.nidi.graphviz.model.Factory.node;
-
 record LegendRenderer(Packagraph graph) {
 
     File embedLegendsInto(final MutableGraph mainGraph, final File destinationFile) throws IOException {
