@@ -12,7 +12,7 @@ public class Main {
         if (args.length == 0) {
             throw new IllegalArgumentException("Missing .pg file argument.");
         }
-        var inputFile = new File(args[0]);
+        var inputFile = new File(args[0]).getCanonicalFile();
         verifyExistsAndIsNotADirectory(inputFile);
 
         var inputFileDirectory = inputFile.getParentFile();
