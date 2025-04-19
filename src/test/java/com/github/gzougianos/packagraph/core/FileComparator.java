@@ -48,15 +48,4 @@ class FileComparator {
         }
         return sb.toString();
     }
-
-    public static void main(String[] args) throws Exception {
-        File file1 = new File("path/to/file1.txt");
-        File file2 = new File("path/to/file2.txt");
-
-        if (areFilesEqual(file1, file2)) {
-            System.out.println("Files are identical ✅");
-        } else {
-            System.out.println("Files are different ❌");
-        }
-    }
 }
