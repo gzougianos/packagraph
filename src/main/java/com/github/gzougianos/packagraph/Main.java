@@ -2,10 +2,12 @@ package com.github.gzougianos.packagraph;
 
 import com.github.gzougianos.packagraph.antlr4.*;
 import com.github.gzougianos.packagraph.core.*;
+import lombok.extern.slf4j.*;
 
 import java.io.*;
 import java.nio.file.*;
 
+@Slf4j
 public class Main {
 
     public static void main(String[] args) throws Exception {
@@ -20,7 +22,8 @@ public class Main {
 
         Options options = PgLangInterpreter.interprete(inputContents).withBaseDir(inputFileDirectory);
         Packagraph packagraph = Packagraph.create(options);
-        new GraphvizRenderer(packagraph).render();
+        File output = new GraphvizRenderer(packagraph).render();
+        log.warn("Output file: {}", output.getAbsolutePath());
     }
 
     private static void verifyExistsAndIsNotADirectory(File inputFile) {

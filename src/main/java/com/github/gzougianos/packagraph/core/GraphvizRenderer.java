@@ -18,7 +18,7 @@ public record GraphvizRenderer(Packagraph graph) {
     public File render() {
         final File destinationFile = new File(graph().options().exportInto().filePath());
         if (destinationFile.exists() && !options().exportInto().overwrite()) {
-            throw new IllegalStateException("File already exists: " + destinationFile.getAbsolutePath());
+            throw new IllegalStateException("Output file already exists: " + destinationFile.getAbsolutePath());
         }
 
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
