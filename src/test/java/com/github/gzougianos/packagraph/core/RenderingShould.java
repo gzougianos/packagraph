@@ -8,6 +8,7 @@ import java.io.*;
 import java.nio.file.*;
 
 import static com.github.gzougianos.packagraph.core.FileComparator.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RenderingShould {
 
@@ -427,6 +428,26 @@ class RenderingShould {
 
         File output = outputOf(script);
         assertFilesEquals(preRenderedFile("missing_style_definition.png"), output);
+    }
+
+    @Test
+    void not_export_when_destination_file_already_exists() throws Exception {
+        File destinationFile = preRenderedFile("missing_style_definition.png"); //already exists
+
+        var script = """
+                include source directory '%s';
+                show nodes '.*' with style 'some_style';
+                export as 'png' into '%s';
+                """.formatted(tempDir.path().toString(), destinationFile);
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                
+                public class A{ }
+                """);
+
+        assertThrows(RuntimeException.class, () -> outputOf(script));
     }
 
     private File outputOf(String script) throws Exception {
