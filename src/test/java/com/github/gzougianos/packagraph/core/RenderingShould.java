@@ -409,6 +409,26 @@ class RenderingShould {
         assertFilesEquals(preRenderedFile("legend_graph_as_grid.svg"), output);
     }
 
+    @Test
+    void do_nothing_when_defined_style_is_missing() throws Exception {
+        File tempExportFile = createTempImage();
+        var script = """
+                include source directory '%s';
+                show nodes '.*' with style 'some_style';
+                export as 'png' into '%s' by overwriting;
+                """.formatted(tempDir.path().toString(), tempExportFile.toString());
+
+        tempDir.addJavaFile("A.java", """
+                package packageA;
+                import java.util.*;
+                
+                public class A{ }
+                """);
+
+        File output = outputOf(script);
+        assertFilesEquals(preRenderedFile("missing_style_definition.png"), output);
+    }
+
     private File outputOf(String script) throws Exception {
         var graph = Packagraph.create(run(script));
         return new GraphvizRenderer(graph).render();
