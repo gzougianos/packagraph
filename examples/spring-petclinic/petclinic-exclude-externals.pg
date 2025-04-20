@@ -1,0 +1,12 @@
+include source directory './repository/src/main/java';
+
+show main graph with style 'dpi=115;fontsize=25;label=Spring Petclinic - Only Internal Dependencies';
+exclude externals;
+
+show nodes '.*' with style 'shape=box';
+
+show nodes 'org.springframework.samples\.(.*)' as '$1' with style 'default';
+
+define style 'default' as 'shape=box;fontsize=20;style=filled;fillcolor=orange';
+
+export as '.png' into './petclinic-exclude-externals.png' by overwriting;

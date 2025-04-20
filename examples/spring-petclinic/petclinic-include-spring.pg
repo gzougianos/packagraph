@@ -23,4 +23,4 @@ define style 'depends_on_jpa_edge_style' as 'color=blue;style=fixed';
 define constant 'JPA_PACKAGES' as
 '(org.springframework.data.*)|(jakarta.persistence.*)|(org.springframework.dao.*)|(org.springframework.transaction.*)';
 
-export as '.png' into './petclinic-with-spring.png' by overwriting;
+export as '.png' into './petclinic-include-spring.png' by overwriting;

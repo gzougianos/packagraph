@@ -9,10 +9,10 @@ example of "how it works" for **packgraph** users.
 **packagraph** processes the source code of Spring-Petclinic project and
 generates the package diagram into a graph.
 
-### With `petclinic_options_only_from_dirs.json`:
+### With `petclinic-exclude-externals.pg`:
 
-![petclinic](petclinic.png)
+![petclinic](petclinic-exclude-externals.png)
 
-### With `petclinic_options_with_spring.json`:
+### With `petclinic-include-spring.pg`:
 
-![petclinic_with_spring](petclinic-with-spring.png)
+![petclinic_with_spring](petclinic-include-spring.png)
