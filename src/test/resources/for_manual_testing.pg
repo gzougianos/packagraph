@@ -15,5 +15,5 @@ show nodes 'org.antlr.*' as 'ANTLR' with style 'infrastructure';
 
 
 
-define style 'infrastructure' as 'shape=box;style=filled;fillcolor=lightblue' with node legend;
-export as '.dot' into '../../target/manual_testing.dot' by overwriting;
+define style 'infrastructure' as 'tooltip=blabla\ngggg;shape=box;style=filled;fillcolor=lightblue' with node legend;
+export as '.svg' into '../../target/manual_testing.svg' by overwriting;

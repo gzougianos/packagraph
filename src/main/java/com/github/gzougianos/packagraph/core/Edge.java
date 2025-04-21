@@ -1,6 +1,6 @@
 package com.github.gzougianos.packagraph.core;
 
-public record Edge(Node from, Node to) {
+record Edge(Node from, Node to) {
 
     public boolean isFrom(String packageName) {
         return from.packag().name().equals(packageName);
