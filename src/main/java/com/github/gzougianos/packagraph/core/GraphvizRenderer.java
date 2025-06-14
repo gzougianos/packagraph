@@ -65,7 +65,7 @@ public record GraphvizRenderer(Packagraph graph) {
         }
 
         if (!isSvgFormat()) {
-            log.warn("Legends are not supported for SVG format.");
+            log.warn("Legends are supported only for SVG format.");
             return destinationFile;
         }
 
