@@ -38,6 +38,10 @@ class JavaClassShould {
                 import java.io.*;
                 import static java.lang.System.setErr;
                 import static javax.swing.SwingUtilities.*;
+                import static javax.swing.SwingUtilities.InnerClass.*;
+                import static javax.swing.SwingUtilities.InnerClass.SOME_STATIC_VAR;
+                import static javax.swing.SwingUtilities.InnerClass.someOtherStaticVar;
+                import javax.swing.TestResourcesFolder.*;
                 
                 public class ClassToBeAnalyzed {}
                 """);

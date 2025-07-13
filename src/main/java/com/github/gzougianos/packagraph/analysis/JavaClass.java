@@ -8,6 +8,7 @@ import lombok.extern.slf4j.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
 @Accessors(fluent = true)
 @ToString
@@ -59,7 +60,45 @@ public final class JavaClass {
     private Collection<PackageName> findImports(CompilationUnit unit) {
         return unit.getImports().stream()
                 .map(JavaClass::adaptImport)
-                .toList();
+                .map(JavaClass::keepOnlyLowerCase)
+                .collect(Collectors.toSet());
+    }
+
+    /*
+     * This needs to be fixed! Imagine the following import:
+     * import static java.lang.System.SomeInnerClass.SOME_STATIC_VAR;
+     *
+     * Without bytecode interpretation, the parser gives:
+     * java.lang.System.SomeInnerClass.SOME_STATIC_VAR
+     *
+     * and the only information we have is of course is whether the import is static or not, or has an asterisk.
+     *
+     * For now...we just assume that the whole world follows the lowercase package-name convention
+     * and manually trim the package-name as a string
+     */
+    //TODO: fix....
+    private static PackageName keepOnlyLowerCase(PackageName packageName) {
+        if (packageName.followsLowercaseConvention())
+            return packageName;
+
+        String name = packageName.name();
+        var newName = trimUpToFirstUppercase(name);
+        if (newName.endsWith(".")) {
+            newName = newName.substring(0, newName.length() - 1);
+        }
+
+        return new PackageName(newName);
+    }
+
+    private static String trimUpToFirstUppercase(String input) {
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isUpperCase(c)) {
+                return input.substring(0, i);
+            }
+        }
+        return input;
     }
 
     private static PackageName adaptImport(ImportDeclaration importt) {
