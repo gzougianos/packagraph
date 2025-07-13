@@ -2,8 +2,6 @@ package com.github.gzougianos.packagraph.core;
 
 import com.github.gzougianos.packagraph.analysis.*;
 
-import java.util.*;
-
 record Node(PackageName packag, boolean isInternal) implements Comparable<Node> {
 
     public boolean isExternal() {

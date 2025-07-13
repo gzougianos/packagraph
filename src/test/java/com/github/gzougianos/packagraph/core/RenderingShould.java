@@ -8,7 +8,7 @@ import java.io.*;
 import java.nio.file.*;
 
 import static com.github.gzougianos.packagraph.core.FileComparator.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RenderingShould {
 
