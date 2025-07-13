@@ -92,9 +92,9 @@ public final class JavaClass {
 
     private static String trimUpToFirstUppercase(String input) {
 
-        for (int i = 0; i < input.length(); i++) {
+        for (int i = 1; i < input.length(); i++) {
             char c = input.charAt(i);
-            if (Character.isUpperCase(c)) {
+            if (Character.isUpperCase(c) && input.charAt(i - 1) == '.') {
                 return input.substring(0, i);
             }
         }
