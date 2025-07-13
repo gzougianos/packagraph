@@ -43,17 +43,33 @@ public record GraphvizRenderer(Packagraph graph) {
 
             graphvizNodes.put(node, graphvizNode);
         }
+        var fromAppliedStyles = new HashMap<String, Set<Integer>>();
+        var toAppliedStyles = new HashMap<String, Set<Integer>>();
 
         for (var edge : graph.edges()) {
             MutableNode from = graphvizNodes.get(edge.from());
             MutableNode to = graphvizNodes.get(edge.to());
 
             if (from != null) {
-                applyNodeStyle(from, options().styleOfFromNode(edge));
+                String fromName = String.valueOf(from.name());
+                fromAppliedStyles.putIfAbsent(fromName, new HashSet<>());
+
+                var style = options().styleOfFromNode(edge);
+                if (!fromAppliedStyles.get(fromName).contains(style.hashCode())) {
+                    applyNodeStyle(from, options().styleOfFromNode(edge));
+                    fromAppliedStyles.get(fromName).add(style.hashCode());
+                }
             }
 
             if (to != null) {
-                applyNodeStyle(to, options().styleOfToNode(edge));
+                String toName = String.valueOf(to.name());
+                toAppliedStyles.putIfAbsent(toName, new HashSet<>());
+
+                var style = options().styleOfToNode(edge);
+                if (!toAppliedStyles.get(toName).contains(style.hashCode())) {
+                    applyNodeStyle(to, options().styleOfToNode(edge));
+                    toAppliedStyles.get(toName).add(style.hashCode());
+                }
             }
 
             if (from != null && to != null && !Objects.equals(from, to) && !Objects.equals(from.name(), to.name())) {
