@@ -13,6 +13,8 @@ show nodes 'com.github.javaparser.*' as 'JavaParser' with style 'infrastructure'
 show nodes 'guru.nidi.graphviz.*' as 'GraphViz' with style 'infrastructure';
 show nodes 'org.antlr.*' as 'ANTLR' with style 'infrastructure';
 
+show edges to '.*?core.*' with from-node style 'label=%%label%%+';
+show edges to '.*?generated.*' with style 'color=red' with from-node style 'label=%%label%%-';
 
 
 define style 'infrastructure' as 'tooltip=Some\nmultilineComment;shape=box;style=filled;fillcolor=lightblue' with node legend;

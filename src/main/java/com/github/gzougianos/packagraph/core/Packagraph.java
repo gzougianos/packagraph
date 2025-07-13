@@ -21,8 +21,8 @@ public record Packagraph(Options options, Set<Node> nodes, Set<Edge> edges) {
                 .map(JavaClass::packag)
                 .collect(Collectors.toSet());
 
-        Set<Node> nodes = new HashSet<>();
-        Set<Edge> edges = new HashSet<>();
+        Set<Node> nodes = new TreeSet<>();
+        Set<Edge> edges = new TreeSet<>();
         for (var javaClass : analyzed) {
             Node node = new Node(javaClass.packag(), internalPackages.contains(javaClass.packag()));
             nodes.add(node);

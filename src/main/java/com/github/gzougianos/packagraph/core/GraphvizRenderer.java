@@ -6,10 +6,15 @@ import lombok.extern.slf4j.*;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 import java.util.stream.*;
 
 @Slf4j
 public record GraphvizRenderer(Packagraph graph) {
+
+    //In style, if you do label=_%%label%%_ and the label was "abc", the label will be "_abc_"
+    public static final Pattern STYLE_VALUE_PLACE_HOLDER_PATTERN = Pattern.compile("\\%\\%(\\w+)\\%\\%");
+
     static {
         GraphvizV8Engine engine = new GraphvizV8Engine();
         Graphviz.useEngine(engine);
@@ -23,12 +28,12 @@ public record GraphvizRenderer(Packagraph graph) {
 
         final MutableGraph mainGraph = Factory.graph("Package Dependencies").directed().toMutable();
 
-        Map<Node, guru.nidi.graphviz.model.Node> graphvizNodes = new HashMap<>();
+        Map<Node, MutableNode> graphvizNodes = new TreeMap<>();
         for (var node : graph.nodes()) {
             if (node.isExternal() && options().excludeExternals())
                 continue;
 
-            guru.nidi.graphviz.model.Node graphvizNode = createNode(node);
+            MutableNode graphvizNode = createNode(node);
             if (graphvizNode == null) {
                 continue;
             }
@@ -40,19 +45,26 @@ public record GraphvizRenderer(Packagraph graph) {
         }
 
         for (var edge : graph.edges()) {
-            var from = graphvizNodes.get(edge.from());
-            var to = graphvizNodes.get(edge.to());
+            MutableNode from = graphvizNodes.get(edge.from());
+            MutableNode to = graphvizNodes.get(edge.to());
 
             if (from != null) {
-                mainGraph.add(applyNodeStyle(from, options().styleOfFromNode(edge)));
+                applyNodeStyle(from, options().styleOfFromNode(edge));
             }
 
             if (to != null) {
-                mainGraph.add(applyNodeStyle(to, options().styleOfToNode(edge)));
+                applyNodeStyle(to, options().styleOfToNode(edge));
             }
 
-            if (from != null && to != null && !Objects.equals(from, to)) {
-                mainGraph.add(from.link(createEdge(edge, from, to)));
+            if (from != null && to != null && !Objects.equals(from, to) && !Objects.equals(from.name(), to.name())) {
+                var alreadyLinked = from.links().stream()
+                        .filter(li -> li.to().name().equals(to.name()))
+                        .filter(li -> li.from().name().equals(from.name()))
+                        .findFirst().isPresent();
+
+                if (!alreadyLinked) {
+                    mainGraph.add(from.addLink(createEdge(edge, from, to)));
+                }
             }
         }
 
@@ -90,7 +102,7 @@ public record GraphvizRenderer(Packagraph graph) {
         }
     }
 
-    private Link createEdge(Edge edge, guru.nidi.graphviz.model.Node fromNode, guru.nidi.graphviz.model.Node toNode) {
+    private Link createEdge(Edge edge, MutableNode fromNode, MutableNode toNode) {
         var graphvizEdge = Link.to(toNode);
 
         var style = options().styleOf(edge);
@@ -103,7 +115,7 @@ public record GraphvizRenderer(Packagraph graph) {
         return graphvizEdge;
     }
 
-    private boolean containsNode(MutableGraph mainGraph, guru.nidi.graphviz.model.Node node) {
+    private boolean containsNode(MutableGraph mainGraph, MutableNode node) {
         return mainGraph.nodes().stream()
                 .anyMatch(n -> n.name().equals(node.name()));
     }
@@ -131,32 +143,53 @@ public record GraphvizRenderer(Packagraph graph) {
         }
     }
 
-    private guru.nidi.graphviz.model.Node createNode(Node node) {
+    private MutableNode createNode(Node node) {
         String name = options().nameOf(node);
         if (isBlankOrNull(name))
             return null;
 
-        var gNode = Factory.node(name);
+        var gNode = Factory.mutNode(name);
+        gNode = gNode.add("label", gNode.name().value());
 
         var style = options().styleOf(node);
         return applyNodeStyle(gNode, style);
     }
 
-    private guru.nidi.graphviz.model.Node applyNodeStyle(guru.nidi.graphviz.model.Node node, Map<String, String> style) {
+    private MutableNode applyNodeStyle(MutableNode node, Map<String, String> style) {
+
         for (var entry : style.entrySet()) {
             var value = entry.getValue();
             if (isBlankOrNull(value)) {
                 value = null;
-            } else if ("label".equalsIgnoreCase(entry.getKey())) {
-                value = node.name().value() + " " + value;
+            } else {
+                value = replaceAttrPlaceholders(value, node);
             }
-            node = node.with(entry.getKey(), value);
+            node = node.add(entry.getKey(), value);
         }
         return node;
     }
 
+    private String replaceAttrPlaceholders(String value, MutableNode node) {
+        if (!value.contains("%")) {
+            return value;
+        }
+
+        Matcher placeHolderMatcher = STYLE_VALUE_PLACE_HOLDER_PATTERN.matcher(value);
+
+        while (placeHolderMatcher.find()) {
+            String attrName = placeHolderMatcher.group(1);
+            String attrValue = isBlankOrNull(String.valueOf(node.get(attrName))) ? null : String.valueOf(node.get(attrName));
+            if (attrValue == null) {
+                continue;
+            }
+            value = placeHolderMatcher.replaceFirst(attrValue);
+            placeHolderMatcher = STYLE_VALUE_PLACE_HOLDER_PATTERN.matcher(value);
+        }
+        return value;
+    }
+
     private boolean isBlankOrNull(String name) {
-        return name == null || name.trim().isEmpty();
+        return name == null || name.trim().isEmpty() || "null".equals(name);
     }
 
     private Options options() {
