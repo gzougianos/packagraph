@@ -1,5 +1,11 @@
 package com.github.gzougianos.packagraph.core;
 
+import com.github.romankh3.image.comparison.*;
+import com.github.romankh3.image.comparison.model.*;
+
+import javax.imageio.*;
+import java.awt.*;
+import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
 import java.security.*;
@@ -9,14 +15,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileComparator {
 
     public static void assertFilesEquals(File expected, File actual) throws Exception {
-        if (!areFilesEqual(expected, actual)) {
+        if (areFilesEqual(expected, actual)) {
+            return;
+        }
+        
+        if (expected.getName().endsWith(".svg")) {
             File copiedExpected = copyFileToTargetDir(expected);
             File copiedActual = copyFileToTargetDir(actual);
             throw new AssertionError("Files are different.\n" +
                     "Expected: " + copiedExpected.getAbsolutePath() + "\n" +
                     "Actual: " + copiedActual.getAbsolutePath());
+        } else {
+            BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(expected.getAbsolutePath());
+            BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(actual.getAbsolutePath());
+
+            ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage).compareImages();
+
+            assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState());
         }
-        assertTrue(areFilesEqual(expected, actual));
     }
 
     private static File copyFileToTargetDir(File f) throws IOException {
@@ -27,7 +43,7 @@ class FileComparator {
         return targetFile;
     }
 
-    public static boolean areFilesEqual(File file1, File file2) throws IOException, NoSuchAlgorithmException {
+    private static boolean areFilesEqual(File file1, File file2) throws IOException, NoSuchAlgorithmException {
         return getMD5Checksum(file1).equals(getMD5Checksum(file2));
     }
 
