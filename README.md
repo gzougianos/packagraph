@@ -6,10 +6,9 @@
 
 ## Problem:
 
-*How can I create a graph of the inter-dependencies among Java projects, modules,
+*How can I see a graph of the inter-dependencies among Java projects, modules,
 and packages while maintaining full control over which dependencies
-are included (or excluded)? In addition, I want to control how the
-final graph is rendered.*
+are included (or excluded)?
 
 ## Solution:
 
@@ -71,7 +70,28 @@ exclude externals;
 
 Excludes external dependencies (packages outside the analyzed source directories) from the graph.
 
-### 3. Define Styles
+### 3. Show Nodes
+
+```
+show nodes 'package_pattern' [as 'display_name'] [with style 'style_name'];
+```
+
+Controls how packages matching the pattern are displayed in the graph.
+
+- `package_pattern`: A regular expression to match package names
+- `as 'display_name'`: Optional display name (supports `$1`, `$2`, etc. for regex groups).
+  If empty, the node be excluded. Useful to exclude Java standard packages such as `java.*` or `javax.*`.
+- `with style`: Optional style to apply to matching nodes
+
+### 4. Define Constants
+
+```
+define constant 'CONSTANT_NAME' as 'value';
+```
+
+Defines a constant that can be reused throughout the configuration file using `${CONSTANT_NAME}` syntax.
+
+### 5. Define Styles
 
 ```
 define style 'style_name' as 'style_definition' [with node legend];
@@ -82,26 +102,6 @@ uses [GraphViz attributes](https://graphviz.org/doc/info/attrs.html).
 
 `with node legend` is optional and when specified, it will add a legend to the graph
 that illustrates this style. See [an example](./docs/legend.png).
-
-### 4. Define Constants
-
-```
-define constant 'CONSTANT_NAME' as 'value';
-```
-
-Defines a constant that can be reused throughout the configuration file using `${CONSTANT_NAME}` syntax.
-
-### 5. Show Nodes
-
-```
-show nodes 'package_pattern' [as 'display_name'] [with style 'style_name'];
-```
-
-Controls how packages matching the pattern are displayed in the graph.
-
-- `package_pattern`: A regular expression to match package names
-- `as 'display_name'`: Optional display name (supports `$1`, `$2`, etc. for regex groups)
-- `with style`: Optional style to apply to matching nodes
 
 ### 6. Show Edges
 
