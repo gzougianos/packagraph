@@ -18,9 +18,9 @@ class FileComparator {
 
         if (isImageFile(expected) && isImageFile(actual)) {
             doImageComparison(expected, actual);
+        } else {
+            throw new AssertionError("Files are different");
         }
-
-        throw new AssertionError("Files are different");
     }
 
     private static boolean isImageFile(File file) {
