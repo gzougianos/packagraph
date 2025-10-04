@@ -5,6 +5,8 @@ import com.github.gzougianos.packagraph.core.*;
 import lombok.extern.slf4j.*;
 
 import java.io.*;
+import java.nio.*;
+import java.nio.charset.*;
 import java.nio.file.*;
 
 @Slf4j
@@ -17,13 +19,30 @@ public class Main {
         var inputFile = new File(args[0]).getCanonicalFile();
         verifyExistsAndIsNotADirectory(inputFile);
 
+
         var inputFileDirectory = inputFile.getParentFile();
-        var inputContents = new String(Files.readAllBytes(inputFile.toPath()));
+        byte[] bytes = Files.readAllBytes(inputFile.toPath());
+
+        if (!isValidUTF8(bytes)) {
+            throw new IllegalArgumentException("Input file: " + inputFile.getAbsolutePath() + " is not a text file.");
+        }
+
+        var inputContents = new String(bytes);
 
         Options options = PgLangInterpreter.interprete(inputContents).withBaseDir(inputFileDirectory);
         Packagraph packagraph = Packagraph.create(options);
         File output = new GraphvizRenderer(packagraph).render();
         log.warn("Output file: {}", output.getAbsolutePath());
+    }
+
+    public static boolean isValidUTF8(byte[] bytes) throws IOException {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        try {
+            StandardCharsets.UTF_8.newDecoder().decode(buffer);
+            return true;
+        } catch (CharacterCodingException e) {
+            return false;
+        }
     }
 
     private static void verifyExistsAndIsNotADirectory(File inputFile) {
