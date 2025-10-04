@@ -8,7 +8,7 @@
 
 *How can I see a graph of the inter-dependencies among Java projects, modules,
 and packages while maintaining full control over which dependencies
-are included (or excluded)?
+are included (or excluded)?*
 
 ## Solution:
 
