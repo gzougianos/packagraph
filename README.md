@@ -2,6 +2,8 @@
 
 [![Build and Release JAR](https://github.com/gzougianos/packagraph/actions/workflows/packgraph.yml/badge.svg)](https://github.com/gzougianos/packagraph/actions/workflows/packgraph.yml)
 
+(Version discontinued. HJSON files were not easy to work with.)
+
 Packagraph is a lightweight tool designed to generate customizable package dependency
 diagrams for Java source code. It reads configurations from a [Human JSON](https://hjson.github.io/)
 file and outputs diagrams in formats supported by [GraphViz](https://graphviz.org/).
