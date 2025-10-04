@@ -46,7 +46,7 @@ the dependency graph to a file such as `.png`, `.svg`, etc.
 
 ## How to use:
 
-Packagraph can be used as a command-line tool where you simply provide
+Packagraph needs Java 21 and can be used as a command-line tool where you simply provide
 the path of the `.pg` as an argument:
 
 ```bash
