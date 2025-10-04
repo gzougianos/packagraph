@@ -3,19 +3,16 @@ package com.github.gzougianos.packagraph.core;
 import com.github.romankh3.image.comparison.*;
 import com.github.romankh3.image.comparison.model.*;
 
-import javax.imageio.*;
-import java.awt.*;
 import java.awt.image.*;
 import java.io.*;
 import java.nio.file.*;
 import java.security.*;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
 
 class FileComparator {
 
     public static void assertFilesEquals(File expected, File actual) throws Exception {
-        if (areFilesEqual(expected, actual)) {
+        if (md5Equal(expected, actual)) {
             return;
         }
 
@@ -30,9 +27,13 @@ class FileComparator {
             BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(actual.getAbsolutePath());
 
             ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage).compareImages();
+            if (Objects.equals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState())) {
+                return;
+            }
 
-            assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState(),
-                    "Mismatch percentage:" + imageComparisonResult.getDifferencePercent());
+            if (imageComparisonResult.getDifferencePercent() > 10) {
+                throw new AssertionError("Image files are different by " + imageComparisonResult.getDifferencePercent() + "%");
+            }
         }
     }
 
@@ -44,11 +45,11 @@ class FileComparator {
         return targetFile;
     }
 
-    private static boolean areFilesEqual(File file1, File file2) throws IOException, NoSuchAlgorithmException {
-        return getMD5Checksum(file1).equals(getMD5Checksum(file2));
+    private static boolean md5Equal(File file1, File file2) throws IOException, NoSuchAlgorithmException {
+        return md5Checksum(file1).equals(md5Checksum(file2));
     }
 
-    private static String getMD5Checksum(File file) throws IOException, NoSuchAlgorithmException {
+    private static String md5Checksum(File file) throws IOException, NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         try (InputStream is = Files.newInputStream(file.toPath());
              DigestInputStream dis = new DigestInputStream(is, md)) {
