@@ -16,24 +16,31 @@ class FileComparator {
             return;
         }
 
-        if (expected.getName().endsWith(".svg")) {
-            File copiedExpected = copyFileToTargetDir(expected);
-            File copiedActual = copyFileToTargetDir(actual);
-            throw new AssertionError("Files are different.\n" +
-                    "Expected: " + copiedExpected.getAbsolutePath() + "\n" +
-                    "Actual: " + copiedActual.getAbsolutePath());
-        } else {
-            BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(expected.getAbsolutePath());
-            BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(actual.getAbsolutePath());
+        if (isImageFile(expected) && isImageFile(actual)) {
+            doImageComparison(expected, actual);
+        }
 
-            ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage).compareImages();
-            if (Objects.equals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState())) {
-                return;
-            }
+        throw new AssertionError("Files are different");
+    }
 
-            if (imageComparisonResult.getDifferencePercent() > 10) {
-                throw new AssertionError("Image files are different by " + imageComparisonResult.getDifferencePercent() + "%");
-            }
+    private static boolean isImageFile(File file) {
+        String name = file.getName().toLowerCase();
+        return name.endsWith(".jpg") ||
+                name.endsWith(".jpeg") ||
+                name.endsWith(".png");
+    }
+
+    private static void doImageComparison(File expected, File actual) {
+        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(expected.getAbsolutePath());
+        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(actual.getAbsolutePath());
+
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage).compareImages();
+        if (Objects.equals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState())) {
+            return;
+        }
+
+        if (imageComparisonResult.getDifferencePercent() > 10) {
+            throw new AssertionError("Image files are different by " + imageComparisonResult.getDifferencePercent() + "%");
         }
     }
 
