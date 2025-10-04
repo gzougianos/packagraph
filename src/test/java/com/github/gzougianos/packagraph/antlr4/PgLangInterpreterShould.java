@@ -87,7 +87,7 @@ class PgLangInterpreterShould {
 
     @Test
     void interprete_define_style_with_legend() throws Exception {
-        String script = "define style 'default' as 'fillcolor=green;shape=oval' with node legend 'my legend';";
+        String script = "define style 'default' as 'fillcolor=green;shape=oval' with node legend;";
         Options options = PgLangInterpreter.interprete(script);
 
         var style = options.defineStyles().getFirst();

@@ -136,6 +136,13 @@ public class PgLangInterpreter extends PgLangBaseListener {
             }
         });
         PgLangParser parser = new PgLangParser(new CommonTokenStream(lexer));
+        parser.setErrorHandler(new DefaultErrorStrategy() {
+            @Override
+            protected void reportUnwantedToken(Parser recognizer) {
+                super.reportUnwantedToken(recognizer);
+                syntaxError.set(true);
+            }
+        });
 
         ParseTreeWalker walker = new ParseTreeWalker();
         PgLangInterpreter listener = new PgLangInterpreter();
