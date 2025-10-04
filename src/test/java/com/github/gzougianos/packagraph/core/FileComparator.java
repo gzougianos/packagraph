@@ -18,7 +18,7 @@ class FileComparator {
         if (areFilesEqual(expected, actual)) {
             return;
         }
-        
+
         if (expected.getName().endsWith(".svg")) {
             File copiedExpected = copyFileToTargetDir(expected);
             File copiedActual = copyFileToTargetDir(actual);
@@ -31,7 +31,8 @@ class FileComparator {
 
             ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage).compareImages();
 
-            assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState());
+            assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState(),
+                    "Mismatch percentage:" + imageComparisonResult.getDifferencePercent());
         }
     }
 
