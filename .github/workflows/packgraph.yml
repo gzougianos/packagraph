@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main #Release only from main branch
+      - develop
 
 jobs:
   build:
@@ -24,11 +25,13 @@ jobs:
 
       - name: Get version from pom.xml
         id: get_version
+        if: github.ref == 'refs/heads/main' #Release only from main branch
         run: |
           echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-          
+
       - name: Create GitHub Release
         id: create_release
+        if: github.ref == 'refs/heads/main' #Release only from main branch
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -40,6 +43,7 @@ jobs:
 
       - name: Upload JAR as Release Asset
         id: upload-release-asset
+        if: github.ref == 'refs/heads/main' #Release only from main branch
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
