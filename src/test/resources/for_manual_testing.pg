@@ -18,4 +18,5 @@ show edges to '.*?generated.*' with style 'color=red' with from-node style 'labe
 
 
 define style 'infrastructure' as 'tooltip=Some\nmultilineComment;shape=box;style=filled;fillcolor=lightblue' with node legend;
+define style 'default' as 'shape=box;style=filled;fillcolor=lightgreen' with node legend;
 export as '.svg' into '../../target/manual_testing.svg' by overwriting;

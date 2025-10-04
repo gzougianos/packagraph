@@ -3,22 +3,36 @@ include source directory './repository/src/main/java';
 show main graph with style 'dpi=115;fontsize=25;label=Spring Petclinic';
 
 show nodes '.*' with style 'shape=box';
-show nodes 'java.*' as '';
-show nodes 'jakarta.*' as '';
+show nodes 'java.*' as ''; //Exclude basic java packages
+show nodes 'jakarta.*' as ''; //Exclude basic jakarta packages
 
-//Nodes
-show nodes 'org.springframework.*' as 'Spring Core' with style 'Infrastructure';
+/*              NODES           */
+
+//Everything is shown as "Spring Core"
+show nodes 'org.springframework.*' as 'Spring Core' with style 'infrastructure_style';
+
+//Show the .samples.* packages and catch a regex group
 show nodes 'org.springframework.samples\.(.*)' as '$1' with style 'default';
-show nodes '${JPA_PACKAGES}' as 'Spring Data' with style 'Infrastructure';
-show nodes '(org.springframework.web.*)|(org.springframework.ui.*)' as 'Spring Web' with style 'Infrastructure';
 
-//Edges
+//Show the JPA packages
+show nodes '${JPA_PACKAGES}' as 'Spring Data' with style 'infrastructure_style_jpa';
+
+//Show the Spring Web packages
+show nodes '(org.springframework.web.*)|(org.springframework.ui.*)' as 'Spring Web' with style 'infrastructure_style';
+
+/*              EDGES           */
+
+//All dependencies to JPA packages have their own style
 show edges to '${JPA_PACKAGES}' with style 'depends_on_jpa_edge_style';
 
-define style 'default' as 'shape=box;fontsize=20';
-define style 'Infrastructure' as 'shape=box;style=filled;fillcolor=lightgreen;fontsize=20';
-define style 'depends_on_jpa_edge_style' as 'color=blue;style=fixed';
+//All dependencies from the model to JPA packages have their own style
+show edges from '.*petclinic.model.*' to '${JPA_PACKAGES}' with style 'depends_on_jpa_edge_diamond_style';
 
+define style 'default' as 'shape=box;fontsize=20';
+define style 'infrastructure_style' as 'shape=box;style=filled;fillcolor=lightgreen;fontsize=20';
+define style 'infrastructure_style_jpa' as 'shape=box;style=filled;fillcolor=green;fontsize=20';
+define style 'depends_on_jpa_edge_style' as 'color=blue'; //diamond edge
+define style 'depends_on_jpa_edge_diamond_style' as 'color=orange; arrowhead=diamond';
 
 define constant 'JPA_PACKAGES' as
 '(org.springframework.data.*)|(jakarta.persistence.*)|(org.springframework.dao.*)|(org.springframework.transaction.*)';
